@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>درس بخون!</title>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/shabnam-font@v5.0.1/dist/font-face.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/sahel-font@v3.4.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/samim-font@v4.0.5/dist/font-face.css" rel="stylesheet" type="text/css" />
+<link rel="preconnect" href="https://v1.fontapi.ir" /> <link href="https://v1.fontapi.ir/css/Gandom" rel="stylesheet" /> <link href="https://fonts.cdnfonts.com/css/tanha" rel="stylesheet" />
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <button class="logo mood-btn" id="moodButton" onclick="openMoodPicker()" title="تغییر حالت/مود">📚</button>
+    <div><h1>درس بخون!</h1><div class="muted">سیستمی برای مطالعه کردن</div></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn" id="themeToggle" onclick="toggleTheme()" title="تغییر تم">🌙</button>
+    <button class="btn" onclick="exportData()">💾 خروجی</button>
+    <button class="btn" onclick="document.getElementById('importFile').click()">📥 ورود</button>
+    <input id="importFile" type="file" accept=".json" hidden onchange="importData(event)">
+    <button class="btn danger" onclick="resetAll()">♻ ریست</button>
+  </div>
+</header>
+
+<div class="nav-bar">
+  <div class="nav-brand">📖 درس بخون!</div>
+  <select id="pageSelect" class="page-select" onchange="switchToPage(this.value)">
+    <option value="dashboard">🏠 خانه</option>
+    <option value="episodes">📖 پارت‌های مطالعه</option>
+    <option value="checklist">📋 چک‌لیست</option>
+    <option value="classes">📅 برنامه روزانه</option>
+    <option value="routines">🔁 روتین</option>
+    <option value="quests">🎯 اهداف من</option>
+    <option value="mistakes">❌ دفترچه اشتباهات</option>
+    <option value="mockExams">🧪 آزمون‌های آزمایشی</option>
+    <option value="tasks">🔨 تسک‌ها</option>
+    <option value="skillHub">🧭 مرکز مهارت‌ها</option>
+    <option value="leitner">🧰 جعبه ابزار</option>
+    <option value="settings">⚙️ تنظیمات</option>
+  </select>
+  <div class="nav-quick" id="navQuick"></div>
+</div>
+
+<section id="dashboard" class="page active">
+<div class="grid">
+  <div class="card span-12" id="backupReminderCard" style="display:none;border-color:rgba(255,209,102,.4)">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div><b>⚠️ مدتی از آخرین بکاپ گذشته</b><div class="muted small" id="backupReminderText">—</div></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" onclick="exportData()">💾 دانلود بکاپ</button>
+        <button class="btn" onclick="dismissBackupReminder()">بعداً</button>
+      </div>
+    </div>
+  </div>
+  <div class="card span-8">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+      <div><h2 id="playerNameDisplay">دانش‌آموز</h2><div class="muted">خلاصه پیشرفت</div></div>
+    </div>
+    <div class="statgrid" style="margin-top:13px">
+      <div class="stat"><span class="label">سطح پیشرفت</span><b id="playerLevel">1</b></div>
+      <div class="stat"><span class="label">امتیاز</span><b id="playerXP">0</b></div>
+      <div class="stat"><span class="label">روزهای متوالی</span><b id="streak">0</b></div>
+    </div>
+    <div class="xpbar">
+      <div class="xpmeta"><span id="xpText">0 / 100</span><span id="xpPercent">0%</span></div>
+      <div class="progress"><div class="bar" id="playerXPBar" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="card span-4">
+    <h3>🎯 هدف امروز</h3>
+    <p class="muted">تعداد پارت مطالعه با خود توست؛ سیستم فقط ظرفیت پیشنهادی می‌دهد.</p>
+    <div class="stat"><span class="label">ظرفیت پیشنهادی</span><b id="dashboardTarget">7 پارت مطالعه</b><small class="muted" id="dashboardEpisodeFormat">—</small></div>
+    <div class="actions"><button class="btn primary" onclick="openEpisodeModal()">+ ثبت پارت مطالعه</button><button class="btn" onclick="switchToPage('quests')">🎯 اهداف من</button></div>
+  </div>
+  <div class="card span-4">
+    <h3>⏳ روزشمار کنکور</h3>
+    <div id="examCountdownBody"></div>
+  </div>
+  <div class="card span-4" id="dailyPlanCardWrap">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h3 style="margin:0">📝 برنامه امروز</h3>
+      <button class="btn" onclick="openDailyPlanner()" title="ویرایش برنامه ۱۰دقیقه‌ای">⚙</button>
+    </div>
+    <div id="dailyPlanCard"></div>
+  </div>
+  <div class="card span-8">
+    <h3>📊 پیشرفت امروز</h3>
+    <div class="statgrid" style="margin-top:10px">
+      <div class="stat"><span class="label">پارت مطالعه</span><b id="todayEpisodes">0</b></div>
+      <div class="stat"><span class="label">امتیاز امروز</span><b id="todayXP">0</b></div>
+      <div class="stat"><span class="label">دقیقه مطالعه امروز</span><b id="todayMinutes">0</b></div>
+      <div class="stat"><span class="label">تست امروز</span><b id="todayTests">0</b></div>
+      <div class="stat"><span class="label">آخرین کیفیت</span><b id="lastQuality">—</b></div>
+    </div>
+    <hr>
+    <div class="xpmeta"><span>پیشرفت نسبت به هدف پیشنهادی:</span><span id="dayProgressText">0 / 7</span></div>
+    <div class="progress"><div class="bar" id="dayProgressBar" style="width:0%"></div></div>
+  </div>
+  <div class="card span-4">
+    <div class="campaign-weak-control">
+      <label>🎯 درسِ ضعف غالب</label>
+      <div class="weak-filters">
+        <select id="weakCurriculum" onchange="setWeakCurriculum(this.value)">
+          <option value="">رشته...</option>
+          <option value="experimental">🧬 تجربی</option>
+          <option value="mathematics">📐 ریاضی</option>
+          <option value="humanities">📚 انسانی</option>
+        </select>
+        <select id="weakGrade" onchange="setWeakGrade(this.value)">
+          <option value="10">دهم</option>
+          <option value="11">یازدهم</option>
+          <option value="12">دوازدهم</option>
+        </select>
+      </div>
+      <select id="manualWeakSubject" onchange="setManualWeakSubject(this.value)"></select>
+      <div class="muted small" style="margin-top:6px">خودکار = تشخیص سیستم؛ انتخاب دستی همیشه نمایش داده می‌شود.</div>
+    </div>
+    <h3>📌 خلاصه برنامه</h3>
+    <div class="list">
+      <div class="quest"><span>سهم زمان مطالعه کنکوری</span><b id="campaignConcoursWeight">65%</b></div>
+      <div class="quest"><span>سهم زمان مطالعه امتحان نهایی</span><b id="campaignFinalWeight">35%</b></div>
+      <div class="quest"><span>ضعف غالب</span><b id="weakSubject">—</b></div>
+      <div class="quest"><span>Retention بحرانی</span><b id="retentionCount">0</b></div>
+    </div>
+  </div>
+  <div class="card span-6">
+    <h3>📚 وضعیت دروس</h3>
+    <div class="dashboard-curriculum-picker" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px;padding:11px;border:1px solid var(--border);border-radius:13px;background:rgba(125,145,190,.06)">
+      <div>
+        <label>رشته تحصیلی</label>
+        <select id="dashboardCurriculum" onchange="setDashboardCurriculum(this.value)">
+          <option value="">انتخاب رشته...</option>
+          <option value="experimental">🧬 تجربی</option>
+          <option value="mathematics">📐 ریاضی</option>
+          <option value="humanities">📚 انسانی</option>
+        </select>
+      </div>
+      <div>
+        <label>پایه تحصیلی</label>
+        <select id="dashboardGrade" onchange="setDashboardGrade(this.value)">
+          <option value="10">دهم</option>
+          <option value="11">یازدهم</option>
+          <option value="12">دوازدهم</option>
+        </select>
+      </div>
+    </div>
+    <div class="subjects" id="subjectMini"></div>
+  </div>
+  <div class="card span-12">
+    <h3>🧠 Stats کلی</h3>
+    <div id="globalStats"></div>
+<div class="smart-tools">
+  <div class="smart-card">
+    <h3>📉 تحلیل ضعف</h3>
+    <div id="smartWeakness" class="smart-list"></div>
+  </div>
+  <div class="smart-card">
+    <h3>🔥 پیشرفت زنجیره‌ای</h3>
+    <div id="smartStreak" class="smart-list"></div>
+  </div>
+
+</div>
+<div id="focusOverlay" class="focus-overlay" aria-hidden="true">
+  <div class="focus-box">
+    <div class="muted">حالت تمرکز</div><h2 id="focusTitle">مطالعه</h2><div id="focusSubject" class="focus-subject">یک درس را انتخاب کن</div>
+    <div id="focusTime" class="focus-time">25:00</div>
+    <div class="smart-actions" style="justify-content:center"><button class="btn primary" onclick="toggleFocusTimer()" id="focusToggle">▶ شروع</button><button class="btn" onclick="resetFocusTimer()">↺ ریست</button><button class="btn danger" onclick="closeFocusMode()">✕ خروج</button></div>
+  </div>
+</div>
+
+  </div>
+  <div class="card span-12" id="progressChartCard">
+    <div class="progress-chart-head">
+      <h3>📈 روند پیشرفت</h3>
+      <div class="progress-chart-controls">
+        <div class="progress-metric-tabs">
+          <button class="btn progress-metric-btn active" data-metric="xp" onclick="setProgressChartMetric('xp')">XP</button>
+          <button class="btn progress-metric-btn" data-metric="minutes" onclick="setProgressChartMetric('minutes')">دقیقه</button>
+          <button class="btn progress-metric-btn" data-metric="accuracy" onclick="setProgressChartMetric('accuracy')">دقت</button>
+        </div>
+        <div class="progress-range-tabs">
+          <button class="btn progress-range-btn" data-range="7" onclick="setProgressChartRange(7)">۷ روز</button>
+          <button class="btn progress-range-btn active" data-range="14" onclick="setProgressChartRange(14)">۱۴ روز</button>
+          <button class="btn progress-range-btn" data-range="30" onclick="setProgressChartRange(30)">۳۰ روز</button>
+        </div>
+      </div>
+    </div>
+    <div id="progressChart"></div>
+  </div>
+  <div class="card span-8" id="heatmapCard">
+    <h3>🗓️ نقشه حرارتی مطالعه</h3>
+    <p class="muted small">هر خونه یک روزه؛ هرچی رنگش تیره‌تر، اون روز بیشتر خوندی.</p>
+    <div id="studyHeatmap"></div>
+  </div>
+  <div class="card span-4" id="rankingCard">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <h3 style="margin:0">🏆 رتبه‌بندی دروس</h3>
+      <div class="ranking-range-tabs">
+        <button class="btn ranking-range-btn" data-range="7" onclick="setRankingRange(7)">۷ روز</button>
+        <button class="btn ranking-range-btn active" data-range="30" onclick="setRankingRange(30)">۳۰ روز</button>
+        <button class="btn ranking-range-btn" data-range="all" onclick="setRankingRange('all')">همه</button>
+      </div>
+    </div>
+    <div id="subjectRanking" style="margin-top:10px"></div>
+  </div>
+</div>
+</section>
+
+<section id="episodes" class="page">
+<div class="grid">
+  <div class="card span-4">
+    <div class="episode-create-head">
+      <div><h2>📖 پارت مطالعه جدید</h2><p class="muted" id="episodeFormatText">هر پارت مطالعه = ۵۰ دقیقه مطالعه + ۱۰ دقیقه استراحت.</p></div>
+      <span class="field-badge" id="episodeFieldBadge">رشته انتخاب نشده</span>
+    </div>
+    <div class="episode-field-picker">
+      <div class="episode-field-row">
+        <div><label>رشته تحصیلی</label>
+          <select id="episodeCurriculum" onchange="setEpisodeCurriculum(this.value)">
+            <option value="">انتخاب رشته...</option>
+            <option value="experimental">🧬 تجربی</option>
+            <option value="mathematics">📐 ریاضی</option>
+            <option value="humanities">📚 انسانی</option>
+          </select>
+        </div>
+        <div><label>پایه تحصیلی</label>
+          <select id="epGrade" onchange="setEpisodeGrade(this.value)"><option value="10">دهم</option><option value="11">یازدهم</option><option value="12">دوازدهم</option></select>
+        </div>
+      </div>
+      <div class="muted small" style="margin-top:8px">بعد از انتخاب رشته و پایه، فقط دروس مرتبط در فهرست زیر نمایش داده می‌شوند.</div>
+    </div>
+    <div class="formgrid">
+      <div><label>درس</label><select id="epSubject"></select></div>
+      <div><label>نوع</label><select id="epType"></select></div>
+      <div><label>موضوع</label><input id="epTopic" placeholder="مثلاً فصل ۲، تابع..."></div>
+      <div><label>دقیقه واقعی</label><input id="epMinutes" type="number" min="1"></div>
+      <div><label>تعداد تست</label><input id="epTests" type="number" value="0" min="0"></div>
+      <div><label>درست</label><input id="epCorrect" type="number" value="0" min="0"></div>
+      <div><label>غلط</label><input id="epWrong" type="number" value="0" min="0"></div>
+      <div><label>نزده</label><input id="epBlank" type="number" value="0" min="0"></div>
+      <div><label>✏️ چند تا علامت‌دار شده؟</label><input id="epMarked" type="number" value="0" min="0"></div>
+      <div><label>تحلیل انجام شد؟</label><select id="epAnalysis"><option value="yes">بله</option><option value="no">خیر</option></select></div>
+      <div><label>سختی</label><select id="epDifficulty">
+        <option value="easy">آسان</option>
+        <option value="normal" selected>عادی</option>
+        <option value="hard">متوسط</option>
+        <option value="veryhard">دشوار</option>
+        <option value="nightmare">بسیار دشوار</option>
+      </select></div>
+      <div><label>کیفیت</label><select id="epQuality">
+        <option value="poor">ضعیف</option>
+        <option value="normal" selected>عادی</option>
+        <option value="good">خوب</option>
+        <option value="excellent">عالی</option>
+        <option value="exceptional">فوق العاده</option>
+      </select></div>
+    </div>
+    <div class="actions"><button class="btn primary" onclick="addEpisode()">⚡ ثبت و محاسبه XP</button></div>
+  </div>
+  <div class="card span-8">
+    <h2>📜 پارت‌های مطالعه شده</h2>
+    <div class="muted">آخرین فعالیت‌ها</div>
+    <div id="episodeList"></div>
+  </div>
+</div>
+</section>
+
+<section id="checklist" class="page">
+  <div class="card">
+    <div class="checklist-topbar">
+      <h2 class="ct-title">📋 چک‌لیست</h2>
+      <div class="ct-field">
+        <label>🎓</label>
+        <select id="checklistCurriculum" onchange="setChecklistCurriculum(this.value)">
+          <option value="">رشته...</option>
+          <option value="experimental">🧬 تجربی</option>
+          <option value="mathematics">📐 ریاضی</option>
+          <option value="humanities">📚 انسانی</option>
+        </select>
+      </div>
+      <div class="ct-field">
+        <label>📚</label>
+        <select id="checklistGrade" onchange="setChecklistGrade(this.value)">
+          <option value="10">دهم</option>
+          <option value="11">یازدهم</option>
+          <option value="12">دوازدهم</option>
+          <option value="12r">🔁 ترمیم</option>
+        </select>
+      </div>
+      <div class="ct-spacer"></div>
+      <div class="ct-actions">
+        <button class="btn" onclick="printCurrentChecklist()" title="چاپ افقی">🖨️</button>
+        <button class="btn danger" onclick="resetCurrentChecklist()" title="ریست درس فعلی">🗑</button>
+      </div>
+    </div>
+    <div class="checklist-tabs" id="checklistTabs"></div>
+    <div class="checklist-scroll-hint">⟵ برای دیدن ستون‌های بیشتر، جدول را بکشید ⟶</div>
+    <div id="checklistContent"></div>
+    <div class="checklist-legend">
+      <span style="font-weight:800;color:var(--text)">راهنما:</span>
+      <div class="checklist-legend-item"><span class="checklist-cell"></span> نزده</div>
+      <div class="checklist-legend-item"><span class="checklist-cell partial"></span> در حال پیشرفت</div>
+      <div class="checklist-legend-item"><span class="checklist-cell done"></span> کامل</div>
+      <div class="checklist-legend-item"><span class="checklist-cell disabled"></span> ممنوع</div>
+      <div class="checklist-legend-item"><span class="checklist-cell mastery mastery-A">A</span> تسلط عالی</div>
+      <div class="checklist-legend-item"><span class="checklist-cell mastery mastery-B">B</span> تسلط خوب</div>
+      <div class="checklist-legend-item"><span class="checklist-cell mastery mastery-C">C</span> تسلط متوسط</div>
+      <div class="checklist-legend-item"><span class="checklist-cell mastery mastery-D">D</span> تسلط ضعیف</div>
+    </div>
+  </div>
+</section>
+
+<section id="classes" class="page">
+<div class="card">
+  <div class="classes-shell">
+    <div class="classes-hero">
+      <div>
+        <div class="skill-v7-eyebrow">CLASS MANAGER</div>
+                <h2>📅 برنامه روزانه</h2>
+        <p class="muted" style="margin:4px 0 0">کلاس‌های مدرسه، کلاس‌های آنلاین و سایر کارهای روزمره.</p>
+      </div>
+      <div class="classes-filters">
+        <select id="classesFilter" onchange="renderClasses()">
+          <option value="all">همه</option>
+          <option value="school">🏫 مدرسه</option>
+          <option value="online">💻 آنلاین</option>
+          <option value="exam">📝 آزمون</option>
+          <option value="sport">🏃 ورزش</option>
+          <option value="custom">🌱 سایر</option>
+        </select>
+        <button class="btn danger" onclick="clearClasses()">🗑 حذف همه</button>
+      </div>
+    </div>
+    <div class="classes-add">
+      <div class="field-mini"><label>عنوان</label><input id="classTitle" maxlength="80" placeholder="مثلاً کلاس ریاضی"></div>
+      <div class="field-mini"><label>روز</label>
+        <select id="classDay">
+          <option value="شنبه">شنبه</option><option value="یکشنبه">یکشنبه</option><option value="دوشنبه">دوشنبه</option>
+          <option value="سه‌شنبه">سه‌شنبه</option><option value="چهارشنبه">چهارشنبه</option><option value="پنجشنبه">پنجشنبه</option><option value="جمعه">جمعه</option>
+        </select>
+      </div>
+      <div class="field-mini"><label>شروع</label><input id="classTime" type="time" value="08:00"></div>
+      <div class="field-mini"><label>پایان</label><input id="classEndTime" type="time" value="09:30"></div>
+      <div class="field-mini"><label>استاد</label><input id="classTeacher" maxlength="60" placeholder="آقای احمدی"></div>
+      <div class="field-mini"><label>نوع</label>
+        <select id="classType">
+          <option value="school">🏫 مدرسه</option>
+          <option value="online">💻 آنلاین</option>
+          <option value="exam">📝 آزمون</option>
+          <option value="sport">🏃 ورزش</option>
+          <option value="custom">🌱 سایر</option>
+        </select>
+      </div>
+      <div class="field-mini"><label>یادداشت</label><input id="classNote" maxlength="140" placeholder="اتاق ۲۰۳"></div>
+      <div class="actions-cell"><button class="btn primary" id="classSaveBtn" style="width:100%" onclick="addClass()">➕ افزودن</button></div>
+    </div>
+    <div id="classesTableWrap" class="classes-table-wrap"></div>
+  </div>
+</div>
+</section>
+
+<section id="quests" class="page">
+<div class="quest-board-v7">
+  <div class="quest-board-hero card">
+    <div class="quest-hero-copy">
+      <div class="eyebrow">برنامه‌ریزی هدفمند</div>
+      <h2>🎯 اهداف من</h2>
+      <p class="muted">اهداف روزانه‌ات را اینجا تعریف و پیگیری کن.</p>
+    </div>
+    <div class="quest-hero-actions">
+      <button class="btn primary" onclick="openManualQuestModal()">＋ هدف جدید</button>
+    </div>
+  </div>
+  <div class="quest-board-stats" id="questBoardStats"></div>
+  <div class="quest-board-toolbar card">
+    <div><b>اهداف امروز</b><div class="muted small">فقط اهداف دستی.</div></div>
+    <div class="quest-filters">
+      <select id="questFilter" onchange="renderQuests()">
+        <option value="all">همه</option><option value="active">فعال</option><option value="completed">انجام‌شده</option>
+      </select>
+      <select id="questPriorityFilter" onchange="renderQuests()">
+        <option value="all">همه اولویت‌ها</option><option value="urgent">فوری</option><option value="critical">بحرانی</option><option value="high">مهم</option><option value="normal">عادی</option><option value="low">کم</option>
+      </select>
+    </div>
+  </div>
+  <div class="quest-board-main card"><div id="questList" class="quest-board-list"></div></div>
+  <aside class="quest-board-side card">
+    <div class="side-title">🧭 راهنما</div>
+    <div class="quest-rule"><span>فعال</span><b id="questActiveCount">0</b></div>
+    <div class="quest-rule"><span>✅ تکمیل‌شده</span><b id="questDoneCount">0</b></div>
+    <div class="quest-rule"><span>اولویت بالا</span><b id="questHighCount">0</b></div>
+    <hr>
+    <p class="muted small">فقط اهداف دستی نمایش داده می‌شوند.</p>
+  </aside>
+</div>
+</section>
+
+<section id="tasks" class="page">
+  <div class="card" style="overflow:visible">
+    <div class="tasks-hero">
+      <div>
+        <div class="skill-v7-eyebrow">DAILY TASKS</div>
+        <h2>🔨 تسک‌های روزانه</h2>
+        <p class="muted" style="margin:4px 0 0">با انجام کارهای شخصی، خانه، ورزش و سلامتی، امتیاز بگیر.</p>
+      </div>
+      <div class="tasks-summary" id="tasksSummary"></div>
+    </div>
+    <div class="tasks-grid" id="tasksGrid"></div>
+  </div>
+</section>
+
+<section id="skillHub" class="page">
+  <div class="card" style="overflow:visible">
+    <div class="hub-topbar">
+      <h2 class="st-title" style="margin:0">🧭 مرکز مهارت‌ها</h2>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="st-field">
+          <label>🎓</label>
+          <select id="statusCurriculum" onchange="setStatusCurriculum(this.value)">
+            <option value="">رشته...</option>
+            <option value="experimental">🧬 تجربی</option>
+            <option value="mathematics">📐 ریاضی</option>
+            <option value="humanities">📚 انسانی</option>
+          </select>
+        </div>
+        <div class="st-field">
+          <label>📚</label>
+          <select id="statusGrade" onchange="setStatusGrade(this.value)">
+            <option value="10">دهم</option>
+            <option value="11">یازدهم</option>
+            <option value="12">دوازدهم</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="skillHubContent"></div>
+  </div>
+</section>
+
+<section id="leitner" class="page">
+  <div class="card" style="overflow:visible">
+    <div class="toolbox-tabs">
+      <button class="toolbox-tab active" onclick="switchToolboxTab('leitner')">🧠 لایتنر</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('timer')">⏱ تایمر</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('periodic')">⚗️ جدول تناوبی</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('noise')">🎧 نویز سفید</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('notes')">📝 یادداشت</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('formulas')">📐 فرمول‌نامه</button>
+      <button class="toolbox-tab" onclick="switchToolboxTab('calc')">🧮 ماشین‌حساب</button>
+    </div>
+    <div id="toolLeitner" class="tool-panel active">
+      <div class="leitner-shell">
+        <div class="leitner-hero">
+          <div>
+            <div class="skill-v7-eyebrow">LEITNER BOX</div>
+            <h2>🧠 جعبه لایتنر</h2>
+            <p class="muted" style="margin:4px 0 0">مرور فاصله‌دار: درست ← جعبه بالاتر. غلط ← برگشت به جعبه ۱.</p>
+          </div>
+          <button class="btn primary" onclick="startLeitnerReview()">▶ شروع مرور</button>
+        </div>
+        <div class="leitner-stats" id="leitnerStats"></div>
+        <div class="leitner-add">
+          <div class="field-mini"><label>واژه / سؤال</label><input id="leitnerWord" maxlength="120" placeholder="Mitochondria"></div>
+          <div class="field-mini"><label>معنی / پاسخ</label><input id="leitnerMeaning" maxlength="180" placeholder="میتوکندری"></div>
+          <div class="field-mini">
+            <label>دسته / درس</label>
+            <select id="leitnerSubject"><option value="">— بدون دسته —</option></select>
+            <div class="leitner-image-row">
+              <input id="leitnerImage" type="file" accept="image/*" onchange="previewLeitnerImage(event)">
+              <div id="leitnerImagePreview"></div>
+            </div>
+          </div>
+          <div class="actions-cell"><button class="btn primary" style="width:100%" onclick="addLeitnerCard()">➕ افزودن کارت</button></div>
+        </div>
+        <div class="leitner-filters">
+          <select id="leitnerFilterBox" onchange="renderLeitner()">
+            <option value="all">همه جعبه‌ها</option><option value="due">سررسید امروز</option>
+            <option value="1">جعبه ۱</option><option value="2">جعبه ۲</option><option value="3">جعبه ۳</option>
+            <option value="4">جعبه ۴</option><option value="5">جعبه ۵ (مسلط)</option>
+          </select>
+          <select id="leitnerFilterSubject" onchange="renderLeitner()"><option value="all">همه دروس</option></select>
+          <button class="btn danger" onclick="clearLeitner()">🗑 حذف همه</button>
+        </div>
+        <div id="leitnerReviewArea"></div>
+        <div id="leitnerList" class="leitner-grid"></div>
+      </div>
+    </div>
+    <div id="toolTimer" class="tool-panel">
+      <div class="timer-redesign timer-v2">
+        <div class="timer-topbar timer-v2-topbar">
+          <div>
+            <span class="section-kicker">تمرکز عمیق • آفلاین</span>
+            <h2>⏱ تایمر مطالعه</h2>
+            <p class="muted">درس را انتخاب کن، زمان را مشخص کن و یک جلسه مطالعه واقعی شروع کن.</p>
+          </div>
+          <div class="timer-v2-status"><span id="studyTimerStatusDot"></span><span id="studyTimerStatusText">آماده</span></div>
+        </div>
+
+        <div class="timer-v2-grid">
+          <section class="timer-v2-clock card">
+            <div class="timer-v2-mode"><span>جلسه تمرکز</span><b id="studyTimerPercent">۰٪</b></div>
+            <div class="timer-display-wrap">
+              <div class="timer-display" id="studyTimerDisplay">25:00</div>
+              <div class="timer-display-label" id="studyTimerDisplayLabel">زمان باقی‌مانده</div>
+            </div>
+            <div class="timer-progress"><span id="studyTimerProgress"></span></div>
+            <div class="timer-v2-subject" id="studyTimerSelectedSubject">مطالعه آزاد</div>
+            <div class="timer-v2-topic" id="studyTimerSelectedTopic">بدون مبحث</div>
+            <div class="timer-v2-controls">
+              <button class="btn primary" id="studyTimerToggle" onclick="toggleStudyTimer()">▶ شروع مطالعه</button>
+              <button class="btn" onclick="resetStudyTimer()">↺ ریست</button>
+              <button class="btn danger" id="studyTimerFinish" onclick="finishStudyTimer()">■ پایان جلسه</button>
+            </div>
+            <div class="timer-v2-meta">
+              <div><span>زمان جلسه</span><b id="studyTimerSessionLength">۲۵ دقیقه</b></div>
+              <div><span>زمان مطالعه</span><b id="studyTimerElapsed">۰ دقیقه</b></div>
+            </div>
+          </section>
+
+          <section class="timer-v2-config card">
+            <div class="timer-config-head">
+              <div><h3>تنظیم جلسه</h3><span class="muted small">رشته و پایه پیش‌فرض تنظیمات به‌صورت خودکار اعمال می‌شود.</span></div>
+              <span class="timer-live-dot">● ذخیره خودکار</span>
+            </div>
+            <div class="timer-v2-context" id="studyTimerContext">—</div>
+            <div class="timer-setup timer-form-grid">
+              <div class="timer-field timer-v2-wide"><label for="studyTimerSubject">درس مطالعه</label><select id="studyTimerSubject" onchange="setStudyTimerSubject(this.value)"></select></div>
+              <div class="timer-field"><label for="studyTimerMinutes">مدت جلسه</label><div class="input-suffix"><input id="studyTimerMinutes" type="number" min="1" max="240" step="1" value="25" inputmode="numeric" onchange="setStudyTimerCustom(this.value)" onkeydown="if(event.key==='Enter'){this.blur()}"><span>دقیقه</span></div></div>
+              <div class="timer-field"><label for="studyTimerTopic">مبحث <span class="muted">اختیاری</span></label><input id="studyTimerTopic" type="text" maxlength="60" placeholder="مثلاً فصل ۲" onchange="setStudyTimerTopic(this.value)"></div>
+            </div>
+            <div class="preset-title">مدت‌های سریع</div>
+            <div class="timer-presets timer-v2-presets">
+              <button class="timer-preset active" onclick="setStudyTimerPreset(25,this)">۲۵ دقیقه</button>
+              <button class="timer-preset" onclick="setStudyTimerPreset(50,this)">۵۰ دقیقه</button>
+              <button class="timer-preset" onclick="setStudyTimerPreset(90,this)">۹۰ دقیقه</button>
+              <button class="timer-preset custom-preset" onclick="focusStudyTimerCustom()">⏱ زمان دلخواه</button>
+            </div>
+            <div class="timer-v2-info">
+              <div>💾 <span>وضعیت تایمر روی همین دستگاه ذخیره می‌شود.</span></div>
+              <div>📚 <span>با پایان جلسه، پارت مطالعه با مدت واقعی ثبت می‌شود.</span></div>
+            </div>
+            <button class="btn" id="studyTimerLogBtn" onclick="logCurrentTimerSession()" style="width:100%;margin-top:12px">📝 ثبت دستی زمان سپری‌شده</button>
+          </section>
+        </div>
+
+        <div class="timer-v2-pomodoro card">
+          <div class="pomodoro-head">
+            <div>
+              <h3>🍅 حالت چرخه پومودورو</h3>
+              <p class="muted small">فعالش کن تا بعد از هر جلسه فوکوس، استراحت خودکار شروع بشه و دور بعدی خودش آماده بشه.</p>
+            </div>
+            <label class="pomodoro-switch">
+              <input type="checkbox" id="pomodoroModeToggle" onchange="togglePomodoroMode(this)">
+              <span>فعال</span>
+            </label>
+          </div>
+          <div class="pomodoro-stats">
+            <div class="stat"><small class="label">دورهای امروز</small><b id="pomodoroCyclesToday">۰</b></div>
+            <div class="stat"><small class="label">پایبندی به تعهد</small><b id="focusCommitRate">—</b></div>
+          </div>
+          <div class="commit-title">📵 قبل از شروع، به این‌ها دست نمی‌زنم:</div>
+          <div class="commit-chips" id="commitChips">
+            <button type="button" class="commit-chip" data-item="موبایل" onclick="toggleCommitChip(this)">📱 موبایل</button>
+            <button type="button" class="commit-chip" data-item="شبکه اجتماعی" onclick="toggleCommitChip(this)">📡 شبکه اجتماعی</button>
+            <button type="button" class="commit-chip" data-item="بازی" onclick="toggleCommitChip(this)">🎮 بازی</button>
+            <button type="button" class="commit-chip" data-item="یوتیوب" onclick="toggleCommitChip(this)">▶️ یوتیوب</button>
+            <button type="button" class="commit-chip" data-item="پیام‌رسان" onclick="toggleCommitChip(this)">💬 پیام‌رسان</button>
+          </div>
+          <div class="pomodoro-break-box" id="pomodoroBreakBox" style="display:none">
+            <span>☕ در حال استراحت...</span>
+            <b id="pomodoroBreakTime">10:00</b>
+            <button class="btn" type="button" onclick="skipPomodoroBreak()">رد کردن استراحت ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="toolPeriodic" class="tool-panel">
+      <div class="pt-hero">
+        <div>
+          <div class="skill-v7-eyebrow">PERIODIC TABLE</div>
+              <h2>⚗️ جدول تناوبی عناصر</h2>
+          <p class="muted" style="margin:4px 0 0">روی هر عنصر کلیک کن تا اطلاعات کامل + آرایش الکترونی رو ببینی.</p>
+        </div>
+      </div>
+      <div class="pt-wrap"><div class="periodic-table" id="periodicTable"></div></div>
+      <div class="pt-legend">
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#c0392b"></span> فلز قلیایی</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e67e22"></span> قلیایی خاکی</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e0a200"></span> فلز واسطه</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#1f8fc9"></span> پس‌واسطه</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#6c5ce7"></span> شبه‌فلز</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0f9e6b"></span> نافلز</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0984e3"></span> هالوژن</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#7d2ae8"></span> گاز نجیب</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e84393"></span> لانتانید</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#b33939"></span> اکتینید</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#636e72"></span> نامعلوم</div>
+      </div>
+      <div id="ptDetail" class="pt-detail"></div>
+    </div>
+
+    <div id="toolNoise" class="tool-panel">
+      <div class="skill-v7-eyebrow">FOCUS SOUND</div>
+      <h2>🎧 نویز سفید / صدای تمرکز</h2>
+      <p class="muted" style="margin:4px 0 14px">یک صدای پس‌زمینه ثابت پخش کن تا حواس‌پرتی و صداهای اطراف کمتر حس بشه. کاملاً آفلاین و بدون فایل صوتی تولید می‌شه.</p>
+      <div class="noise-types" id="noiseTypes"></div>
+      <div class="noise-player">
+        <button class="btn primary noise-toggle" id="noiseToggleBtn" onclick="toggleNoisePlayback()">▶ پخش</button>
+        <div class="noise-volume">
+          <label>حجم صدا</label>
+          <input id="noiseVolume" type="range" min="0" max="100" value="55" oninput="setNoiseVolume(this.value)">
+        </div>
+        <div class="field-mini">
+          <label>توقف خودکار</label>
+          <select id="noiseAutoStop" onchange="setNoiseAutoStop(this.value)">
+            <option value="0">بدون توقف خودکار</option>
+            <option value="15">۱۵ دقیقه</option>
+            <option value="25">۲۵ دقیقه</option>
+            <option value="45">۴۵ دقیقه</option>
+            <option value="60">۶۰ دقیقه</option>
+          </select>
+        </div>
+      </div>
+      <div class="muted small" id="noiseStatus" style="margin-top:10px">در حال حاضر متوقف است.</div>
+    </div>
+
+    <div id="toolNotes" class="tool-panel">
+      <div class="skill-v7-eyebrow">QUICK NOTES</div>
+      <h2>📝 یادداشت سریع</h2>
+      <p class="muted" style="margin:4px 0 14px">نکته‌ای که حین مطالعه به ذهنت رسید رو همین‌جا سریع ثبت کن، بدون این‌که از صفحه بیرون بری.</p>
+      <div class="note-add">
+        <textarea id="quickNoteText" maxlength="500" placeholder="نکته، فرمول، یا یادآوری خودت رو بنویس..."></textarea>
+        <div class="note-add-row">
+          <select id="quickNoteSubject"><option value="">— بدون دسته —</option></select>
+          <button class="btn primary" onclick="addQuickNote()">➕ افزودن یادداشت</button>
+        </div>
+      </div>
+      <div id="quickNotesList" class="notes-list"></div>
+    </div>
+
+    <div id="toolFormulas" class="tool-panel">
+      <div class="skill-v7-eyebrow">FORMULA SHEET</div>
+      <h2>📐 فرمول‌نامه</h2>
+      <p class="muted" style="margin:4px 0 14px">فرمول‌های پرکاربرد ریاضی، فیزیک و شیمی، یک‌جا و قابل‌جست‌وجو.</p>
+      <input id="formulaSearch" type="text" placeholder="جست‌وجو در فرمول‌ها... مثلاً «مشتق» یا «مول»" oninput="renderFormulaSheet(this.value)">
+      <div id="formulaSheetList" class="formula-list"></div>
+    </div>
+
+    <div id="toolCalc" class="tool-panel">
+      <div class="skill-v7-eyebrow">CALCULATOR</div>
+      <h2>🧮 ماشین‌حساب علمی + مبدل واحد</h2>
+      <div class="calc-subtabs">
+        <button class="calc-subtab active" id="calcSubtabCalc" onclick="switchCalcSubtab('calc')">ماشین‌حساب</button>
+        <button class="calc-subtab" id="calcSubtabConv" onclick="switchCalcSubtab('conv')">مبدل واحد</button>
+      </div>
+
+      <div id="calcPanelCalc" class="calc-panel active">
+        <input id="calcExpr" class="calc-screen" type="text" inputmode="none" readonly value="0">
+        <div class="calc-meta">
+          <button class="calc-deg-btn active" id="calcDegBtn" onclick="setCalcAngleMode('deg')">DEG</button>
+          <button class="calc-deg-btn" id="calcRadBtn" onclick="setCalcAngleMode('rad')">RAD</button>
+        </div>
+        <div class="calc-grid" id="calcGrid"></div>
+      </div>
+
+      <div id="calcPanelConv" class="calc-panel">
+        <div class="conv-cats" id="convCats"></div>
+        <div class="conv-row">
+          <div class="field-mini">
+            <label>مقدار</label>
+            <input id="convFrom" type="number" value="1" inputmode="decimal" oninput="runConversion()">
+          </div>
+          <select id="convFromUnit" onchange="runConversion()"></select>
+          <span class="conv-arrow">=</span>
+          <div class="field-mini">
+            <label>نتیجه</label>
+            <input id="convTo" type="text" readonly value="">
+          </div>
+          <select id="convToUnit" onchange="runConversion()"></select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="routines" class="page">
+<div class="routine-shell">
+  <div class="routine-hero">
+    <div>
+      <span class="section-kicker">برنامه‌ریزی تکرارشونده</span>
+      <h2>🔁 روتین‌های من</h2>
+      <p class="muted">کارهای ثابتت را یک‌بار تعریف کن و هر روز فقط انجام‌شدنشان را ثبت کن.</p>
+    </div>
+    <div class="routine-stats">
+      <div><b id="routineCount">0</b><span>روتین</span></div>
+      <div><b id="routineTodayHint">۰</b><span>امروز</span></div>
+    </div>
+  </div>
+
+  <div class="routine-layout">
+    <div class="card routine-builder">
+      <div class="panel-title"><div class="panel-icon">＋</div><div><h3>روتین جدید</h3><span class="muted small">کمتر از یک دقیقه زمان می‌برد</span></div></div>
+      <div class="routine-form-grid">
+        <div class="routine-field routine-field-wide"><label for="routineName">عنوان</label><input id="routineName" placeholder="مثلاً مرور ریاضی" maxlength="80"></div>
+        <div class="routine-field"><label for="routineType">نوع</label><select id="routineType"><option value="study">📚 درسی</option><option value="nonstudy">🌱 غیردرسی</option></select></div>
+        <div class="routine-field" id="routineStudyField"><label for="routineSubject">درس</label><select id="routineSubject"><option value="">انتخاب درس...</option></select></div>
+        <div class="routine-field"><label for="routineTime">ساعت</label><input id="routineTime" type="time"></div>
+        <div class="routine-field"><label for="routineDuration">مدت</label><div class="input-suffix"><input id="routineDuration" type="number" min="1" max="1440" value="30" inputmode="numeric"><span>دقیقه</span></div></div>
+      </div>
+      <div class="routine-field routine-days-field"><label>روزهای تکرار</label>
+        <div class="routine-days" id="routineDays">
+          <label><input type="checkbox" value="6"><span>شنبه</span></label><label><input type="checkbox" value="0"><span>یکشنبه</span></label><label><input type="checkbox" value="1"><span>دوشنبه</span></label><label><input type="checkbox" value="2"><span>سه‌شنبه</span></label><label><input type="checkbox" value="3"><span>چهارشنبه</span></label><label><input type="checkbox" value="4"><span>پنجشنبه</span></label><label><input type="checkbox" value="5"><span>جمعه</span></label>
+        </div>
+      </div>
+      <div class="routine-field"><label for="routineNote">یادداشت <span class="muted">اختیاری</span></label><textarea id="routineNote" rows="2" maxlength="180" placeholder="مثلاً بعد از صبحانه انجام شود"></textarea></div>
+      <div class="routine-form-actions"><button class="btn primary" id="routineSaveBtn" onclick="addRoutine()">＋ افزودن روتین</button><button class="btn ghost" onclick="clearRoutineForm()">پاک کردن</button></div>
+    </div>
+
+    <div class="card routine-board">
+      <div class="routine-board-head"><div><h3>برنامه فعال من</h3><span class="muted small">ترتیب را با ↑/↓ جابه‌جا کن و هر روتین را ویرایش کن.</span></div><span class="routine-today-badge">امروز: <b id="routineTodayLabel">—</b></span></div>
+      <div id="routineList" class="routine-list"></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="mistakes" class="page">
+<div class="grid">
+  <div class="card span-4">
+    <h2>❌ ثبت اشتباه</h2><p class="muted">اشتباهات تکراری را ثبت کن تا برنامه آن‌ها را دوباره وارد برنامه مطالعه کند.</p>
+    <div class="formgrid">
+      <div><label>درس</label><select id="mistakeSubject"></select></div>
+      <div><label>مبحث</label><input id="mistakeTopic" placeholder="مثلاً تابع"></div>
+      <div><label>نوع اشتباه</label><select id="mistakeType"><option>مفهومی</option><option>بی‌دقتی</option><option>فراموشی</option><option>محاسباتی</option><option>زمان‌بندی</option><option>حل مسئله</option></select></div>
+      <div style="grid-column:1/-1"><label>علت / نکته</label><textarea id="mistakeNote" rows="3" maxlength="300" placeholder="چرا اشتباه شد و دفعه بعد چه کار کنم؟"></textarea></div>
+    </div>
+    <button class="btn primary" onclick="addMistake()">＋ ثبت اشتباه</button>
+  </div>
+  <div class="card span-4"><h3>📊 تحلیل الگوی اشتباه</h3><p class="muted small">نوع اشتباهاتت را بررسی کن — شاید مشکل «مفهومی» نباشد.</p><div id="mistakeAnalytics"></div></div>
+  <div class="card span-8"><div class="smart-plan-head"><div><h2>📒 دفترچه اشتباهات</h2><span class="muted small">مثل جعبه لایتنر: هر اشتباه جعبه و سررسید مرور خودش را دارد (۱، ۳، ۷، ۱۴ روز) و خودش سررسید می‌شود.</span></div><button class="btn" onclick="renderMistakes()">🔄</button></div><div class="leitner-stats" id="mistakeStats" style="margin:10px 0"></div><div id="mistakeList"></div></div>
+</div>
+</section>
+
+<section id="mockExams" class="page">
+<div class="grid">
+  <div class="card span-4">
+    <h2>🧪 ثبت آزمون آزمایشی</h2><p class="muted">تراز و درصد هر درس را بعد از هر آزمون دوره‌ای (قلم‌چی، گاج، سنجش و…) ثبت کن تا روند واقعی پیشرفتت را ببینی.</p>
+    <div class="formgrid">
+      <div><label>پایه تحصیلی</label><select id="mockExamGrade" onchange="setMockExamGradeCurriculum()"><option value="10">دهم</option><option value="11">یازدهم</option><option value="12">دوازدهم</option></select></div>
+      <div><label>رشته تحصیلی</label><select id="mockExamCurriculum" onchange="setMockExamGradeCurriculum()"><option value="experimental">🧬 تجربی</option><option value="mathematics">📐 ریاضی</option><option value="humanities">📚 انسانی</option></select></div>
+    </div>
+    <div class="formgrid">
+      <div><label>تاریخ آزمون (شمسی)</label>
+        <div class="mock-jalali-date">
+          <select id="mockExamDateDay"></select>
+          <select id="mockExamDateMonth"></select>
+          <select id="mockExamDateYear"></select>
+        </div>
+      </div>
+      <div><label>منبع آزمون</label><input id="mockExamSource" maxlength="30" placeholder="مثلاً ماز، خیلی سبز، آرمان، مدرسه..."></div>
+      <div style="grid-column:1/-1"><label>نام آزمون (اختیاری)</label><input id="mockExamName" maxlength="60" placeholder="مثلاً آزمون جامع ۵"></div>
+      <div><label>تراز کل</label><input id="mockExamPercentile" type="number" min="0" max="10000" step="1" placeholder="مثلاً 6200"></div>
+      <div><label>رتبه کشوری (اختیاری)</label><input id="mockExamRank" type="number" min="1" placeholder="مثلاً 1500"></div>
+    </div>
+    <div class="muted small" style="margin:12px 0 6px">درصد هر درس تخصصی (اختیاری — بر اساس پایه و رشته انتخاب‌شده در بالا)</div>
+    <div class="mock-subj-grid" id="mockExamSubjects"></div>
+    <div class="actions" style="margin-top:12px"><button class="btn primary" onclick="addMockExam()">➕ ثبت آزمون</button></div>
+    <div id="examWeakFollowup"></div>
+  </div>
+  <div class="card span-8">
+    <div class="smart-plan-head"><div><h2>📈 روند آزمون‌های آزمایشی</h2><span class="muted small">تراز کل در طول زمان</span></div><button class="btn" onclick="renderMockExams()">🔄</button></div>
+    <div class="leitner-stats" id="mockExamStats" style="margin:10px 0"></div>
+    <div id="mockExamChartWrap"></div>
+    <h3 style="margin-top:16px">📋 تاریخچه آزمون‌ها</h3>
+    <div id="mockExamList"></div>
+  </div>
+</div>
+</section>
+
+<section id="settings" class="page">
+<div class="grid">
+<div class="card span-8">
+<h2>⚙️ تنظیمات سیستم</h2><p class="muted">تمام گزینه‌های زیر مستقیماً روی برنامه و محاسبات اثر می‌گذارند.</p>
+
+<div class="settings-section">
+  <div class="settings-section-title">🎓 پیش‌فرض سیستم</div>
+  <div class="formgrid">
+    <div><label>رشته تحصیلی پیش‌فرض</label>
+      <select id="defaultCurriculum">
+        <option value="">انتخاب کنید...</option>
+        <option value="experimental">🧬 تجربی</option>
+        <option value="mathematics">📐 ریاضی</option>
+        <option value="humanities">📚 انسانی</option>
+      </select>
+    </div>
+    <div><label>پایه تحصیلی پیش‌فرض</label>
+      <select id="defaultGrade">
+        <option value="10">دهم</option>
+        <option value="11">یازدهم</option>
+        <option value="12">دوازدهم</option>
+      </select>
+    </div>
+  </div>
+  <div class="muted small" style="margin-top:8px">
+    با ذخیره، این انتخاب در تمام بخش‌های برنامه (خانه، چک‌لیست، پارت‌های مطالعه، مرکز مهارت‌ها، درس ضعف) اعمال می‌شود.
+  </div>
+</div>
+
+<div class="settings-section">
+  <div class="settings-section-title">⏳ روزشمار کنکور</div>
+  <div class="formgrid">
+    <div><label>تاریخ کنکور (شمسی)</label>
+      <div class="mock-jalali-date">
+        <select id="examDateDay"></select>
+        <select id="examDateMonth"></select>
+        <select id="examDateYear"></select>
+      </div>
+    </div>
+    <div>
+      <label>تاریخ شروع برنامه (شمسی)</label>
+      <div class="mock-jalali-date" id="planStartDateFields" style="margin-top:6px">
+        <select id="planStartDateDay"></select>
+        <select id="planStartDateMonth"></select>
+        <select id="planStartDateYear"></select>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="settings-section">
+  <div class="settings-section-title">🔊 فیدبک لحظه‌ای</div>
+  <p class="muted small">هنگام گرفتن XP یا سکه، یک صدای کوتاه پخش و یک عدد شناور روی صفحه نمایش داده می‌شود.</p>
+  <button class="btn" id="feedbackSoundBtn" onclick="toggleFeedbackSound()">🔊 خاموش کردن صدای امتیاز</button>
+  <div class="muted small" id="feedbackSoundStatus" style="margin-top:6px">وضعیت: فعال</div>
+</div>
+
+<div class="settings-section">
+  <div class="settings-section-title">🔔 یادآوری روتین‌ها</div>
+  <p class="muted small">با فعال‌سازی، تا وقتی برنامه در مرورگر باز است، سر ساعتِ هر روتین یک نوتیفیکیشن نمایش داده می‌شود.</p>
+  <button class="btn" id="notifyRoutinesBtn" onclick="toggleRoutineNotifications()">🔔 فعال‌سازی یادآوری روتین‌ها</button>
+  <div class="muted small" id="notifyRoutinesStatus" style="margin-top:6px">وضعیت: غیرفعال</div>
+</div>
+
+<div class="settings-section">
+  <div class="settings-section-title">🎨 ظاهر و نمایش</div>
+  <div class="formgrid">
+    <div><label>اندازه فونت</label>
+      <select id="baseFontSize" onchange="previewFontSize(this.value)">
+        <option value="14">کوچک</option><option value="15">متوسط کوچک</option>
+        <option value="16" selected>متوسط (پیش‌فرض)</option>
+        <option value="17">بزرگ</option><option value="18">خیلی بزرگ</option><option value="20">بسیار بزرگ</option>
+      </select>
+    </div>
+    <div><label>ضخامت فونت</label>
+      <select id="fontWeight" onchange="previewFontWeight(this.value)">
+        <option value="300">نازک</option><option value="400" selected>نرمال</option>
+        <option value="500">متوسط</option><option value="600">نیمه‌ضخیم</option>
+        <option value="700">ضخیم</option><option value="800">خیلی ضخیم</option>
+      </select>
+    </div>
+    <div><label>فونت فارسی</label>
+      <select id="fontFamily" onchange="previewFontFamily(this.value)">
+        <option value="'Vazirmatn', Tahoma, sans-serif" selected>وزیرمتن (Vazirmatn)</option>
+        <option value="'Shabnam', Tahoma, sans-serif">شبنم (Shabnam)</option>
+        <option value="'Sahel', Tahoma, sans-serif">ساحل (Sahel)</option>
+        <option value="'Samim', Tahoma, sans-serif">صمیم (Samim)</option>
+        <option value="'Gandom', Tahoma, sans-serif">گندم (Gandom)</option>
+        <option value="'Tanha', Tahoma, sans-serif">تنها (Tanha)</option>
+      </select>
+    </div>
+    <div><label>تراکم نمایش دسکتاپ</label>
+      <select id="desktopDensity"><option value="comfortable">راحت</option><option value="compact">فشرده</option></select>
+    </div>
+    <div><label>تم برنامه</label>
+      <select id="appTheme" onchange="previewAppTheme(this.value)">
+        <option value="dark">🌙 تاریک</option>
+        <option value="light">☀️ روشن</option>
+      </select>
+    </div>
+  </div>
+  <div class="font-size-preview" id="fontSizePreview">این یک پیش‌نمایش از اندازه، ضخامت و فونت انتخابی است. «درس بخون!» برنامه مدیریت مطالعه.</div>
+</div>
+<div class="settings-section">
+  <div class="settings-section-title">📚 تنظیمات مطالعه</div>
+  <p class="muted small">هیچ مقدار پیش‌فرضی برای این بخش وجود ندارد؛ همه را مطابق برنامه خودت تعیین کن.</p>
+  <div class="formgrid">
+    <div><label>نام من</label><input id="playerName" maxlength="40" placeholder="نام خودت را وارد کن"></div>
+    <div><label>تعداد پارت مطالعه پیشنهادی روزانه</label><input id="targetEpisodes" type="number" min="1" max="20" placeholder="مثلاً ۷"></div>
+    <div><label>مدت مطالعه هر پارت مطالعه (دقیقه)</label><input id="studyMinutes" type="number" min="5" max="180" placeholder="مثلاً ۵۰"></div>
+    <div><label>مدت استراحت (دقیقه)</label><input id="breakMinutes" type="number" min="1" max="60" placeholder="مثلاً ۱۰"></div>
+    <div><label>سهم زمان برای کنکور سراسری (%)</label><input id="concoursWeight" type="number" min="0" max="100" placeholder="مثلاً ۶۰"></div>
+    <div><label>سهم زمان برای امتحانات نهایی (%)</label><input id="finalWeight" type="number" min="0" max="100" placeholder="مثلاً ۴۰"></div>
+    <div><label>سقف نرم امتیاز روزانه</label><input id="dailyXPSoftCap" type="number" min="100" max="3000" placeholder="مثلاً ۵۰۰"></div>
+    <input id="goldMultiplier" type="hidden" value="1">
+  </div>
+</div>
+<div class="actions"><button class="btn primary" onclick="saveSettings()">💾 ذخیره تنظیمات</button><button class="btn" onclick="loadSettingsForm()">↩ بازنشانی فرم</button></div>
+<div id="settingsStatus" class="muted small"></div>
+</div>
+<div class="card span-4">
+<h2>🧭 تنظیمات سریع</h2>
+<div class="list">
+<div class="quest"><span>رشته پیش‌فرض</span><b id="settingDefaultCurriculum">—</b></div>
+<div class="quest"><span>پایه پیش‌فرض</span><b id="settingDefaultGrade">—</b></div>
+<div class="quest"><span>ساختار پارت مطالعه</span><b id="settingEpisodeFormat">—</b></div>
+<div class="quest"><span>سهم زمان مطالعه کنکور / نهایی</span><b id="settingWeights">—</b></div>
+<div class="quest"><span>ظرفیت روزانه</span><b id="settingCapacity">—</b></div>
+<div class="quest"><span>مأموریت خودکار</span><b id="settingAutoQuest">—</b></div>
+<div class="quest"><span>اندازه فونت</span><b id="settingFontSize">—</b></div>
+<div class="quest"><span>تم برنامه</span><b id="settingAppTheme">—</b></div>
+<div class="quest"><span>ضخامت فونت</span><b id="settingFontWeight">—</b></div>
+</div>
+</div>
+<div class="card span-6"><h2>📦 مدیریت داده</h2><p class="muted">اطلاعات در همین مرورگر ذخیره می‌شود.</p><button class="btn" onclick="exportData()">دانلود نسخه پشتیبان</button><div class="muted small" id="lastBackupInfo" style="margin-top:8px">—</div></div>
+<div class="card span-6"><h2>💡 قوانین</h2><ul class="muted"><li>ظرفیت پیشنهادی فقط پیشنهاد است.</li><li>مدت مطالعه و استراحت از تنظیمات خوانده می‌شود.</li><li>تحلیل اشتباه‌ها پاداش بیشتری می‌دهد.</li><li>این برنامه صرفاً یک ابزار کمکی است و پیشنهادها، تحلیل‌ها و برنامه‌ریزی‌های آن ممکن است دارای خطا یا باگ باشند؛ تصمیم نهایی برای استفاده از این پیشنهادها و هرگونه مسئولیت ناشی از اشتباهات یا خطاهای احتمالی سیستم، بر عهده خود کاربر است.</li></ul></div>
+</div>
+</section>
+<footer>
+  درس بخون! • نسخه تک‌فایلی • ذخیره خودکار در مرورگر
+  <br>
+  <span style="opacity:.75;font-size:.72rem;margin-top:6px;display:inline-block;letter-spacing:.5px">
+    ✨ ساخته شده توسط <b style="color:var(--accent)">میم الف قاف</b> ✨
+  </span>
+</footer>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox card" id="modalBox"></div></div>
+
+<div id="moodModal" class="modal">
+  <div class="modalbox card" style="max-width:620px;width:min(96vw,620px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+      <div>
+        <h2>🎭 حالت امروزت چیه؟</h2>
+        <p class="muted" style="margin:4px 0 0">حالت‌ها کاملاً دستی قابل افزودن، ویرایش و حذف هستند.</p>
+      </div>
+      <button class="btn" type="button" onclick="closeMoodPicker()">✕</button>
+    </div>
+    <div class="mood-current-preview">
+      <span class="big" id="moodPreviewEmoji">📚</span>
+      <div class="txt">
+        <b id="moodPreviewLabel">مطالعه‌گر</b>
+        <small id="moodPreviewMode">حالت دستی</small>
+      </div>
+      <button class="btn" type="button" onclick="enableAutoMood()" title="برگشت به حالت خودکار بر اساس ساعت" style="white-space:nowrap;padding:8px 12px;font-size:.8rem">🕐 خودکار</button>
+    </div>
+    <div class="mood-picker-grid" id="moodGrid"></div>
+    <div class="mood-add-box">
+      <div class="settings-section-title" style="margin-bottom:8px">➕ افزودن حالت جدید</div>
+      <div class="mood-add-form">
+        <input id="moodNewEmoji" maxlength="4" placeholder="🎯" class="mood-emoji-input">
+        <input id="moodNewLabel" maxlength="30" placeholder="نام حالت (مثلاً: پرانرژی)">
+        <button class="btn primary" type="button" onclick="addMood()">افزودن</button>
+      </div>
+      <div class="muted small" style="margin-top:6px">
+        یک ایموجی + یک نام دلخواه وارد کن. برای ویرایش هر حالت روی ✎ و برای حذف روی ✕ بزن.
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="btn" type="button" onclick="resetMoods()">↺ بازنشانی به پیش‌فرض</button>
+      <button class="btn primary" type="button" onclick="closeMoodPicker()">تمام</button>
+    </div>
+  </div>
+</div>
+
+<div id="dailyPlanModal" class="modal">
+  <div class="modalbox card" style="max-width:560px;width:min(96vw,560px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+      <div>
+        <h2>📝 برنامه‌ریز ۱۰دقیقه‌ای</h2>
+        <p class="muted" style="margin:4px 0 0">فقط چند تا انتخاب سریع؛ همین کافیه تا امروزت مسیر داشته باشه.</p>
+      </div>
+      <button class="btn" type="button" onclick="closeDailyPlanner()">✕</button>
+    </div>
+    <div class="muted small" style="margin-bottom:10px">حال‌وهوای فعلی: <b id="dailyPlanMood">—</b> <span style="margin-right:6px">— برای تغییرش از دکمه بالای صفحه استفاده کن.</span></div>
+    <label style="margin-top:4px">اولویت‌های امروز (حداکثر ۳ درس)</label>
+    <div class="plan-subject-list" id="dailyPlanSubjects"></div>
+    <div style="margin-top:12px">
+      <label for="dailyPlanTarget">ظرفیت پیشنهادی امروز (تعداد پارت مطالعه)</label>
+      <input id="dailyPlanTarget" type="number" min="1" max="20" value="7">
+    </div>
+    <div class="actions" style="margin-top:14px">
+      <button class="btn primary" type="button" onclick="saveDailyPlan()">💾 ذخیره برنامه امروز</button>
+      <button class="btn" type="button" onclick="closeDailyPlanner()">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div id="manualQuestModal" class="modal">
+  <div class="modalbox card" style="max-width:980px;width:min(96vw,980px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">
+      <div><h2>🧭 ساخت کوئست جدید</h2><p class="muted">یک مأموریت دقیق بساز.</p></div>
+      <button class="btn" type="button" onclick="closeManualQuestModal()">✕</button>
+    </div>
+    <div class="formgrid">
+      <div style="grid-column:1/-1"><label>عنوان کوئست</label><input id="manualQuestTitle" placeholder="مثلاً تسلط بر تابع درجه دوم"></div>
+      <div><label>درس</label><select id="manualQuestSubject"></select></div>
+      <div><label>پایه</label><select id="manualQuestGrade"><option>دهم</option><option>یازدهم</option><option>دوازدهم</option></select></div>
+      <div><label>نوع کوئست</label><select id="manualQuestType"></select></div>
+      <div><label>تعداد پارت مطالعه</label><input id="manualQuestEpisodes" type="number" min="1" max="20" value="1"></div>
+      <div style="grid-column:1/-1"><label>اولویت</label>
+        <select id="manualQuestPriority">
+          <option value="low">کم</option><option value="normal" selected>عادی</option><option value="high">مهم</option><option value="critical">بحرانی</option><option value="urgent">فوری</option>
+        </select>
+      </div>
+      <div style="grid-column:1/-1"><label>یادداشت / شرط موفقیت</label><textarea id="manualQuestNote" rows="4" placeholder="مثلاً ۳۰ تست آموزشی + تحلیل"></textarea></div>
+    </div>
+    <div class="actions" style="margin-top:14px">
+      <button class="btn primary" type="button" onclick="createManualQuest()">＋ ساخت هدف</button>
+      <button class="btn" type="button" onclick="closeManualQuestModal()">انصراف</button>
+    </div>
+  </div>
+</div>
+
+<div id="taskEditModal" class="modal">
+  <div class="modalbox card" style="max-width:520px;width:min(96vw,520px)">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">
+      <div><h2>✏️ ویرایش تسک</h2><p class="muted">نام و امتیاز را تغییر بده یا تسک را حذف کن.</p></div>
+      <button class="btn" type="button" onclick="closeTaskEditModal()">✕</button>
+    </div>
+    <div class="formgrid">
+      <div style="grid-column:1/-1"><label>نام تسک</label><input id="taskEditName" maxlength="60"></div>
+      <div><label>امتیاز</label><input id="taskEditXP" type="number" min="1" value="5"></div>
+    </div>
+    <div class="actions" style="margin-top:14px">
+      <button class="btn primary" type="button" onclick="saveTaskEdit()">💾 ذخیره</button>
+      <button class="btn danger" type="button" onclick="deleteTaskFromModal()">🗑 حذف تسک</button>
+      <button class="btn" type="button" onclick="closeTaskEditModal()">انصراف</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="reward-fx-layer" id="rewardFx" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
