@@ -538,24 +538,24 @@ english:(function(){
 
 /* ===================== TASKS DATA ===================== */
 const DEFAULT_TASKS=[
-  {id:"p1",cat:"personal",name:"برنامه‌ریزی روز",xp:5,gold:3,icon:"📝"},
-  {id:"p2",cat:"personal",name:"مدیتیشن / تمرکز ۱۰ دقیقه",xp:8,gold:4,icon:"🧘"},
-  {id:"p3",cat:"personal",name:"مطالعه آزاد (کتاب غیردرسی)",xp:10,gold:5,icon:"📖"},
-  {id:"p4",cat:"personal",name:"یادگیری مهارت جدید",xp:12,gold:6,icon:"🎯"},
-  {id:"h1",cat:"home",name:"مرتب کردن اتاق",xp:8,gold:4,icon:"🧹"},
-  {id:"h2",cat:"home",name:"شستن ظرف‌ها",xp:6,gold:3,icon:"🍽️"},
-  {id:"h3",cat:"home",name:"کمک در آشپزی",xp:8,gold:4,icon:"🍳"},
-  {id:"h4",cat:"home",name:"جارو یا تی کشیدن",xp:10,gold:5,icon:"🧽"},
-  {id:"s1",cat:"sport",name:"پیاده‌روی ۲۰ دقیقه",xp:10,gold:5,icon:"🚶"},
-  {id:"s2",cat:"sport",name:"دویدن",xp:15,gold:8,icon:"🏃"},
-  {id:"s3",cat:"sport",name:"حرکات کششی",xp:8,gold:4,icon:"🤸"},
-  {id:"s4",cat:"sport",name:"باشگاه / تمرین قدرتی",xp:20,gold:10,icon:"💪"},
-  {id:"s5",cat:"sport",name:"شنا یا دوچرخه",xp:15,gold:8,icon:"🚴"},
-  {id:"he1",cat:"health",name:"خواب کافی (۷-۸ ساعت)",xp:8,gold:4,icon:"😴"},
-  {id:"he2",cat:"health",name:"نوشیدن ۸ لیوان آب",xp:6,gold:3,icon:"💧"},
-  {id:"he3",cat:"health",name:"مصرف میوه / سبزیجات",xp:6,gold:3,icon:"🍎"},
-  {id:"he4",cat:"health",name:"مسواک قبل خواب",xp:4,gold:2,icon:"🦷"},
-  {id:"he5",cat:"health",name:"دوش گرفتن",xp:5,gold:3,icon:"🚿"}
+  {id:"p1",cat:"personal",name:"برنامه‌ریزی روز",icon:"📝"},
+  {id:"p2",cat:"personal",name:"مدیتیشن / تمرکز ۱۰ دقیقه",icon:"🧘"},
+  {id:"p3",cat:"personal",name:"مطالعه آزاد (کتاب غیردرسی)",icon:"📖"},
+  {id:"p4",cat:"personal",name:"یادگیری مهارت جدید",icon:"🎯"},
+  {id:"h1",cat:"home",name:"مرتب کردن اتاق",icon:"🧹"},
+  {id:"h2",cat:"home",name:"شستن ظرف‌ها",icon:"🍽️"},
+  {id:"h3",cat:"home",name:"کمک در آشپزی",icon:"🍳"},
+  {id:"h4",cat:"home",name:"جارو یا تی کشیدن",icon:"🧽"},
+  {id:"s1",cat:"sport",name:"پیاده‌روی ۲۰ دقیقه",icon:"🚶"},
+  {id:"s2",cat:"sport",name:"دویدن",icon:"🏃"},
+  {id:"s3",cat:"sport",name:"حرکات کششی",icon:"🤸"},
+  {id:"s4",cat:"sport",name:"باشگاه / تمرین قدرتی",icon:"💪"},
+  {id:"s5",cat:"sport",name:"شنا یا دوچرخه",icon:"🚴"},
+  {id:"he1",cat:"health",name:"خواب کافی (۷-۸ ساعت)",icon:"😴"},
+  {id:"he2",cat:"health",name:"نوشیدن ۸ لیوان آب",icon:"💧"},
+  {id:"he3",cat:"health",name:"مصرف میوه / سبزیجات",icon:"🍎"},
+  {id:"he4",cat:"health",name:"مسواک قبل خواب",icon:"🦷"},
+  {id:"he5",cat:"health",name:"دوش گرفتن",icon:"🚿"}
 ];
 const TASK_CATS={
   personal:{name:"شخصی",icon:"👤"},
@@ -566,23 +566,21 @@ const TASK_CATS={
 
 function freshState(){
   const subjects={};
-  Object.keys(SUBJECTS).forEach(k=>subjects[k]={xp:0,level:1,knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}});
+  Object.keys(SUBJECTS).forEach(k=>subjects[k]={knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}});
   return {
-    playerXP:0,gold:0,streak:0,hp:100,energy:100,combo:0,lastDate:null,lastRegenDate:null,
+    streak:0,lastDate:null,lastRegenDate:null,
     settings:{playerName:"",targetEpisodes:null,concoursWeight:null,finalWeight:null,
-      studyMinutes:null,breakMinutes:null,dailyXPSoftCap:null,autoGenerateQuests:false,
-      desktopDensity:"comfortable",goldMultiplier:null,studySettingsConfigured:false,manualWeakSubject:"",
+      studyMinutes:null,breakMinutes:null,autoGenerateQuests:false,
+      desktopDensity:"comfortable",studySettingsConfigured:false,manualWeakSubject:"",
       selectedCurriculum:"",manualStrongSubject:"",manualFocusSubject:"",
       baseFontSize:16,baseFontWeight:400,baseFontFamily:"'Vazirmatn', Tahoma, sans-serif",
       checklistGrade:"10",dashboardGrade:"10",skillGrade:"10",episodeGrade:"10",
       statusGrade:"10",weakCurriculum:"",weakGrade:"10",
 defaultCurriculum:"experimental",defaultGrade:"10",
-moodEmoji:"📚",moodLabel:"مطالعه‌گر",customMoods:null,
-      moodUserSet:false,moodAuto:true,appTheme:"light",
+      appTheme:"dark",
       examDate:"",planStartDate:"",lastBackupAt:null,backupReminderSnoozeUntil:null,notifyRoutines:false,
-      feedbackSound:true,
       mockExamGrade:"10",mockExamCurriculum:""},
-    subjects,episodes:[],quests:[],bosses:[],customRewards:[],achievements:{},history:{},
+    subjects,episodes:[],quests:[],
     lastQuality:"—",leitner:{cards:[]},classes:[],checklists:{},
     checklistVersion:10,customTasks:[],tasksDone:{},taskOverrides:{},hiddenTasks:[],routines:[],routineChecks:{},mistakes:[],smartPlan:null,
     mockExams:[],routineNotifiedLog:null,quickNotes:[]
@@ -592,9 +590,8 @@ let state=JSON.parse(localStorage.getItem(stateKey)||"null")||freshState();
 state.settings=Object.assign(freshState().settings,state.settings||{});
 if(state.settings.studySettingsConfigured!==true){
   state.settings.targetEpisodes=null;state.settings.studyMinutes=null;state.settings.breakMinutes=null;
-  state.settings.concoursWeight=null;state.settings.finalWeight=null;state.settings.dailyXPSoftCap=null;state.settings.goldMultiplier=null;
+  state.settings.concoursWeight=null;state.settings.finalWeight=null;
 }
-if(!Array.isArray(state.customRewards))state.customRewards=[];
 if(!state.leitner)state.leitner={cards:[]};
 if(!Array.isArray(state.leitner.cards))state.leitner.cards=[];
 if(!Array.isArray(state.classes))state.classes=[];
@@ -603,106 +600,21 @@ if(!Array.isArray(state.customTasks))state.customTasks=[];
 if(!state.taskOverrides||typeof state.taskOverrides!=="object")state.taskOverrides={};
 if(!state.tasksDone||typeof state.tasksDone!=="object")state.tasksDone={};
 if(!Array.isArray(state.routines))state.routines=[];
-if(!state.achievementUnlocked||typeof state.achievementUnlocked!=="object")state.achievementUnlocked={};
 if(!state.routineChecks||typeof state.routineChecks!=="object")state.routineChecks={};
 if(!Array.isArray(state.mockExams))state.mockExams=[];
 if(!Array.isArray(state.mistakes))state.mistakes=[];
 if(!Array.isArray(state.quickNotes))state.quickNotes=[];
-Object.keys(SUBJECTS).forEach(k=>{if(!state.subjects[k])state.subjects[k]={xp:0,level:1,knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,topics:{}}});
-
-window.SHOP=[
-  {id:"reward_movie",name:"فیلم",price:150,desc:"یک زمان تفریح بدون عذاب وجدان",icon:"🎬"},
-  {id:"reward_game",name:"زمان بازی",price:120,desc:"۴۵ دقیقه بازی",icon:"🎮"},
-  {id:"reward_snack",name:"خوراکی دلخواه",price:70,desc:"یک میان‌وعده مورد علاقه",icon:"🍫"},
-  {id:"reward_social",name:"استراحت اجتماعی",price:150,desc:"وقت آزاد برای گپ",icon:"💬"},
-  {id:"reward_out",name:"تفریح بیرون",price:250,desc:"یک تفریح کوتاه خارج از خانه",icon:"🌤️"},
-  {id:"reward_big",name:"پاداش ویژه",price:500,desc:"یک جایزه بزرگ که خودت انتخاب می‌کنی",icon:"👑"}
-];
+Object.keys(SUBJECTS).forEach(k=>{if(!state.subjects[k])state.subjects[k]={knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,topics:{}}});
 
 function save(){try{localStorage.setItem(stateKey,JSON.stringify(state))}catch(e){console.warn("save err",e)}}
 function today(){return new Date().toISOString().slice(0,10)}
 function showToast(msg){
   const t=document.getElementById("toast");
   if(t){t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500);}
-  handleRewardFeedback(msg);
-}
-/* ===================== INSTANT FEEDBACK: SOUND + FLOATING REWARDS ===================== */
-let _fxAudioCtx=null;
-function feedbackSoundEnabled(){return state.settings.feedbackSound!==false}
-function playFeedbackSound(kind){
-  if(!feedbackSoundEnabled())return;
-  try{
-    if(!_fxAudioCtx)_fxAudioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    if(_fxAudioCtx.state==="suspended")_fxAudioCtx.resume();
-    const ctx=_fxAudioCtx,now=ctx.currentTime;
-    const notes=kind==="levelup"?[523.25,659.25,783.99,1046.5]:kind==="negative"?[293.66]:[659.25,880];
-    notes.forEach((freq,i)=>{
-      const osc=ctx.createOscillator(),gain=ctx.createGain();
-      osc.type="sine";osc.frequency.value=freq;
-      osc.connect(gain);gain.connect(ctx.destination);
-      const start=now+i*.08;
-      gain.gain.setValueAtTime(0,start);
-      gain.gain.linearRampToValueAtTime(.15,start+.015);
-      gain.gain.exponentialRampToValueAtTime(.0001,start+.3);
-      osc.start(start);osc.stop(start+.32);
-    });
-  }catch(e){}
-}
-function spawnRewardFx(text,type){
-  const layer=document.getElementById("rewardFx");if(!layer)return;
-  const el=document.createElement("div");
-  el.className="reward-fx-bubble"+(type?" "+type:"");
-  el.textContent=text;
-  el.style.setProperty("--fx-x",(Math.random()*50-25).toFixed(1)+"px");
-  layer.appendChild(el);
-  el.addEventListener("animationend",()=>el.remove());
-  setTimeout(()=>{if(el.isConnected)el.remove();},2400);
-}
-function pulseHudStat(id){
-  const el=document.getElementById(id);if(!el)return;
-  el.classList.remove("stat-pulse");void el.offsetWidth;el.classList.add("stat-pulse");
-  setTimeout(()=>el.classList.remove("stat-pulse"),500);
-}
-function handleRewardFeedback(msg){
-  if(!msg)return;
-  const xpMatch=msg.match(/\+(\S+)\s*XP/);
-  const goldMatch=msg.match(/\+(\S+)\s*(?:سکه|💰)/);
-  const isLevelUp=/تبریک|سطح/.test(msg);
-  const isCancel=/^↺|لغو/.test(msg);
-  if(isLevelUp){
-    spawnRewardFx("🎉 Level Up!","levelup");
-    pulseHudStat("playerLevel");
-    playFeedbackSound("levelup");
-    return;
-  }
-  if(!xpMatch&&!goldMatch)return;
-  if(xpMatch){spawnRewardFx((isCancel?"":"+")+xpMatch[1]+" XP",isCancel?"negative":"xp");pulseHudStat("playerXP");}
-  if(goldMatch){spawnRewardFx((isCancel?"":"+")+goldMatch[1]+" 💰",isCancel?"negative":"gold");pulseHudStat("gold");}
-  playFeedbackSound(isCancel?"negative":"positive");
-}
-function updateFeedbackSoundUI(){
-  const btn=document.getElementById("feedbackSoundBtn");
-  const status=document.getElementById("feedbackSoundStatus");
-  const on=feedbackSoundEnabled();
-  if(btn)btn.textContent=on?"🔇 خاموش کردن صدای امتیاز":"🔊 روشن کردن صدای امتیاز";
-  if(status)status.textContent="وضعیت: "+(on?"فعال":"غیرفعال");
-}
-function toggleFeedbackSound(){
-  state.settings.feedbackSound=!feedbackSoundEnabled();
-  save();updateFeedbackSoundUI();
-  if(feedbackSoundEnabled())playFeedbackSound("positive");
 }
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function fmt(n){return Math.round(Number(n)||0).toLocaleString("fa-IR")}
-/* ===================== REBALANCED STUDY ECONOMY ===================== */
-const STUDY_ECONOMY={type:{learn:.90,practice:1,coverage:1.05,review:.82,final:.95,timed:1.10,analysis:1.15,recovery:.85},quality:{poor:.55,normal:.85,good:1,excellent:1.12,exceptional:1.25},difficulty:{easy:.90,normal:1,hard:1.12,veryhard:1.25,nightmare:1.40},maxEpisodeXP:140,maxEpisodeGold:80};
-function threshold(level){level=Math.max(1,+level||1);return Math.round(120*Math.pow(level,1.42))}
-const STUDY_ECONOMY_MIN_MEANINGFUL_MINUTES=10; // کمتر از این، پارت خیلی کوتاه محسوب می‌شود و بونوس اولین پارت روز نمی‌گیرد
-function calculateStudyRewards({type,quality,difficulty,minutes,tests,analysis,completion,subject}){const tm=Math.max(1,Math.min(240,+minutes||50));const t=STUDY_ECONOMY.type[type]||1,q=STUDY_ECONOMY.quality[quality]||1,d=STUDY_ECONOMY.difficulty[difficulty]||1;const combo=1+Math.min(state.combo,5)*.04,repeat=diminishing(subject,type),testBonus=Math.min(30,(+tests||0)*1.2),analysisBonus=analysis?Math.min(20,(+tests||0)*1.5):0;let xp=Math.round(tm*t*q*d*Math.max(.3,completion)*combo*repeat+testBonus+analysisBonus);if(dayEpisodes().length===0&&tm>=STUDY_ECONOMY_MIN_MEANINGFUL_MINUTES)xp+=10;if(state.streak>=3)xp+=Math.min(15,state.streak);xp=Math.min(STUDY_ECONOMY.maxEpisodeXP,Math.max(1,xp));let gold=Math.round(tm/5);if(quality==='excellent')gold+=3;else if(quality==='exceptional')gold+=6;else if(quality==='poor')gold=Math.max(1,gold-3);if(type==='review')gold+=3;if(type==='analysis')gold+=5;if(analysis)gold+=Math.min(8,Math.floor((+tests||0)/10));if(state.streak>=3)gold+=Math.min(8,Math.floor(state.streak/3));gold=Math.min(STUDY_ECONOMY.maxEpisodeGold,Math.max(1,Math.round(gold*(+state.settings.goldMultiplier||1))));return{xp,gold}}
-function levelFromXP(xp){let l=1;while(xp>=threshold(l+1))l++;return l}
 function dayEpisodes(){return state.episodes.filter(e=>e.date===today())}
-function dayXP(){return dayEpisodes().reduce((a,e)=>a+(+e.xp||0),0)}
-function dayGold(){return dayEpisodes().reduce((a,e)=>a+(+e.gold||0),0)}
 function avg(k){const a=Object.values(state.subjects).map(s=>+s[k]||0);return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function avgAccuracy(){const v=Object.values(state.subjects).map(s=>+s.accuracy||0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0}
 
@@ -808,19 +720,19 @@ const SKILL_FINAL_GRADE_RULES = {
 (function(){
   const KEY='studyRPG_theme';
   window.applyTheme=function(t){
-    t=['dark','light'].includes(t)?t:'light';
+    t=['dark','light'].includes(t)?t:'dark';
     document.documentElement.setAttribute('data-theme',t);
     const b=document.getElementById('themeToggle');
-    if(b)b.textContent={light:'☀️',dark:'🌙'}[t]||'☀️';
+    if(b)b.textContent={light:'☀️',dark:'🌙'}[t]||'🌙';
     try{localStorage.setItem(KEY,t)}catch(e){}
   };
   window.previewAppTheme=function(t){applyTheme(t)};
   window.toggleTheme=function(){
-    const cur=document.documentElement.getAttribute('data-theme')||'light';
+    const cur=document.documentElement.getAttribute('data-theme')||'dark';
     applyTheme(cur==='light'?'dark':'light');
     const sel=document.getElementById('appTheme');if(sel)sel.value=document.documentElement.getAttribute('data-theme');
   };
-  let saved='light';try{saved=localStorage.getItem(KEY)||'light'}catch(e){}
+  let saved='dark';try{saved=localStorage.getItem(KEY)||'dark'}catch(e){}
   applyTheme(saved);
 })();
 
@@ -853,230 +765,6 @@ window.switchToPage=function(name){
   if(name==="quests"&&window.renderQuests)renderQuests();
   window.scrollTo({top:0,behavior:"smooth"});
 };
-
-/* ===================== MOOD / STATUS ===================== */
-const MOOD_DEFAULTS=[
-  {emoji:"📚",label:"مطالعه‌گر"},
-  {emoji:"🔥",label:"پرانگیزه"},
-  {emoji:"⚡",label:"پرانرژی"},
-  {emoji:"🎯",label:"هدف‌گرا"},
-  {emoji:"💪",label:"قوی"},
-  {emoji:"🧠",label:"متفکر"},
-  {emoji:"🌟",label:"درخشان"},
-  {emoji:"🚀",label:"در حال پیشرفت"},
-  {emoji:"🦉",label:"شب‌خوان"},
-  {emoji:"☕",label:"کافه‌نشین"},
-  {emoji:"🍀",label:"خوش‌شانس"},
-  {emoji:"👑",label:"پادشاه مطالعه"},
-  {emoji:"🧘",label:"آرام"},
-  {emoji:"🎓",label:"دانشجو"},
-  {emoji:"✍️",label:"تمرکز بالا"},
-  {emoji:"💎",label:"ارزشمند"},
-  {emoji:"🌱",label:"در حال رشد"},
-  {emoji:"🦁",label:"شجاع"}
-];
-const MOOD_GRADIENTS=[
-  "linear-gradient(135deg,#6ee7ff,#9b8cff)",
-  "linear-gradient(135deg,#53e6a6,#6ee7ff)",
-  "linear-gradient(135deg,#ffd166,#ff6b81)",
-  "linear-gradient(135deg,#c56cf0,#7d2ae8)",
-  "linear-gradient(135deg,#ffa751,#e67e22)",
-  "linear-gradient(135deg,#74b9ff,#0984e3)",
-  "linear-gradient(135deg,#f8a5c2,#e84393)",
-  "linear-gradient(135deg,#a29bfe,#6c5ce7)",
-  "linear-gradient(135deg,#f0932b,#b33939)",
-  "linear-gradient(135deg,#00b894,#00cec9)",
-  "linear-gradient(135deg,#55efc4,#00b894)",
-  "linear-gradient(135deg,#fd79a8,#e84393)"
-];
-
-function pickTimeBasedMood(){
-  const h=new Date().getHours();
-  if(h>=5  && h<8 )  return {emoji:"🌅", label:"پگاه‌خیز"};
-  if(h>=8  && h<12)  return {emoji:"☀️", label:"صبح‌کار"};
-  if(h>=12 && h<15)  return {emoji:"🌞", label:"نیمه‌روز"};
-  if(h>=15 && h<18)  return {emoji:"🌤️", label:"بعدازظهر"};
-  if(h>=18 && h<21)  return {emoji:"🌆", label:"غروب‌خوان"};
-  return              {emoji:"🌙", label:"شب‌خوان"};
-}
-
-function getMoods(){
-  if(!Array.isArray(state.settings.customMoods)){
-    state.settings.customMoods = MOOD_DEFAULTS.map(x=>({...x}));
-  }
-  return state.settings.customMoods;
-}
-
-window.openMoodPicker=function(){
-  const m=document.getElementById("moodModal");if(!m)return;
-  renderMoodGrid();
-  updateMoodPreview();
-  m.classList.add("show");
-};
-window.closeMoodPicker=function(){
-  const m=document.getElementById("moodModal");
-  if(m)m.classList.remove("show");
-};
-
-function renderMoodGrid(){
-  const grid=document.getElementById("moodGrid");if(!grid)return;
-  const moods=getMoods();
-  const currentEmoji=state.settings.moodEmoji||"📚";
-  const currentLabel=state.settings.moodLabel||"";
-  if(!moods.length){
-    grid.innerHTML=`<div class="empty" style="grid-column:1/-1">هنوز حالتی نساخته‌ای. از پایین یک ایموجی اضافه کن.</div>`;
-    return;
-  }
-  grid.innerHTML=moods.map((p,i)=>{
-    const isActive=(p.emoji===currentEmoji && p.label===currentLabel);
-    const active=isActive?"active":"";
-    return `<div class="mood-option-wrap">
-      <button type="button" class="mood-option ${active}"
-        onclick="setMood('${esc(p.emoji)}','${esc(p.label)}')"
-        title="${esc(p.label)} — برای ویرایش دکمه ✎ را بزن">${p.emoji}</button>
-      <button type="button" class="mood-edit-btn" onclick="event.stopPropagation();editMood(${i})" title="ویرایش">✎</button>
-      <button type="button" class="mood-del-btn" onclick="event.stopPropagation();deleteMood(${i})" title="حذف">✕</button>
-    </div>`;
-  }).join("");
-}
-
-function updateMoodPreview(){
-  const emojiEl=document.getElementById("moodPreviewEmoji");
-  const labelEl=document.getElementById("moodPreviewLabel");
-  const modeEl=document.getElementById("moodPreviewMode");
-  if(emojiEl)emojiEl.textContent=state.settings.moodEmoji||"📚";
-  if(labelEl)labelEl.textContent=state.settings.moodLabel||"مطالعه‌گر";
-  if(modeEl){
-    if(state.settings.moodAuto){
-      modeEl.textContent="🕐 حالت خودکار بر اساس ساعت روز";
-    }else{
-      modeEl.textContent="✋ حالت دستی — انتخاب خودت";
-    }
-  }
-}
-
-window.setMood=function(emoji,label){
-  state.settings.moodEmoji=emoji;
-  state.settings.moodLabel=label||"حالت";
-  state.settings.moodUserSet=true;
-  state.settings.moodAuto=false;
-  save();
-  applyMoodToHeader();
-  renderMoodGrid();
-  updateMoodPreview();
-  showToast(`Status ثبت شد: ${emoji} ${label||""}`);
-};
-
-window.addMood=function(){
-  const emojiEl=document.getElementById("moodNewEmoji");
-  const labelEl=document.getElementById("moodNewLabel");
-  const emoji=(emojiEl?.value||"").trim();
-  const label=(labelEl?.value||"").trim();
-  if(!emoji){showToast("یک ایموجی وارد کن.");return}
-  const moods=getMoods();
-  if(moods.some(m=>m.emoji===emoji && m.label===label)){
-    showToast("این حالت قبلاً وجود دارد.");return;
-  }
-  moods.push({emoji:emoji.slice(0,4),label:label||"حالت"});
-  state.settings.customMoods=moods;
-  save();
-  if(emojiEl)emojiEl.value="";
-  if(labelEl)labelEl.value="";
-  renderMoodGrid();
-  showToast("حالت جدید اضافه شد.");
-};
-
-window.editMood=function(index){
-  const moods=getMoods();
-  const cur=moods[index];if(!cur)return;
-  const newEmoji=prompt("ایموجی جدید:",cur.emoji);
-  if(newEmoji===null)return;
-  const newLabel=prompt("نام حالت:",cur.label);
-  if(newLabel===null)return;
-  const trimmed=(newEmoji||"").trim();
-  if(!trimmed){showToast("ایموجی نمی‌تواند خالی باشد.");return}
-  const wasCurrent=(cur.emoji===state.settings.moodEmoji && cur.label===state.settings.moodLabel);
-  moods[index]={emoji:trimmed.slice(0,4),label:(newLabel||"").trim()||"حالت"};
-  state.settings.customMoods=moods;
-  if(wasCurrent){
-    state.settings.moodEmoji=moods[index].emoji;
-    state.settings.moodLabel=moods[index].label;
-    applyMoodToHeader();
-  }
-  save();
-  renderMoodGrid();
-  updateMoodPreview();
-  showToast("حالت ویرایش شد.");
-};
-
-window.deleteMood=function(index){
-  const moods=getMoods();
-  const cur=moods[index];if(!cur)return;
-  if(!confirm(`حالت «${cur.emoji} ${cur.label}» حذف شود؟`))return;
-  const wasCurrent=(cur.emoji===state.settings.moodEmoji && cur.label===state.settings.moodLabel);
-  moods.splice(index,1);
-  state.settings.customMoods=moods;
-  if(wasCurrent){
-    if(moods.length){
-      state.settings.moodEmoji=moods[0].emoji;
-      state.settings.moodLabel=moods[0].label;
-    }else{
-      state.settings.moodEmoji="📚";
-      state.settings.moodLabel="مطالعه‌گر";
-    }
-    applyMoodToHeader();
-  }
-  save();
-  renderMoodGrid();
-  updateMoodPreview();
-  showToast("حالت حذف شد.");
-};
-
-window.resetMoods=function(){
-  if(!confirm("لیست حالت‌ها به پیش‌فرض برگردد؟ تغییراتت پاک می‌شود."))return;
-  state.settings.customMoods=MOOD_DEFAULTS.map(x=>({...x}));
-  save();
-  renderMoodGrid();
-  showToast("لیست حالت‌ها بازنشانی شد.");
-};
-
-window.enableAutoMood=function(){
-  state.settings.moodUserSet=false;
-  state.settings.moodAuto=true;
-  save();
-  applyMoodToHeader();
-  renderMoodGrid();
-  updateMoodPreview();
-  showToast("حالت خودکار بر اساس ساعت روز فعال شد.");
-};
-
-function applyMoodToHeader(){
-  const btn=document.getElementById("moodButton");
-  if(!btn)return;
-  if(!state.settings.moodUserSet){
-    const auto=pickTimeBasedMood();
-    state.settings.moodEmoji=auto.emoji;
-    state.settings.moodLabel=auto.label;
-    state.settings.moodAuto=true;
-  }else{
-    state.settings.moodAuto=false;
-  }
-  const c=MOOD_GRADIENTS[Math.floor(Math.random()*MOOD_GRADIENTS.length)];
-  btn.style.background=c;
-  btn.classList.toggle("auto-mode", !!state.settings.moodAuto);
-  btn.textContent=state.settings.moodEmoji||"📚";
-  const modeTag=state.settings.moodAuto?" (خودکار)":"";
-  btn.title=`Status: ${state.settings.moodLabel||""}${modeTag} — کلیک برای تغییر`;
-  const existing=btn.querySelector(".mood-auto-badge");
-  if(existing)existing.remove();
-  if(state.settings.moodAuto){
-    const b=document.createElement("span");
-    b.className="mood-auto-badge";
-    b.textContent="AUTO";
-    btn.appendChild(b);
-  }
-}
-window.applyMoodToHeader=applyMoodToHeader;
 
 /* ===== v1.21 additive tools: intentionally independent of existing study logic ===== */
 let focusTimer=null, focusSeconds=25*60, focusRunning=false;
@@ -1180,7 +868,7 @@ function setStudyTimerSubject(v){
   studyTimerSubject=opt?.value||'';studyTimerSubjectLabel=opt?.dataset.label||'';
   saveOfflineStudyTimer();updateOfflineStudyTimer();
 }
-function setStudyTimerTopic(v){studyTimerTopic=(v||'').trim().slice(0,60);saveOfflineStudyTimer();updateOfflineStudyTimer();}
+function setStudyTimerTopic(v){if(studyTimerRunning)return;studyTimerTopic=(v||'').trim().slice(0,60);saveOfflineStudyTimer();updateOfflineStudyTimer();}
 function formatTimerNumber(n){return new Intl.NumberFormat('fa-IR').format(Math.max(0,Math.round(n)));}
 function updateOfflineStudyTimer(){
   const t=document.getElementById('studyTimerDisplay'),st=document.getElementById('studyTimerStatusText'),status=document.querySelector('.timer-v2-status'),dot=document.getElementById('studyTimerStatusDot'),btn=document.getElementById('studyTimerToggle'),sub=document.getElementById('studyTimerSelectedSubject'),topic=document.getElementById('studyTimerSelectedTopic'),mins=document.getElementById('studyTimerMinutes'),prog=document.getElementById('studyTimerProgress'),pct=document.getElementById('studyTimerPercent'),elapsedEl=document.getElementById('studyTimerElapsed'),lenEl=document.getElementById('studyTimerSessionLength'),label=document.getElementById('studyTimerDisplayLabel');
@@ -1199,7 +887,7 @@ function updateOfflineStudyTimer(){
   if(mins&&!studyTimerRunning)mins.value=Math.round(studyTimerTotal/60);
   if(elapsedEl)elapsedEl.textContent=formatTimerNumber(elapsed/60)+' دقیقه';
   if(lenEl)lenEl.textContent=formatTimerNumber(studyTimerTotal/60)+' دقیقه';
-  const oldTopic=document.getElementById('studyTimerTopic');if(oldTopic&&document.activeElement!==oldTopic&&oldTopic.value!==studyTimerTopic)oldTopic.value=studyTimerTopic;
+  const oldTopic=document.getElementById('studyTimerTopic');if(oldTopic&&oldTopic.value!==studyTimerTopic)oldTopic.value=studyTimerTopic;
 }
 function resyncStudyTimerClock(){
   if(!studyTimerRunning||!studyTimerStartedAt)return;
@@ -1817,25 +1505,14 @@ ensureMockExams();
 function ensureDailyRegen(){
   const d=today();
   if(state.lastRegenDate===d)return;
-  const first=!state.lastRegenDate;
-  state.energy=100;
-  state.hp=first?100:Math.min(100,(+state.hp||0)+25);
   state.lastRegenDate=d;
   save();
 }
 function render(){
   ensureDailyRegen();
-  const pl=levelFromXP(state.playerXP),prev=(pl===1?0:threshold(pl)),next=threshold(pl+1);
-  const pct=Math.min(100,Math.max(0,((state.playerXP-prev)/(next-prev))*100));
   const g=id=>document.getElementById(id);
-  if(g("playerLevel"))g("playerLevel").textContent=fmt(pl);
-  if(g("playerXP"))g("playerXP").textContent=fmt(state.playerXP);
   if(g("streak"))g("streak").textContent=fmt(state.streak);
-  if(g("xpText"))g("xpText").textContent=`${fmt(state.playerXP-prev)} / ${fmt(next-prev)} امتیاز`;
-  if(g("xpPercent"))g("xpPercent").textContent=Math.round(pct)+"%";
-  if(g("playerXPBar"))g("playerXPBar").style.width=pct+"%";
   if(g("todayEpisodes"))g("todayEpisodes").textContent=dayEpisodes().length;
-  if(g("todayXP"))g("todayXP").textContent=fmt(dayXP());
   if(g("lastQuality"))g("lastQuality").textContent=state.lastQuality;
    const _todayEps=dayEpisodes();
   if(g("todayMinutes"))g("todayMinutes").textContent=fmt(_todayEps.reduce((a,e)=>a+(+e.minutes||0),0));
@@ -1918,94 +1595,6 @@ function subjectMatchesGrade(subjKey, grade, curriculum){
   if(gn===12 && isSpecialtySubject(subjKey)) return true;
   return hasTarget;
 }
-/* ===================== DASHBOARD SUBJECT LIST (وضعیت دروس) =====================
-   لیست دقیق دروس تخصصی و عمومی هر پایه/رشته. هر آیتم به کلید موجود در SUBJECTS/state.subjects
-   وصل است تا XP/Level/Knowledge همان درس نمایش داده شود؛ چند عنوان می‌توانند به یک کلید مشترک
-   وصل باشند (مثلاً «زیست شناسی ۱ و ۲» و «زیست شناسی ۳» هر دو به کلید biology). */
-const DASHBOARD_SUBJECT_LIST = {
-  experimental:{
-    "12":[
-      ["زیست شناسی ۱ و ۲ (پایه)","biology"],["زیست شناسی ۳ (دوازدهم)","biology"],
-      ["فیزیک ۱ و ۲ (پایه)","physics"],["فیزیک ۳ (دوازدهم)","physics"],
-      ["شیمی ۱ و ۲ (پایه)","chemistry"],["شیمی ۳ (دوازدهم)","chemistry"],
-      ["ریاضی ۱ و ۲ (پایه)","math"],["ریاضی ۳ (دوازدهم)","math"],
-      ["زمین شناسی (جامع)","geology"],
-      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۳ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۳","english"],
-      ["سلامت و بهداشت","health"],["هویت اجتماعی (برای رشته ریاضی و تجربی)","identity"]
-    ],
-    "11":[
-      ["زیست شناسی ۲","biology"],["فیزیک ۲","physics"],["شیمی ۲","chemistry"],
-      ["ریاضی ۲","math"],["زمین شناسی (جامع)","geology"],
-      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۲ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۲","english"],
-      ["انسان و محیط زیست","humanEnvironment"],["تاریخ معاصر (برای رشته ریاضی و تجربی)","contemporaryHistory"]
-    ],
-    "10":[
-      ["زیست شناسی ۱","biology"],["فیزیک ۱","physics"],["شیمی ۱","chemistry"],["ریاضی ۱","math"],
-      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۱ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۱","english"],
-      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"],
-      ["جغرافیا ایران","geographyIran"]
-    ]
-  },
-  mathematics:{
-    "12":[
-      ["ریاضی ۱ و حسابان ۱ (پایه)","calculus"],["حسابان ۲ (دوازدهم)","calculus"],
-      ["هندسه ۱ و ۲ (پایه)","geometry"],["هندسه ۳ (دوازدهم)","geometry"],
-      ["آمار و احتمال","statistics"],["ریاضیات گسسته","discrete"],
-      ["فیزیک ۱ و ۲ (پایه)","physics"],["فیزیک ۳ (دوازدهم)","physics"],
-      ["شیمی ۱ و ۲ (پایه)","chemistry"],["شیمی ۳ (دوازدهم)","chemistry"],
-      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۳ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۳","english"],
-      ["سلامت و بهداشت","health"],["هویت اجتماعی (برای رشته ریاضی و تجربی)","identity"]
-    ],
-    "11":[
-      ["حسابان ۱","calculus"],["هندسه ۲","geometry"],["آمار و احتمال","statistics"],
-      ["فیزیک ۲","physics"],["شیمی ۲","chemistry"],
-      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۲ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۲","english"],
-      ["انسان و محیط زیست","humanEnvironment"],["تاریخ معاصر (برای رشته ریاضی و تجربی)","contemporaryHistory"]
-    ],
-    "10":[
-      ["ریاضی ۱","math"],["هندسه ۱","geometry"],["فیزیک ۱","physics"],["شیمی ۱","chemistry"],
-      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته ریاضی و تجربی)","dini"],
-      ["عربی ۱ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۱","english"],
-      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"],
-      ["جغرافیا ایران","geographyIran"]
-    ]
-  },
-  humanities:{
-    "12":[
-      ["ریاضی و آمار ۱ و ۲ (پایه)","mathStats"],["ریاضی و آمار ۳ (دوازدهم)","mathStats"],
-      ["علوم و فنون ادبی ۱ و ۲ (پایه)","literaryArts"],["علوم و فنون ادبی ۳ (دوازدهم)","literaryArts"],
-      ["آرایه های ادبی","literaryArts"],
-      ["جامعه شناسی ۱ و ۲ (پایه)","sociology"],["جامعه شناسی ۳ (دوازدهم)","sociology"],
-      ["روان‌شناسی","psychology"],
-      ["عربی تخصصی ۱ و ۲ (پایه)","arabicSpec"],["عربی تخصصی ۳ (دوازدهم)","arabicSpec"],
-      ["تاریخ ۱ و ۲ (پایه)","history"],["تاریخ ۳ (دوازدهم)","history"],
-      ["جغرافیا ۱ و ۲ (پایه)","geography"],["جغرافیا ۳ (دوازدهم)","geography"],
-      ["منطق","logic"],["فلسفه ۱","philosophy"],["فلسفه ۲","philosophy"],["اقتصاد","economics"],
-      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته انسانی)","dini"],["انگلیسی ۳","english"],
-      ["سلامت و بهداشت","health"],["تحلیل فرهنگی (فقط برای رشته انسانی)","culturalAnalysis"]
-    ],
-    "11":[
-      ["ریاضی و آمار ۲","mathStats"],["علوم و فنون ادبی ۲","literaryArts"],
-      ["جامعه شناسی ۲","sociology"],["روان‌شناسی","psychology"],
-      ["عربی تخصصی ۲","arabicSpec"],["تاریخ ۲","history"],["جغرافیا ۲","geography"],
-      ["فلسفه ۱","philosophy"],
-      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته انسانی)","dini"],["انگلیسی ۲","english"],
-      ["انسان و محیط زیست","humanEnvironment"]
-    ],
-    "10":[
-      ["ریاضی و آمار ۱","mathStats"],["علوم و فنون ادبی ۱","literaryArts"],
-      ["جامعه شناسی ۱","sociology"],["عربی تخصصی ۱","arabicSpec"],["تاریخ ۱","history"],
-      ["جغرافیا ایران","geographyIran"],["منطق","logic"],
-      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته انسانی)","dini"],["انگلیسی ۱","english"],
-      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"]
-    ]
-  }
-};
 function renderMiniSubjects(){
   const el=document.getElementById("subjectMini");if(!el)return;
   const picker=document.getElementById("dashboardCurriculum");
@@ -2015,26 +1604,27 @@ function renderMiniSubjects(){
   if(picker)picker.value=key;
   if(gradeSel)gradeSel.value=gr;
   if(!key){el.innerHTML='<div class="empty">رشته تحصیلی را انتخاب کن تا وضعیت دروس نمایش داده شود.</div>';return}
-  const list=(DASHBOARD_SUBJECT_LIST[key]||{})[gr]||[];
-  if(!list.length){el.innerHTML='<div class="empty">درسی برای این پایه یافت نشد.</div>';return}
-  el.innerHTML=list.map(([label,k])=>{
+  // همان فیلتر لیست دروس صفحه «پارت مطالعه» (populateEpisodeSubjects) تا دو لیست همیشه یکی باشند.
+  const visible=curriculumSubjectKeys(key).filter(k=>CHECKLIST_TEMPLATES[k]&&subjectMatchesGrade(k,gr,key));
+  if(!visible.length){el.innerHTML='<div class="empty">درسی برای این پایه یافت نشد.</div>';return}
+  el.innerHTML=visible.map(k=>{
     const v=SUBJECTS[k],s=state.subjects[k];
-    if(!v||!s)return "";
-    return `<div class="subject"><div class="subject-top"><b>${v.icon} ${esc(label)}</b><span class="pill">Lv ${s.level}</span></div>
-      <div class="xpmeta"><span>XP ${fmt(s.xp)}</span><span>${Math.round(s.knowledge)} Know</span></div>
+    const displayName=subjectDisplayName(k,key);
+    const know=Math.round(s.knowledge);
+    return `<div class="subject"><div class="subject-top"><b>${v.icon} ${displayName}</b><span class="pill" style="color:${hubKnowColor(know)}">${know}٪</span></div>
+      <div class="xpmeta"><span>تسلط</span><span>${fmt(s.episodes||0)} جلسه</span></div>
       <div class="progress"><div class="bar" style="width:${Math.min(100,s.knowledge)}%"></div></div></div>`;
   }).join("");
 }
 function renderGlobalStats(){
   const vals={discipline:calcDiscipline(),knowledge:avg("knowledge"),accuracy:avg("accuracy"),speed:avg("speed"),retention:avg("retention"),consistency:avg("consistency")};
-  const names={discipline:"Discipline",knowledge:"Knowledge",accuracy:"Accuracy",speed:"Speed",retention:"Retention",consistency:"Consistency"};
+  const names={discipline:"نظم مطالعه",knowledge:"تسلط",accuracy:"دقت",speed:"سرعت",retention:"ماندگاری",consistency:"پیوستگی"};
   const el=document.getElementById("globalStats");if(!el)return;
   el.innerHTML=Object.entries(vals).map(([k,v])=>`<div style="margin:8px 0"><div class="xpmeta"><span>${names[k]}</span><b>${Math.round(v)}</b></div><div class="progress"><div class="bar" style="width:${Math.min(100,v)}%"></div></div></div>`).join("");
 }
 /* ===================== PROGRESS TREND CHART ===================== */
-let progressChartRange=14,progressChartMetric="xp";
+let progressChartRange=14,progressChartMetric="minutes";
 const PROGRESS_METRIC_META={
-  xp:{label:"XP روزانه",color:"var(--accent)",format:v=>fmt(v)+" XP"},
   minutes:{label:"دقیقه مطالعه روزانه",color:"var(--accent2)",format:v=>fmt(v)+" دقیقه"},
   accuracy:{label:"دقت آزمون روزانه",color:"var(--good)",format:v=>fmt(Math.round(v))+"٪"}
 };
@@ -2044,11 +1634,10 @@ function progressChartDailyData(days){
     const d=new Date(Date.now()-i*86400000);
     const key=d.toISOString().slice(0,10);
     const dayEps=state.episodes.filter(e=>e.date===key);
-    const xp=dayEps.reduce((a,e)=>a+(+e.xp||0),0);
     const minutes=dayEps.reduce((a,e)=>a+(+e.minutes||0),0);
     const tested=dayEps.filter(e=>+e.tests>0);
     const accuracy=tested.length?tested.reduce((a,e)=>a+((+e.correct||0)/(+e.tests||1)*100),0)/tested.length:null;
-    out.push({d,key,xp,minutes,accuracy});
+    out.push({d,key,minutes,accuracy});
   }
   return out;
 }
@@ -2068,7 +1657,7 @@ function renderProgressChart(){
   const meta=PROGRESS_METRIC_META[progressChartMetric];
   const values=data.map(x=>x[progressChartMetric]).filter(v=>v!==null&&v!==undefined);
   const max=Math.max(1,...(progressChartMetric==="accuracy"?[100]:values));
-  const activeDays=data.filter(x=>x.xp>0||x.minutes>0).length;
+  const activeDays=data.filter(x=>x.minutes>0).length;
   const avgVal=values.length?values.reduce((a,b)=>a+b,0)/values.length:0;
   const prevData=progressChartDailyData(progressChartRange*2).slice(0,progressChartRange);
   const prevVals=prevData.map(x=>x[progressChartMetric]).filter(v=>v!==null&&v!==undefined);
@@ -2102,82 +1691,17 @@ function renderProgressChart(){
     </div>`;
 }
 function calcDiscipline(){return Math.min(100,state.episodes.length*1.5+state.streak*2)}
-function comboMultiplier(){return 1+Math.min(state.combo,5)*.05}
-function diminishing(subject,type){
-  const recent=state.episodes.filter(e=>e.date===today()&&e.subject===subject&&e.type===type).length;
-  return recent===0?1:recent===1?.9:recent===2?.75:recent===3?.6:.4;
-}
 function qualityName(q){return {poor:"ضعیف",normal:"عادی",good:"خوب",excellent:"عالی",exceptional:"فوق العاده"}[q]||q}
 
-/* ===================== EPISODES ===================== */
-function addEpisode(){
-  const subject=document.getElementById("epSubject").value,type=document.getElementById("epType").value;
-  if(!subject){showToast("ابتدا رشته و درس را انتخاب کن.");return}
-  const tests=+document.getElementById("epTests").value||0,correct=+document.getElementById("epCorrect").value||0;
-  const wrong=+document.getElementById("epWrong").value||0,blank=+document.getElementById("epBlank").value||0;
-const marked=+document.getElementById("epMarked").value||0;
-  const q=document.getElementById("epQuality").value,d=document.getElementById("epDifficulty").value;
-  const analysis=document.getElementById("epAnalysis").value==="yes";
-  let completion=1;
-  const minutes=+document.getElementById("epMinutes").value||50;
-  const targetMinutes=+state.settings.studyMinutes||50,ratio=minutes/targetMinutes;
-  if(ratio<.5)completion=.3;else if(ratio<.8)completion=.6;else if(ratio<.96)completion=.85;
-  const oldLevel=levelFromXP(state.playerXP);
-  if(q==="poor")state.combo=0;else state.combo=Math.min(6,state.combo+1);
-  updateStreak();
-  let {xp,gold}=calculateStudyRewards({type,quality:q,difficulty:d,minutes,tests,analysis,completion,subject});
-  const beforeTodayXP=dayXP(),cap=+state.settings.dailyXPSoftCap||500;
-  if(beforeTodayXP>=cap)xp=Math.round(xp*.5);
-  else if(beforeTodayXP+xp>cap)xp=Math.round((cap-beforeTodayXP)+(xp-(cap-beforeTodayXP))*.75);
-  const accuracy=tests?Math.max(0,correct/tests*100):0;
-  const e={id:crypto.randomUUID(),date:today(),
-    time:new Date().toLocaleTimeString("fa-IR",{hour:"2-digit",minute:"2-digit"}),
-    subject,grade:document.getElementById("epGrade").value,
-    topic:document.getElementById("epTopic").value||"بدون موضوع",
-    type,minutes,tests,correct,wrong,blank,marked,analysis,quality:q,difficulty:d,xp,gold,combo:state.combo};
-  state.episodes.unshift(e);
-  state.playerXP+=xp;state.gold+=gold;state.lastQuality=qualityName(q);
-  const s=state.subjects[subject];s.xp+=xp;s.level=levelFromXP(s.xp);s.episodes++;
-  s.tests+=tests;s.correct+=correct;s.wrong+=wrong;s.blank+=blank;
-  if(marked>0) s.marked = (s.marked||0) + marked;
-  const k=q==="poor"?-.5:q==="exceptional"?2:q==="excellent"?1.5:q==="good"?1:.5;
-  s.knowledge=Math.max(0,Math.min(100,s.knowledge+k+(type==="learn"?2:type==="review"?1:0)));
-  if(tests)s.accuracy=Math.max(0,Math.min(100,s.accuracy*.7+accuracy*.3));
-  if(type==="timed")s.speed=Math.min(100,s.speed+2);
-  if(type==="review")s.retention=Math.min(100,s.retention+4);
-  s.consistency=Math.min(100,s.consistency+.8);
-  if(e.topic){s.topics[e.topic]||={retention:50,last:today(),seen:0};s.topics[e.topic].seen++;s.topics[e.topic].last=today();s.topics[e.topic].retention=Math.min(100,s.topics[e.topic].retention+15)}
-  state.energy=Math.max(0,state.energy-Math.max(2,Math.round(minutes/6)));
-  state.hp=Math.max(1,state.hp-(q==="poor"?2:0));
-  const newLevel=levelFromXP(state.playerXP);
-  save();render();
-  showToast(`+${fmt(xp)} XP`);
-  if(newLevel>oldLevel)setTimeout(()=>showToast(`🎉 تبریک! به سطح ${fmt(newLevel)} رسیدی!`),500);
-}
-const _mEl=document.getElementById("epMarked");if(_mEl)_mEl.value="0";
+/* ===================== EPISODES =====================
+   NOTE: addEpisode/renderEpisodes are re-defined further below (see
+   "SUBJECT DROPDOWN PATCH") to also store a precise per-grade subject
+   label; that later definition is the one actually used at runtime. */
 function updateStreak(){
   const d=today();if(state.lastDate===d)return;
   const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
   if(state.lastDate===y)state.streak++;else state.streak=1;
   state.lastDate=d;
-}
-function renderEpisodes(){
-  const el=document.getElementById("episodeList");if(!el)return;
-  const arr=state.episodes.slice(0,40);
-  if(!arr.length){el.innerHTML='<div class="empty">هنوز پارت مطالعه‌ای ثبت نشده.</div>';return}
-  el.innerHTML=arr.map(e=>{
-    const v=SUBJECTS[e.subject]||{icon:"📘",name:e.subject};
-    return `<div class="episode ${e.quality==="poor"?"":"done"}">
-      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
-        <b>${v.icon} ${v.name} — ${esc(e.topic)}</b>
-        <span class="tag">${TYPES[e.type]?.name||e.type}</span>
-      </div>
-      <div class="muted small">${e.date} • ${e.time} • ${e.minutes} دقیقه • ${e.tests} تست • ${e.correct}/${e.tests||0} درست${e.marked?` • ✏️ ${e.marked} علامت‌دار`:""}</div>
-      <div style="display:flex;justify-content:space-between;margin-top:7px">
-        <span class="good">+${fmt(e.xp)} XP</span>
-        <span>کیفیت: ${qualityName(e.quality)}</span>
-      </div></div>`;
-  }).join("");
 }
 
 /* ===================== CHECKLIST ===================== */
@@ -2668,7 +2192,7 @@ function renderClasses(){
   </table>`;
 }
 
-/* ===================== QUESTS ===================== */
+/* ===================== TODAY'S TASKS (manual to-dos) ===================== */
 const priorityRank={urgent:4,critical:4,high:3,normal:2,low:1};
 function renderQuests(){
   const all=state.quests.filter(q=>q.date===today()&&q.manual);
@@ -2679,7 +2203,7 @@ function renderQuests(){
   const high=all.filter(q=>["urgent","critical","high"].includes(q.priority));
   const stats=document.getElementById("questBoardStats");
   if(stats)stats.innerHTML=`
-    <div class="quest-stat"><span>کل</span><b>${all.length}</b><small>Quest</small></div>
+    <div class="quest-stat"><span>کل</span><b>${all.length}</b><small>کار</small></div>
     <div class="quest-stat active-stat"><span>فعال</span><b>${active.length}</b><small>در انتظار</small></div>
     <div class="quest-stat done-stat"><span>تکمیل</span><b>${done.length}</b><small>امروز</small></div>
     <div class="quest-stat"><span>اولویت بالا</span><b>${high.length}</b><small>مهم/فوری</small></div>`;
@@ -2692,14 +2216,14 @@ function renderQuests(){
   arr.sort((x,y)=>(x.completed?1:0)-(y.completed?1:0)||(priorityRank[y.priority]||2)-(priorityRank[x.priority]||2));
   const el=document.getElementById("questList");if(!el)return;
   if(!arr.length){
-    el.innerHTML=`<div class="quest-empty-v7"><div>🗺️</div><b>${all.length?"با این فیلتر Questای پیدا نشد.":"امروز هنوز کوئست دستی نساختی."}</b><span>با دکمه «ساخت کوئست» یک مأموریت جدید بساز.</span></div>`;
+    el.innerHTML=`<div class="quest-empty-v7"><div>🗒️</div><b>${all.length?"با این فیلتر کاری پیدا نشد.":"امروز هنوز کاری اضافه نکردی."}</b><span>با دکمه «افزودن کار» یک آیتم جدید بساز.</span></div>`;
     return;
   }
   el.innerHTML=arr.map(q=>{
     const subject=SUBJECTS[q.subject]||{name:q.subject||"عمومی",icon:"🎯"};
     const isDone=q.completed||q.done===true;
     const pr={urgent:"فوری",critical:"بحرانی",high:"مهم",normal:"عادی",low:"کم"}[q.priority]||"عادی";
-    const type=TYPES[q.type]?.name||q.type||"مأموریت";
+    const type=TYPES[q.type]?.name||q.type||"کار";
     return `<article class="quest-v7 ${isDone?"is-done":""} priority-${q.priority||"normal"}" data-id="${esc(q.id)}">
       <div class="quest-v7-accent"></div>
       <div class="quest-v7-icon">${subject.icon}</div>
@@ -2717,7 +2241,7 @@ function renderQuests(){
         </div>
       </div>
       <div class="quest-v7-actions">
-        <button class="btn ${isDone?"":"primary"}" ${isDone?"disabled":""} onclick="completeQuest('${esc(q.id)}')">${isDone?"✓ انجام شد":"انجام دادم"}</button>
+        <button class="btn ${isDone?"":"primary"}" ${isDone?"disabled":""} onclick="completeQuest('${esc(q.id)}')">${isDone?"✓ انجام شد":"✓ انجام شد"}</button>
         <button class="btn danger" onclick="deleteQuest('${esc(q.id)}')">🗑 حذف</button>
       </div>
     </article>`;
@@ -2727,17 +2251,15 @@ window.completeQuest=function(id){
   const q=state.quests.find(x=>String(x.id)===String(id));
   if(!q||q.completed||q.done===true)return;
   q.completed=true;q.done=true;
-  state.gold=(+state.gold||0)+5;
-  state.energy=Math.max(0,(+state.energy||0)-2);
-  save();render();showToast("هدف انجام شد ✓");
+  save();render();showToast("کار انجام شد ثبت شد.");
 };
 window.deleteQuest=function(id){
   const i=state.quests.findIndex(q=>String(q.id)===String(id));
-  if(i<0){showToast("Quest پیدا نشد.");return}
+  if(i<0){showToast("این کار پیدا نشد.");return}
   const q=state.quests[i];
-  const label=q.title||SUBJECTS[q.subject]?.name||"این Quest";
+  const label=q.title||SUBJECTS[q.subject]?.name||"این کار";
   if(!confirm(`«${label}» حذف شود؟`))return;
-  state.quests.splice(i,1);save();render();showToast("Quest حذف شد.");
+  state.quests.splice(i,1);save();render();showToast("حذف شد.");
 };
 window.openManualQuestModal=function(){
   const m=document.getElementById("manualQuestModal");if(!m)return;
@@ -2755,7 +2277,7 @@ window.closeManualQuestModal=function(){
 };
 window.createManualQuest=function(){
   const title=document.getElementById("manualQuestTitle")?.value.trim();
-  if(!title){showToast("عنوان کوئست را وارد کن.");return}
+  if(!title){showToast("عنوان کار را وارد کن.");return}
   state.quests.push({
     id:"manual_"+Date.now(),date:today(),title,
     subject:document.getElementById("manualQuestSubject")?.value||"",
@@ -2766,10 +2288,10 @@ window.createManualQuest=function(){
     note:document.getElementById("manualQuestNote")?.value.trim()||"",
     completed:false,done:false,manual:true
   });
-  save();closeManualQuestModal();render();showToast("کوئست جدید ساخته شد.");
+  save();closeManualQuestModal();render();showToast("کار جدید اضافه شد.");
 };
 
-/* ===================== TASKS ===================== */
+/* ===================== DAILY HABITS (formerly "tasks") ===================== */
 function getAllTasks(){
   const overrides=state.taskOverrides||{};
   const hidden=Array.isArray(state.hiddenTasks)?state.hiddenTasks:[];
@@ -2786,74 +2308,35 @@ window.toggleTask=function(taskId){
   const wasDone=state.tasksDone[taskId]===today();
   if(wasDone){
     delete state.tasksDone[taskId];
-    state.playerXP=Math.max(0,(+state.playerXP||0)-(t.xp||0));
-    state.gold=Math.max(0,(+state.gold||0)-(t.gold||0));
-    showToast(`↺ لغو: ${t.name}`);
+    showToast(`↺ لغو شد: ${t.name}`);
   } else {
     state.tasksDone[taskId]=today();
-    state.playerXP=(+state.playerXP||0)+(t.xp||0);
-    state.gold=(+state.gold||0)+(t.gold||0);
-    showToast(`✓ +${t.xp} XP`);
+    showToast(`✓ ${t.name}`);
   }
   save();render();
 };
 window.addCustomTask=function(cat){
   const nameEl=document.getElementById(`taskName_${cat}`);
-  const xpEl=document.getElementById(`taskXP_${cat}`);
-  const goldEl=document.getElementById(`taskGold_${cat}`);
   const name=(nameEl?.value||"").trim();
-  if(!name){showToast("اسم تسک را وارد کن.");return}
-  const xp=Math.max(1,+xpEl?.value||5);
-  const gold=Math.max(0,+goldEl?.value||2);
+  if(!name){showToast("اسم عادت را وارد کن.");return}
   if(!Array.isArray(state.customTasks)) state.customTasks=[];
-  state.customTasks.push({id:"ct_"+Date.now(),cat,name,xp,gold,icon:"⭐"});
+  state.customTasks.push({id:"ct_"+Date.now(),cat,name,icon:"⭐"});
   if(nameEl)nameEl.value="";
-  if(xpEl)xpEl.value="5";
-  if(goldEl)goldEl.value="2";
   save();render();
-  showToast("تسک اضافه شد.");
+  showToast("اضافه شد.");
 };
 window.deleteCustomTask=function(taskId){
-  if(!confirm("این تسک حذف شود؟"))return;
+  if(!confirm("این مورد حذف شود؟"))return;
   state.customTasks=(state.customTasks||[]).filter(t=>t.id!==taskId);
   if(state.tasksDone) delete state.tasksDone[taskId];
   save();render();
-  showToast("تسک حذف شد.");
-};
-window.editTask=function(taskId){
-  const tasks=getAllTasks();
-  const t=tasks.find(x=>x.id===taskId);
-  if(!t)return;
-  const newName=prompt("نام تسک:",t.name);
-  if(newName===null)return;
-  const name=newName.trim();
-  if(!name){showToast("نام تسک نمی‌تواند خالی باشد.");return}
-  const newXpRaw=prompt("امتیاز XP:",String(t.xp));
-  if(newXpRaw===null)return;
-  const xp=Math.max(1,Math.round(+newXpRaw)||t.xp);
-  const gold=t.gold;
-  if(String(t.id).startsWith("ct_")){
-    const ct=(state.customTasks||[]).find(x=>x.id===taskId);
-    if(ct){ct.name=name;ct.xp=xp;ct.gold=gold;}
-  } else {
-    if(!state.taskOverrides||typeof state.taskOverrides!=="object")state.taskOverrides={};
-    state.taskOverrides[taskId]={name,xp,gold};
-  }
-  save();render();
-  showToast("تسک ویرایش شد.");
-};
-window.resetTaskOverride=function(taskId){
-  if(!confirm("این تسک به حالت پیش‌فرض برگردد؟"))return;
-  if(state.taskOverrides)delete state.taskOverrides[taskId];
-  save();render();
-  showToast("تسک به حالت پیش‌فرض برگشت.");
+  showToast("حذف شد.");
 };
 let editingTaskId=null;
 window.openTaskEditModal=function(id){
   const t=getAllTasks().find(x=>x.id===id);if(!t)return;
   editingTaskId=id;
   document.getElementById('taskEditName').value=t.name||'';
-  document.getElementById('taskEditXP').value=t.xp||5;
   document.getElementById('taskEditModal').classList.add('show');
   setTimeout(()=>document.getElementById('taskEditName')?.focus(),50);
 };
@@ -2864,21 +2347,19 @@ window.closeTaskEditModal=function(){
 window.saveTaskEdit=function(){
   if(!editingTaskId)return;
   const name=(document.getElementById('taskEditName').value||'').trim();
-  if(!name){showToast('نام تسک نمی‌تواند خالی باشد.');return}
-  const xp=Math.max(1,Math.round(+document.getElementById('taskEditXP').value||5));
-  const gold=(getAllTasks().find(x=>x.id===editingTaskId)||{}).gold||0;
+  if(!name){showToast('نام نمی‌تواند خالی باشد.');return}
   if(String(editingTaskId).startsWith('ct_')){
     const ct=(state.customTasks||[]).find(x=>x.id===editingTaskId);
-    if(ct){ct.name=name;ct.xp=xp;ct.gold=gold;}
+    if(ct){ct.name=name;}
   } else {
     if(!state.taskOverrides||typeof state.taskOverrides!=='object')state.taskOverrides={};
-    state.taskOverrides[editingTaskId]={name,xp,gold};
+    state.taskOverrides[editingTaskId]={name};
   }
-  save();render();closeTaskEditModal();showToast('تسک ویرایش شد.');
+  save();render();closeTaskEditModal();showToast('ویرایش شد.');
 };
 window.deleteTask=function(id){
   const t=getAllTasks().find(x=>x.id===id);if(!t)return;
-  if(!confirm(`تسک «${t.name}» حذف شود؟`))return;
+  if(!confirm(`«${t.name}» حذف شود؟`))return;
   if(String(id).startsWith('ct_')){
     state.customTasks=(state.customTasks||[]).filter(x=>x.id!==id);
   } else {
@@ -2887,7 +2368,7 @@ window.deleteTask=function(id){
   }
   if(state.tasksDone)delete state.tasksDone[id];
   if(state.taskOverrides)delete state.taskOverrides[id];
-  save();render();showToast('تسک حذف شد.');
+  save();render();showToast('حذف شد.');
 };
 window.deleteTaskFromModal=function(){if(!editingTaskId)return;const id=editingTaskId;closeTaskEditModal();deleteTask(id);};
 function renderTasks(){
@@ -2896,12 +2377,8 @@ function renderTasks(){
   if(!grid) return;
   const all=getAllTasks();
   const doneCount=all.filter(t=>isTaskDoneToday(t.id)).length;
-  const totalXP=all.filter(t=>isTaskDoneToday(t.id)).reduce((a,t)=>a+t.xp,0);
-  const totalGold=all.filter(t=>isTaskDoneToday(t.id)).reduce((a,t)=>a+t.gold,0);
   if(summary)summary.innerHTML=`
-    <div class="ts-item"><b>${doneCount}/${all.length}</b><span>انجام‌شده</span></div>
-    <div class="ts-item"><b style="color:var(--accent)">${totalXP}</b><span>XP امروز</span></div>
-`;
+    <div class="ts-item"><b>${doneCount}/${all.length}</b><span>انجام‌شده امروز</span></div>`;
   grid.innerHTML=Object.entries(TASK_CATS).map(([catId,cat])=>{
     const catTasks=all.filter(t=>t.cat===catId);
     const doneCountCat=catTasks.filter(t=>isTaskDoneToday(t.id)).length;
@@ -2914,15 +2391,12 @@ function renderTasks(){
       <div class="task-list">
         ${catTasks.map(t=>{
           const done=isTaskDoneToday(t.id);
-          const isCustom=t.id.startsWith("ct_");
-          const isOverridden=!isCustom&&!!(state.taskOverrides||{})[t.id];
           return `<div class="task-item ${done?"done":""}" onclick="toggleTask('${t.id}')">
             <div class="task-check"></div>
             <div class="task-info">
               <span class="task-name"><span class="task-icon">${t.icon||"⭐"}</span>${esc(t.name)}</span>
             <div class="task-reward" onclick="event.stopPropagation()">
-  <span class="tr-xp">+${t.xp} XP</span>
-  <div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">
+  <div style="display:flex;gap:3px;justify-content:flex-end">
     <span class="task-edit" onclick="event.stopPropagation();openTaskEditModal('${t.id}')" title="ویرایش">✏️</span>
     <span class="task-delete" onclick="event.stopPropagation();deleteTask('${t.id}')" title="حذف">🗑</span>
   </div>
@@ -2931,24 +2405,14 @@ function renderTasks(){
         }).join("")}
       </div>
       <div class="task-add-row">
-        <input class="tn" id="taskName_${catId}" maxlength="60" placeholder="تسک جدید...">
-        <input class="tx" id="taskXP_${catId}" type="number" min="1" value="5" title="XP">
+        <input class="tn" id="taskName_${catId}" maxlength="60" placeholder="مورد جدید...">
         <button class="btn primary" onclick="addCustomTask('${catId}')">➕</button>
       </div>
     </div>`;
   }).join("");
 }
 
-/* ===================== SKILL TREE ===================== */
-function tierFor(level,knowledge){
-  const score=(+level||1)*10+(+knowledge||0)/10;
-  if(score>=600)return{name:"Diamond",cls:"tier-diamond",icon:"💎"};
-  if(score>=300)return{name:"Platinum",cls:"tier-platinum",icon:"🌟"};
-  if(score>=150)return{name:"Gold",cls:"tier-gold",icon:"🥇"};
-  if(score>=70)return{name:"Silver",cls:"tier-silver",icon:"🥈"};
-  if(score>=20)return{name:"Bronze",cls:"tier-bronze",icon:"🥉"};
-  return{name:"Novice",cls:"",icon:"🪨"};
-}
+/* ===================== SUBJECT MASTERY MAP ===================== */
 const SKILL_CONCOURS_BOOKS={
   experimental:{
     "10":["زیست شناسی ۱","شیمی ۱","فیزیک ۱ تجربی","ریاضی ۱"],
@@ -2968,7 +2432,7 @@ const SKILL_CONCOURS_BOOKS={
 };
 const SKILL_BOOK_ICONS={"زیست شناسی":"🧬","شیمی":"⚗️","فیزیک":"⚛️","ریاضی":"🧮","هندسه":"📐","حسابان":"∫","آمار و احتمال":"📊","ریاضیات گسسته":"🔢","زمین شناسی":"🌍","منطق":"🔎","جغرافیا":"🗺️","تاریخ":"🏛️","اقتصاد":"💰","علوم و فنون":"✒️","جامعه شناسی":"👥","فلسفه":"💭","روان":"🧠","عربی":"📝"};
 function skillBookIcon(name){const k=Object.keys(SKILL_BOOK_ICONS).find(x=>name.startsWith(x)||name.includes(x));return SKILL_BOOK_ICONS[k]||'📘'}
-function skillBookState(id){state.skillBooks=state.skillBooks||{};return state.skillBooks[id]||(state.skillBooks[id]={xp:0,level:1,knowledge:0,accuracy:0,retention:0,episodes:0});}
+function skillBookState(id){state.skillBooks=state.skillBooks||{};return state.skillBooks[id]||(state.skillBooks[id]={knowledge:0,accuracy:0,retention:0,episodes:0});}
 function skillBookCount(curriculum, grade){return (SKILL_CONCOURS_BOOKS[curriculum]?.[String(grade)]||[]).length;}
 function skillBookCountLabel(curriculum, grade){return `${fmt(skillBookCount(curriculum,grade))} درس کنکور`;}
 
@@ -2995,8 +2459,8 @@ const SKILL_SECONDTERM_BOOKS_11={
   mathematics:["تاریخ معاصر","انسان و محیط زیست","شیمی ۲","حسابان ۲","آمار و احتمال","زمین شناسی"],
   humanities:["انسان و محیط","فلسفه ۱","علوم و فنون ۲","ریاضی و آمار ۲","جغرافیا ۲","روان‌شناسی"]
 };
-function skillFinalBookState(curriculum,grade,name){state.skillFinalBooks=state.skillFinalBooks||{};const id=`${curriculum}_${grade}_${name}`;return state.skillFinalBooks[id]||(state.skillFinalBooks[id]={xp:0,level:1,knowledge:0,accuracy:0,retention:0,episodes:0});}
-function skillSecondTermBookState(curriculum,grade,name){state.skillSecondTermBooks=state.skillSecondTermBooks||{};const id=`${curriculum}_${grade}_${name}`;return state.skillSecondTermBooks[id]||(state.skillSecondTermBooks[id]={xp:0,level:1,knowledge:0,accuracy:0,retention:0,episodes:0});}
+function skillFinalBookState(curriculum,grade,name){state.skillFinalBooks=state.skillFinalBooks||{};const id=`${curriculum}_${grade}_${name}`;return state.skillFinalBooks[id]||(state.skillFinalBooks[id]={knowledge:0,accuracy:0,retention:0,episodes:0});}
+function skillSecondTermBookState(curriculum,grade,name){state.skillSecondTermBooks=state.skillSecondTermBooks||{};const id=`${curriculum}_${grade}_${name}`;return state.skillSecondTermBooks[id]||(state.skillSecondTermBooks[id]={knowledge:0,accuracy:0,retention:0,episodes:0});}
 function skillFinalSubjects(curriculum, grade, finalKeys){
   const keys = Array.isArray(finalKeys) ? finalKeys : (SKILL_FINAL_BOOKS[curriculum]?.[String(grade)] || []);
   const rule = (SKILL_FINAL_GRADE_RULES[curriculum] || {})[String(grade)];
@@ -3010,7 +2474,7 @@ function skillFinalSubjects(curriculum, grade, finalKeys){
 function skillSecondTermSubjects(curriculum,grade){return String(grade)==='11'?(SKILL_SECONDTERM_BOOKS_11[curriculum]||[]):[]}
 const SKILL_FINAL_ICON_RULES=[[/زیست شناسی/,'🧬'],[/شیمی/,'⚗️'],[/فیزیک/,'⚛️'],[/ریاضی/,'🧮'],[/هندسه/,'📐'],[/حسابان/,'∫'],[/گسسته/,'🔢'],[/زمین شناسی/,'🌍'],[/فارسی/,'📖'],[/دین و زندگی/,'📜'],[/انگلیسی/,'🔤'],[/عربی/,'📝'],[/جغرافیا/,'🗺️'],[/تاریخ/,'🏛️'],[/آمادگی دفاعی/,'🛡️'],[/تفکر و سواد رسانه‌ای/,'📱'],[/سلامت و بهداشت/,'❤️‍🩹'],[/هویت اجتماعی/,'🧑‍🤝‍🧑'],[/علوم و فنون/,'✒️'],[/منطق/,'🔎'],[/جامعه شناسی/,'👥'],[/فلسفه/,'💭']];
 function skillFinalBookIcon(name){const r=SKILL_FINAL_ICON_RULES.find(([re])=>re.test(name));return r?r[1]:'📘'}
-function renderSkillSecondTermCard(c,gr,name){const st=skillSecondTermBookState(c,gr,name),xp=+st.xp||0,lv=+st.level||1,know=Math.round(+st.knowledge||0);const next=threshold(lv+1),prev=lv<=1?0:threshold(lv),pct=Math.max(0,Math.min(100,(xp-prev)/Math.max(1,next-prev)*100)),tier=tierFor(lv,know);return `<article class="skill-v11-card ${tier.cls}"><div class="skill-v11-head"><div class="skill-v11-icon">${skillFinalBookIcon(name)}</div><div class="skill-v11-name"><b>${esc(name)}</b><small>${tier.icon} ${tier.name} • نوبت دوم</small></div><div class="skill-v11-level">Lv ${lv}</div></div><div class="skill-v11-progress-wrap"><div class="skill-v11-progress-meta"><span>${fmt(xp)} XP</span><b>${know}% تسلط</b></div><div class="skill-v11-bar"><i style="width:${pct}%"></i></div></div><div class="skill-v11-chips"><div class="skill-v11-chip"><b>${Math.round(+st.accuracy||0)}%</b>دقت</div><div class="skill-v11-chip"><b>${Math.round(+st.retention||0)}%</b>ماندگاری</div><div class="skill-v11-chip"><b>${+st.episodes||0}</b>جلسه</div></div></article>`}
+function renderSkillSecondTermCard(c,gr,name){const st=skillSecondTermBookState(c,gr,name),know=Math.round(+st.knowledge||0);return `<article class="skill-v11-card"><div class="skill-v11-head"><div class="skill-v11-icon">${skillFinalBookIcon(name)}</div><div class="skill-v11-name"><b>${esc(name)}</b><small>نوبت دوم</small></div></div><div class="skill-v11-progress-wrap"><div class="skill-v11-progress-meta"><b style="color:${hubKnowColor(know)}">${know}% تسلط</b></div><div class="skill-v11-bar"><i style="width:${know}%"></i></div></div><div class="skill-v11-chips"><div class="skill-v11-chip"><b>${Math.round(+st.accuracy||0)}%</b>دقت</div><div class="skill-v11-chip"><b>${Math.round(+st.retention||0)}%</b>ماندگاری</div><div class="skill-v11-chip"><b>${+st.episodes||0}</b>جلسه</div></div></article>`}
 
 function skillLastStudy(c,gr,name){
   const keys=Object.keys(SUBJECTS);
@@ -3021,7 +2485,7 @@ function skillLastStudy(c,gr,name){
 }
 function skillDaysSince(date){if(!date)return 999;const a=new Date(String(date).slice(0,10));const b=new Date();a.setHours(12,0,0,0);b.setHours(12,0,0,0);return Math.max(0,Math.round((b-a)/86400000));}
 function skillTierRank(knowledge){const k=+knowledge||0;return k>=80?4:k>=60?3:k>=40?2:k>=20?1:0}
-function skillMasteryRank(avg){const a=+avg||0;if(a>=85)return ['👑','استاد'];if(a>=70)return ['💎','مسلط'];if(a>=50)return ['🥇','در حال پیشرفت'];return ['🥉','مبتدی']}
+function skillMasteryRank(avg){const a=+avg||0;if(a>=85)return ['🟢','استاد'];if(a>=70)return ['🟢','مسلط'];if(a>=50)return ['🟡','در حال پیشرفت'];return ['🔴','مبتدی']}
 function skillFilterState(){return state.settings.skillFilter||'all'}
 function skillSortState(){return state.settings.skillSort||'default'}
 window.setSkillViewFilter=function(v){state.settings.skillFilter=v||'all';save();if(window.renderSkillHub)renderSkillHub();}
@@ -3077,11 +2541,10 @@ function hubHeatmap(){
   for(let i=days-1;i>=0;i--){
     const d=new Date(t);d.setDate(d.getDate()-i);
     const k=localKey(d);
-    let xp=0,done=false;
-    (state.episodes||[]).forEach(e=>{if(String(e.date||'').slice(0,10)===k){xp+=+e.xp||0;done=true}});
-    (state.quests||[]).forEach(q=>{if(String(q.date||'').slice(0,10)===k&&(q.completed||q.done))xp+=+q.xp||+q.rewardXP||5});
-    const lvl=!done&&xp===0?0:xp<60?1:xp<150?2:xp<300?3:4;
-    const tip=`${new Intl.DateTimeFormat("fa-IR",{month:"numeric",day:"numeric"}).format(d)} • ${lvl?fmt(xp)+' XP':'بدون فعالیت'}`;
+    let minutes=0,done=false;
+    (state.episodes||[]).forEach(e=>{if(String(e.date||'').slice(0,10)===k){minutes+=+e.minutes||0;done=true}});
+    const lvl=!done&&minutes===0?0:minutes<30?1:minutes<75?2:minutes<150?3:4;
+    const tip=`${new Intl.DateTimeFormat("fa-IR",{month:"numeric",day:"numeric"}).format(d)} • ${lvl?fmt(minutes)+' دقیقه':'بدون فعالیت'}`;
     cells+=`<div class="hub-heat-cell l${lvl}${i===0?' today':''}" data-tip="${esc(tip)}"></div>`;
   }
   return `<div class="hub-heatmap">${cells}</div>
@@ -3129,21 +2592,18 @@ function hubSuggestions(c,gr){
 }
 function hubBookCard(c,gr,e){
   const st=hubEntryState(c,gr,e);
-  const xp=+st.xp||0,lv=+st.level||1,know=Math.round(+st.knowledge||0),acc=Math.round(+st.accuracy||0),ret=Math.round(+st.retention||0);
-  const next=threshold(lv+1),prev=lv<=1?0:threshold(lv);
-  const pct=Math.max(0,Math.min(100,(xp-prev)/Math.max(1,next-prev)*100));
-  const tier=tierFor(lv,know);
+  const know=Math.round(+st.knowledge||0),acc=Math.round(+st.accuracy||0),ret=Math.round(+st.retention||0);
   const last=skillLastStudy(c,gr,e.name),days=skillDaysSince(last);
   const open=state.settings.hubOpenBook===hubBookId(e)?'open':'';
   const tree=hubBookTreeHtml(c,gr,e);
-  return `<article class="hub-book ${tier.cls} ${open}" id="${hubBookId(e)}" onclick="window.hubToggleBook('${hubBookId(e)}',event)">
+  return `<article class="hub-book ${open}" id="${hubBookId(e)}" onclick="window.hubToggleBook('${hubBookId(e)}',event)">
     <div class="hub-book-head">
       <div class="hub-book-icon">${hubEntryIcon(e)}</div>
-      <div class="hub-book-name"><b>${esc(e.name)}</b><small>${tier.icon} ${tier.name} • ${hubEntryGroupLabel(e)}</small></div>
-      <div class="hub-book-level">Lv ${fmt(lv)}</div>
+      <div class="hub-book-name"><b>${esc(e.name)}</b><small>${hubEntryGroupLabel(e)}</small></div>
+      <div class="hub-book-level" style="color:${hubKnowColor(know)}">${know}٪</div>
     </div>
-    <div class="hub-book-bar"><i style="width:${pct}%"></i></div>
-    <div class="hub-book-xpmeta"><span>${fmt(xp)} XP</span><b style="color:${hubKnowColor(know)}">${know}٪ تسلط</b></div>
+    <div class="hub-book-bar"><i style="width:${know}%;background:${hubKnowColor(know)}"></i></div>
+    <div class="hub-book-xpmeta"><b style="color:${hubKnowColor(know)}">${know}٪ تسلط</b></div>
     <div class="hub-chips">
       <div class="hub-chip"><b>${acc}٪</b>دقت</div>
       <div class="hub-chip"><b>${ret}٪</b>ماندگاری</div>
@@ -3214,7 +2674,6 @@ function renderSkillHub(){
   const gradeName={"10":"دهم","11":"یازدهم","12":"دوازدهم"}[gr];
   const col=hubCollection(c,gr);
   const entries=col.map(e=>({e,st:hubEntryState(c,gr,e)}));
-  const totalXP=entries.reduce((a,x)=>a+(+x.st.xp||0),0);
   const avgKnow=entries.length?Math.round(entries.reduce((a,x)=>a+(+x.st.knowledge||0),0)/entries.length):0;
   const avgAcc=entries.length?Math.round(entries.reduce((a,x)=>a+(+x.st.accuracy||0),0)/entries.length):0;
   const avgRet=entries.length?Math.round(entries.reduce((a,x)=>a+(+x.st.retention||0),0)/entries.length):0;
@@ -3223,7 +2682,7 @@ function renderSkillHub(){
   const counts={strong:entries.filter(x=>(+x.st.knowledge||0)>=70).length,mid:entries.filter(x=>(+x.st.knowledge||0)>=40&&(+x.st.knowledge||0)<70).length,focus:entries.filter(x=>(+x.st.knowledge||0)<40).length,stale:col.filter(x=>skillDaysSince(skillLastStudy(c,gr,x.name))>=3).length};
   const readiness=hubReadiness(c,gr);
   const filter=skillFilterState(),sort=skillSortState();
-  const applyView=(arr)=>{let out=arr.slice();if(filter==='strong')out=out.filter(x=>(+x.st.knowledge||0)>=70);if(filter==='mid')out=out.filter(x=>(+x.st.knowledge||0)>=40&&(+x.st.knowledge||0)<70);if(filter==='focus')out=out.filter(x=>(+x.st.knowledge||0)<40);if(filter==='stale')out=out.filter(x=>skillDaysSince(skillLastStudy(c,gr,x.name))>=3);if(sort==='weak')out.sort((a,b)=>(+a.st.knowledge||0)-(+b.st.knowledge||0));else if(sort==='strong')out.sort((a,b)=>(+b.st.knowledge||0)-(+a.st.knowledge||0));else if(sort==='xp')out.sort((a,b)=>(+b.st.xp||0)-(+a.st.xp||0));else if(sort==='study')out.sort((a,b)=>skillDaysSince(skillLastStudy(c,gr,b.e.name))-skillDaysSince(skillLastStudy(c,gr,a.e.name)));return out};
+  const applyView=(arr)=>{let out=arr.slice();if(filter==='strong')out=out.filter(x=>(+x.st.knowledge||0)>=70);if(filter==='mid')out=out.filter(x=>(+x.st.knowledge||0)>=40&&(+x.st.knowledge||0)<70);if(filter==='focus')out=out.filter(x=>(+x.st.knowledge||0)<40);if(filter==='stale')out=out.filter(x=>skillDaysSince(skillLastStudy(c,gr,x.name))>=3);if(sort==='weak')out.sort((a,b)=>(+a.st.knowledge||0)-(+b.st.knowledge||0));else if(sort==='strong')out.sort((a,b)=>(+b.st.knowledge||0)-(+a.st.knowledge||0));else if(sort==='study')out.sort((a,b)=>skillDaysSince(skillLastStudy(c,gr,b.e.name))-skillDaysSince(skillLastStudy(c,gr,a.e.name)));return out};
   const visibleConcours=applyView(entries.filter(x=>x.e.kind==='concours'));
   const visibleFinal=applyView(entries.filter(x=>x.e.kind==='final'));
   const visibleSecond=applyView(entries.filter(x=>x.e.kind==='secondterm'));
@@ -3231,14 +2690,14 @@ function renderSkillHub(){
   const now=new Date();
   const {cal,j}=renderUnifiedCalendar(now);
   const monthName=new Intl.DateTimeFormat("fa-IR-u-ca-persian",{month:"long"}).format(now);
-  const weekNow=xpSumForDays(0,6),weekPrev=xpSumForDays(7,13);
+  const weekNow=minutesSumForDays(0,6),weekPrev=minutesSumForDays(7,13);
   const subjectOptionsFor=(sel)=>'<option value="">انتخاب درس...</option>'+(SKILL_CONCOURS_BOOKS[c]?.[gr]||[]).map(n=>`<option value="${esc(n)}" ${sel===n?"selected":""}>${skillBookIcon(n)} ${esc(n)}</option>`).join("");
   const effRows=hubEfficiencyRows();
   const grid=(arr)=>arr.length?`<div class="hub-grid">${arr.map(x=>hubBookCard(c,gr,x.e)).join('')}</div>`:'<div class="empty">با این فیلتر درسی پیدا نشد.</div>';
   host.innerHTML=`<div class="hub-v1">
     <div class="hub-hero">
       <div>
-        <div class="skill-v7-eyebrow">SKILL HUB</div>
+        <div class="skill-v7-eyebrow">وضعیت دروس</div>
         <h2 style="margin:4px 0">${g.icon} ${g.name} — پایه ${gradeName}</h2>
         <p class="muted" style="margin:0">وضعیت دروس، آمار و درخت مباحث — همه در یک صفحه.</p>
       </div>
@@ -3250,28 +2709,27 @@ function renderSkillHub(){
       <div class="hub-readiness-meta"><span>${rankIcon} ${rankName} • میانگین تسلط ${avgKnow}٪</span><span>ترکیب تسلط + دقت + تازگی مطالعه</span></div>
     </div>
     <div class="hub-kpis">
-      <div class="hub-kpi"><b>${fmt(totalXP)}</b><span>کل XP</span></div>
       <div class="hub-kpi"><b>${fmt(col.length)}</b><span>تعداد دروس</span></div>
       <div class="hub-kpi"><b>${counts.strong}</b><span>🟢 درس قوی</span></div>
       <div class="hub-kpi"><b>${counts.focus}</b><span>🔴 نیاز به تمرکز</span></div>
       <div class="hub-kpi"><b>${counts.stale}</b><span>⏱ ۳+ روز بدون مطالعه</span></div>
       <div class="hub-kpi"><b>${fmt(totalEpisodes)}</b><span>جلسات انجام‌شده</span></div>
     </div>
-    <div class="hub-smart">📈 مقایسه هفتگی: این هفته <strong>${fmt(weekNow)} XP</strong> در برابر <strong>${fmt(weekPrev)} XP</strong> هفته قبل؛ ${weekNow>=weekPrev?'روند رو به رشد است 🚀':'جا برای جبران هست 💪'}<small>${(()=>{const w=col.find(x=>skillDaysSince(skillLastStudy(c,gr,x.name))>=3&&(+hubEntryState(c,gr,x).knowledge||0)<50);return w?`🎯 پیشنهاد امروز: <b>${esc(w.name)}</b> — کم‌تسلط و بی‌مطالعه`:''})()}</small></div>
+    <div class="hub-smart">📈 مقایسه هفتگی: این هفته <strong>${fmt(weekNow)} دقیقه</strong> در برابر <strong>${fmt(weekPrev)} دقیقه</strong> هفته قبل؛ ${weekNow>=weekPrev?'روند رو به رشد است 🚀':'جا برای جبران هست 💪'}<small>${(()=>{const w=col.find(x=>skillDaysSince(skillLastStudy(c,gr,x.name))>=3&&(+hubEntryState(c,gr,x).knowledge||0)<50);return w?`🎯 پیشنهاد امروز: <b>${esc(w.name)}</b> — کم‌تسلط و بی‌مطالعه`:''})()}</small></div>
     <div class="hub-card"><h3>🔥 تقویم فعالیت</h3>
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px"><small class="muted">${monthName} ${j.jy} • ${j.jd}</small><div class="streak-badge-v9">${currentStreak()} روز پیوسته</div></div>
       <div class="shamsi-grid-v9">${cal}</div>
     </div>
     <div class="hub-card"><h3>🗓️ نقشه حرارتی مطالعه — ۹۰ روز</h3>${hubHeatmap()}</div>
     <div class="hub-charts">
-      <div class="hub-card hub-chart-card">${statusLineChart(r7,"روند XP در ۷ روز")}</div>
-      <div class="hub-card hub-chart-card">${statusLineChart(r30,"روند XP در ۳۰ روز")}</div>
+      <div class="hub-card hub-chart-card">${statusLineChart(r7,"روند مطالعه در ۷ روز")}</div>
+      <div class="hub-card hub-chart-card">${statusLineChart(r30,"روند مطالعه در ۳۰ روز")}</div>
     </div>
     <div class="hub-card"><h3>⏱️ تحلیل بازده زمانی</h3><p class="muted small" style="margin:0 0 6px">بازده = نسبت درستی تست‌ها به زمان و تست صرف‌شده در هر درس. نوار قرمز یعنی وقت می‌گذاری ولی نتیجه کم است.</p>${effRows}</div>
     <div class="hub-card"><h3>🎯 پیشنهاد مطالعه</h3><div class="hub-suggest">${hubSuggestions(c,gr)}</div></div>
     <div class="hub-tools">
       <div><label>فیلتر وضعیت</label><select onchange="window.setSkillViewFilter(this.value)"><option value="all" ${filter==='all'?'selected':''}>همه دروس</option><option value="strong" ${filter==='strong'?'selected':''}>🟢 قوی</option><option value="mid" ${filter==='mid'?'selected':''}>🟡 متوسط</option><option value="focus" ${filter==='focus'?'selected':''}>🔴 نیاز به تمرکز</option><option value="stale" ${filter==='stale'?'selected':''}>⏱ بدون مطالعه ۳+ روز</option></select></div>
-      <div><label>مرتب‌سازی</label><select onchange="window.setSkillViewSort(this.value)"><option value="default" ${sort==='default'?'selected':''}>پیش‌فرض</option><option value="weak" ${sort==='weak'?'selected':''}>ضعیف‌ترین اول</option><option value="strong" ${sort==='strong'?'selected':''}>قوی‌ترین اول</option><option value="xp" ${sort==='xp'?'selected':''}>بیشترین XP</option><option value="study" ${sort==='study'?'selected':''}>قدیمی‌ترین مطالعه</option></select></div>
+      <div><label>مرتب‌سازی</label><select onchange="window.setSkillViewSort(this.value)"><option value="default" ${sort==='default'?'selected':''}>پیش‌فرض</option><option value="weak" ${sort==='weak'?'selected':''}>ضعیف‌ترین اول</option><option value="strong" ${sort==='strong'?'selected':''}>قوی‌ترین اول</option><option value="study" ${sort==='study'?'selected':''}>قدیمی‌ترین مطالعه</option></select></div>
       <div><label>راهنما</label><div class="muted small" style="padding-top:7px">🔴 زیر ۴۰٪ • 🟡 ۴۰–۶۹٪ • 🟢 ۷۰٪+</div></div>
     </div>
     <div class="hub-manual">
@@ -3302,21 +2760,20 @@ function xpHistory(days){
   const t=new Date();t.setHours(12,0,0,0);const out=[];
   for(let i=days-1;i>=0;i--){
     const d=new Date(t);d.setDate(d.getDate()-i);const k=localKey(d);
-    let xp=0;
-    (state.episodes||[]).forEach(e=>{if(String(e.date||"").slice(0,10)===k)xp+=+e.xp||0});
-    (state.quests||[]).forEach(q=>{if(String(q.date||"").slice(0,10)===k&&(q.completed||q.done))xp+=+q.xp||+q.rewardXP||5});
-    out.push({date:d,label:new Intl.DateTimeFormat("fa-IR",{month:"numeric",day:"numeric"}).format(d),xp});
+    let minutes=0;
+    (state.episodes||[]).forEach(e=>{if(String(e.date||"").slice(0,10)===k)minutes+=+e.minutes||0});
+    out.push({date:d,label:new Intl.DateTimeFormat("fa-IR",{month:"numeric",day:"numeric"}).format(d),minutes});
   }
   return out;
 }
 function statusLineChart(rows,title){
   const w=520,h=190,p={l:28,r:12,t:20,b:28};
-  const max=Math.max(1,...rows.map(r=>r.xp));
-  const pts=rows.map((r,i)=>({x:p.l+i*(w-p.l-p.r)/Math.max(1,rows.length-1),y:h-p.b-(r.xp/max)*(h-p.t-p.b)}));
+  const max=Math.max(1,...rows.map(r=>r.minutes));
+  const pts=rows.map((r,i)=>({x:p.l+i*(w-p.l-p.r)/Math.max(1,rows.length-1),y:h-p.b-(r.minutes/max)*(h-p.t-p.b)}));
   const path=pts.map((q,i)=>(i?"L":"M")+q.x.toFixed(1)+" "+q.y.toFixed(1)).join(" ");
   const area=path+` L ${pts[pts.length-1].x} ${h-p.b} L ${pts[0].x} ${h-p.b} Z`;
   const step=Math.max(1,Math.ceil(rows.length/6));
-  return `<div class="status-chart-v9"><h3>${title}</h3><small>XP ثبت‌شده در هر روز</small>
+  return `<div class="status-chart-v9"><h3>${title}</h3><small>دقیقه مطالعه در هر روز</small>
     <svg class="xp-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
       ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="xp-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join("")}
       <path class="xp-area" d="${area}"/>
@@ -3357,7 +2814,7 @@ function gregorianToJalali(gy,gm,gd){
   let jm=jdays<186?1+Math.floor(jdays/31):7+Math.floor((jdays-186)/30);
   return {jy,jm,jd:1+(jdays%31)};
 }
-function xpSumForDays(startOffset,endOffset){const t=new Date();t.setHours(12,0,0,0);let total=0;for(let i=startOffset;i<=endOffset;i++){const d=new Date(t);d.setDate(d.getDate()-i);const k=localKey(d);(state.episodes||[]).forEach(e=>{if(String(e.date||'').slice(0,10)===k)total+=+e.xp||0});(state.quests||[]).forEach(q=>{if(String(q.date||'').slice(0,10)===k&&(q.completed||q.done))total+=+q.xp||+q.rewardXP||5})}return total}
+function minutesSumForDays(startOffset,endOffset){const t=new Date();t.setHours(12,0,0,0);let total=0;for(let i=startOffset;i<=endOffset;i++){const d=new Date(t);d.setDate(d.getDate()-i);const k=localKey(d);(state.episodes||[]).forEach(e=>{if(String(e.date||'').slice(0,10)===k)total+=+e.minutes||0})}return total}
 function renderUnifiedCalendar(now){
   const j=gregorianToJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
   const daysInMonth=j.jm<=6?31:(j.jm<=11?30:(j.jy%4===3?30:29));
@@ -3559,7 +3016,7 @@ function getElectronConfigArray(z){
   return config;
 }
 function formatElectronConfig(config){
-  const fillOrder=["1s","2s","2p","3s","3p","3d","4s","4p","5s","4d","5p","6s","4f","5d","6p","7s","5f","6d","7p"];
+  const fillOrder=["1s","2s","2p","3s","3p","4s","3d","4p","5s","4d","5p","6s","4f","5d","6p","7s","5f","6d","7p"];
   const rank=new Map(fillOrder.map((x,i)=>[x,i]));
   const ordered=[...(config||[])].sort((a,b)=>(rank.get(a[0])??999)-(rank.get(b[0])??999));
   return ordered.map(([orb,n])=> n===1 ? orb : `${orb}<sup>${n}</sup>`).join(" ");
@@ -3646,23 +3103,16 @@ const PT_CAT_NAMES={
   halogen:"هالوژن",noble:"گاز نجیب",lanthanide:"لانتانید",
   actinide:"اکتینید",unknown:"خواص نامعلوم"
 };
-const PT_CAT_DOT={
-  alkali:"#ff6b6b",alkaline:"#ffa751",transition:"#ffd166",post:"#6ee7ff",
-  metalloid:"#a29bfe",nonmetal:"#53e6a6",halogen:"#74b9ff",noble:"#c56cf0",
-  lanthanide:"#f8a5c2",actinide:"#f0932b",unknown:"#b2bec3"
-};
 function buildPeriodicTable(){
   const grid=document.getElementById("periodicTable");
   if(!grid) return;
   if(grid.dataset.built==="1") return;
-  let html=`<div class="pt-corner"></div>`;
-  for(let g=1;g<=18;g++) html+=`<div class="pt-head" style="grid-column:${g+1};grid-row:1">${g}</div>`;
-  for(let p=1;p<=7;p++) html+=`<div class="pt-head-period" style="grid-column:1;grid-row:${p+1}">${p}</div>`;
-  html+=`<div class="pt-element cat-ln-placeholder" style="grid-column:4;grid-row:7">57-71</div>`;
-  html+=`<div class="pt-element cat-an-placeholder" style="grid-column:4;grid-row:8">89-103</div>`;
+  let html="";
+  html+=`<div class="pt-element cat-ln-placeholder" style="grid-column:3;grid-row:6">57-71</div>`;
+  html+=`<div class="pt-element cat-an-placeholder" style="grid-column:3;grid-row:7">89-103</div>`;
   PERIODIC_ELEMENTS.forEach(e=>{
     const [z,sym,nameFa,cat,row,col]=e;
-    html+=`<div class="pt-element cat-${cat}" style="grid-column:${col+1};grid-row:${row+1}" data-z="${z}" data-name="${nameFa}" data-sym="${sym}" data-cat="${cat}" onclick="showPeriodicDetail(${z})" title="${nameFa}">
+    html+=`<div class="pt-element cat-${cat}" style="grid-column:${col};grid-row:${row}" data-z="${z}" onclick="showPeriodicDetail(${z})" title="${nameFa}">
       <span class="pt-z">${z}</span>
       <span class="pt-sym">${sym}</span>
       <span class="pt-name">${nameFa}</span>
@@ -3670,56 +3120,8 @@ function buildPeriodicTable(){
   });
   grid.innerHTML=html;
   grid.dataset.built="1";
-  const legend=document.getElementById("ptLegend");
-  if(legend&&!legend.dataset.built){
-    legend.innerHTML=Object.keys(PT_CAT_NAMES).map(cat=>
-      `<div class="pt-legend-item" data-cat="${cat}" onclick="filterPeriodicCategory('${cat}')"><span class="pt-legend-dot" style="background:${PT_CAT_DOT[cat]}"></span>${PT_CAT_NAMES[cat]}</div>`
-    ).join("");
-    legend.dataset.built="1";
-  }
 }
-let ptActiveCategory=null;
-window.filterPeriodicCategory=function(cat){
-  const grid=document.getElementById("periodicTable"); if(!grid) return;
-  ptActiveCategory = ptActiveCategory===cat ? null : cat;
-  document.querySelectorAll("#ptLegend .pt-legend-item").forEach(el=>el.classList.toggle("active", el.dataset.cat===ptActiveCategory));
-  const search=document.getElementById("ptSearch"); if(search) search.value="";
-  const cells=[...grid.querySelectorAll(".pt-element[data-z]")];
-  const countEl=document.getElementById("ptSearchCount");
-  if(!ptActiveCategory){ cells.forEach(c=>c.classList.remove("dim","match")); if(countEl)countEl.textContent=""; return; }
-  let n=0;
-  cells.forEach(c=>{
-    const hit=c.dataset.cat===ptActiveCategory;
-    c.classList.toggle("dim",!hit); c.classList.remove("match");
-    if(hit)n++;
-  });
-  if(countEl)countEl.textContent=`${fmt(n)} عنصر`;
-};
-window.filterPeriodicTable=function(q){
-  const grid=document.getElementById("periodicTable"); if(!grid) return;
-  const norm=(q||"").trim().toLowerCase();
-  const countEl=document.getElementById("ptSearchCount");
-  const cells=[...grid.querySelectorAll(".pt-element[data-z]")];
-  if(!norm){
-    cells.forEach(c=>c.classList.remove("dim","match"));
-    if(countEl)countEl.textContent="";
-    return;
-  }
-  ptActiveCategory=null;
-  document.querySelectorAll("#ptLegend .pt-legend-item").forEach(el=>el.classList.remove("active"));
-  let matches=0,firstMatch=null;
-  cells.forEach(c=>{
-    const hit=(c.dataset.name||"").toLowerCase().includes(norm)||(c.dataset.sym||"").toLowerCase().includes(norm)||String(c.dataset.z)===norm;
-    c.classList.toggle("match",hit);
-    c.classList.toggle("dim",!hit);
-    if(hit){matches++;if(!firstMatch)firstMatch=c;}
-  });
-  if(countEl)countEl.textContent=matches?`${fmt(matches)} نتیجه`:"چیزی پیدا نشد";
-  if(firstMatch&&matches<=6) firstMatch.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
-};
 window.showPeriodicDetail=function(z){
-  document.querySelectorAll("#periodicTable .pt-element.selected").forEach(el=>el.classList.remove("selected"));
-  const cellEl=document.querySelector(`#periodicTable .pt-element[data-z="${z}"]`); if(cellEl)cellEl.classList.add("selected");
   const e=PERIODIC_ELEMENTS.find(x=>x[0]===z);
   if(!e) return;
   const [zNum,sym,nameFa,cat,row,col,mass]=e;
@@ -3752,7 +3154,7 @@ window.showPeriodicDetail=function(z){
         <span class="pt-config-value">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p → 7s → 5f → 6d → 7p</span>
       </div>
       <div class="pt-config-row">
-        <span class="pt-config-label">آرایش الکترونی (نوشتار نهایی):</span>
+        <span class="pt-config-label">آرایش الکترونی (ترتیب پرشدن):</span>
         <span class="pt-config-value">${fullStr}</span>
       </div>
       ${shortStr?`<div class="pt-config-row">
@@ -3760,7 +3162,6 @@ window.showPeriodicDetail=function(z){
         <span class="pt-config-value">${shortStr}</span>
       </div>`:""}
     </div>`;
-  box.scrollIntoView({behavior:"smooth",block:"nearest"});
 };
 
 /* ===================== TOOLBOX ===================== */
@@ -4218,7 +3619,7 @@ function saveSettings(){
   const name=document.getElementById("playerName").value.trim();
   const raw={
     t:document.getElementById("targetEpisodes").value,study:document.getElementById("studyMinutes").value,brk:document.getElementById("breakMinutes").value,
-    c:document.getElementById("concoursWeight").value,f:document.getElementById("finalWeight").value,cap:document.getElementById("dailyXPSoftCap").value,gm:document.getElementById("goldMultiplier").value
+    c:document.getElementById("concoursWeight").value,f:document.getElementById("finalWeight").value
   };
   if(Object.values(raw).some(v=>v==="")){showToast("همه گزینه‌های تنظیمات مطالعه را خودت مشخص کن.");return}
   const t=Math.max(1,Math.min(20,+raw.t));
@@ -4226,8 +3627,6 @@ function saveSettings(){
   const brk=Math.max(1,Math.min(60,+raw.brk));
   const c=Math.max(0,Math.min(100,+raw.c));
   const f=Math.max(0,Math.min(100,+raw.f));
-  const cap=Math.max(100,Math.min(3000,+raw.cap));
-  const gm=Math.max(.1,Math.min(5,+raw.gm));
   const fs=Math.max(12,Math.min(22,+document.getElementById("baseFontSize").value||16));
   const fw=Math.max(100,Math.min(900,+document.getElementById("fontWeight").value||400));
   const ff=document.getElementById("fontFamily").value;
@@ -4238,16 +3637,16 @@ const planStartDate=jalaliSelectsToISO("planStartDateDay","planStartDateMonth","
 if(c+f!==100){showToast("سهم کنکور و نهایی باید جمعاً ۱۰۰٪ باشند.");return}
 state.settings=Object.assign(state.settings,{
   playerName:name,targetEpisodes:t,studyMinutes:study,breakMinutes:brk,
-  concoursWeight:c,finalWeight:f,dailyXPSoftCap:cap,goldMultiplier:gm,
+  concoursWeight:c,finalWeight:f,
   autoGenerateQuests:false,
   studySettingsConfigured:true,
   desktopDensity:document.getElementById("desktopDensity").value,
-  appTheme:document.getElementById("appTheme").value||"light",
+  appTheme:document.getElementById("appTheme").value||"dark",
   baseFontSize:fs,baseFontWeight:fw,baseFontFamily:ff,
   defaultCurriculum:defCur,defaultGrade:defGrade,
   examDate:examDate,planStartDate:planStartDate
 });
-applyFontSize(fs);applyFontWeight(fw);applyFontFamily(ff);applyTheme(state.settings.appTheme||"light");
+applyFontSize(fs);applyFontWeight(fw);applyFontFamily(ff);applyTheme(state.settings.appTheme||"dark");
 save();
 syncUiToDefaults();
 applySettingsUI();loadSettingsForm();
@@ -4265,11 +3664,9 @@ function loadSettingsForm(){
   set("breakMinutes",x.breakMinutes??"");
   set("concoursWeight",x.concoursWeight??"");
   set("finalWeight",x.finalWeight??"");
-  set("dailyXPSoftCap",x.dailyXPSoftCap??"");
-  set("goldMultiplier",x.goldMultiplier??1);
   set("desktopDensity",x.desktopDensity||"comfortable");
-  set("appTheme",x.appTheme||localStorage.getItem("studyRPG_theme")||"light");
-  applyTheme(x.appTheme||localStorage.getItem("studyRPG_theme")||"light");
+  set("appTheme",x.appTheme||localStorage.getItem("studyRPG_theme")||"dark");
+  applyTheme(x.appTheme||localStorage.getItem("studyRPG_theme")||"dark");
   set("baseFontSize",String(x.baseFontSize||16));
   set("fontWeight",String(x.baseFontWeight||400));
   set("fontFamily",x.baseFontFamily||"'Vazirmatn', Tahoma, sans-serif");
@@ -4287,7 +3684,7 @@ applyFontSize(x.baseFontSize||16);
 function applySettingsUI(){
   const x=state.settings;
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
-  set("playerNameDisplay",(x.playerName||"").trim()||"دانش‌آموز");
+  set("playerNameDisplay",(x.playerName||"").trim()||"بازیکن");
   set("dashboardTarget",x.targetEpisodes?`${x.targetEpisodes} پارت مطالعه`:"تنظیم نشده"); set("todayConcours",x.concoursWeight!=null?`${x.concoursWeight}%`:"—"); set("todayFinal",x.finalWeight!=null?`${x.finalWeight}%`:"—"); set("campaignConcoursWeight",x.concoursWeight!=null?`${x.concoursWeight}%`:"—"); set("campaignFinalWeight",x.finalWeight!=null?`${x.finalWeight}%`:"—");
   set("dashboardEpisodeFormat",x.studyMinutes!=null&&x.breakMinutes!=null?`${x.studyMinutes} دقیقه مطالعه + ${x.breakMinutes} دقیقه استراحت`:"تنظیم نشده");
   set("episodeFormatText",x.studyMinutes!=null&&x.breakMinutes!=null?`هر پارت مطالعه = ${x.studyMinutes} دقیقه مطالعه + ${x.breakMinutes} دقیقه استراحت.`:"مدت پارت مطالعه را از تنظیمات مشخص کن.");
@@ -4296,7 +3693,7 @@ function applySettingsUI(){
   set("settingCapacity",x.targetEpisodes?`${x.targetEpisodes} پارت مطالعه`:"تنظیم نشده");
   set("settingAutoQuest","خاموش");
   set("settingFontSize",currentFontSizeLabel(x.baseFontSize||16));
-  set("settingAppTheme",({dark:"تاریک",light:"روشن"}[x.appTheme||"light"]||"روشن"));
+  set("settingAppTheme",({dark:"تاریک",light:"روشن"}[x.appTheme||"dark"]||"تاریک"));
 set("settingFontWeight",currentFontWeightLabel(x.baseFontWeight||400));
 const dcLabel = {experimental:"🧬 تجربی",mathematics:"📐 ریاضی",humanities:"📚 انسانی"}[x.defaultCurriculum||x.selectedCurriculum] || "—";
 const dgLabel = {10:"دهم",11:"یازدهم",12:"دوازدهم"}[String(x.defaultGrade||"10")] || "—";
@@ -4365,7 +3762,6 @@ function populateEpisodeSubjects(key){
 }
 function populateSelects(){
   const allOpts=Object.entries(SUBJECTS).map(([k,v])=>`<option value="${k}">${v.icon} ${v.name}</option>`).join("");
-  const boss=document.getElementById("bossSubject");if(boss)boss.innerHTML=allOpts;
   const epType=document.getElementById("epType");if(epType)epType.innerHTML=Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
   const mqType=document.getElementById("manualQuestType");if(mqType)mqType.innerHTML=Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join("");
   const ltSub=document.getElementById("leitnerSubject");
@@ -4394,7 +3790,7 @@ function renderBackupReminder(){
   const days=last?Math.floor((now-last)/86400000):null;
   if(last!=null&&days<7){card.style.display='none';return;}
   const txt=document.getElementById('backupReminderText');
-  if(txt)txt.textContent=last?`آخرین بکاپ ${fmt(days)} روز پیش بوده. برای جلوگیری از از دست رفتن XP و استریک، یک بکاپ تازه بگیر.`:'هنوز هیچ بکاپی نگرفتی. اگر مرورگر پاک شود یا گوشی عوض شود، همه اطلاعات از بین می‌رود.';
+  if(txt)txt.textContent=last?`آخرین بکاپ ${fmt(days)} روز پیش بوده. برای جلوگیری از از دست رفتن اطلاعاتت، یک بکاپ تازه بگیر.`:'هنوز هیچ بکاپی نگرفتی. اگر مرورگر پاک شود یا گوشی عوض شود، همه اطلاعات از بین می‌رود.';
   card.style.display='';
 }
 function dismissBackupReminder(){
@@ -4428,24 +3824,22 @@ function importData(ev){
 if(!Array.isArray(state.routines))state.routines=[];
       if(!Array.isArray(state.mockExams))state.mockExams=[];
       if(!Array.isArray(state.mistakes))state.mistakes=[];
-      Object.keys(SUBJECTS).forEach(k=>{if(!state.subjects[k])state.subjects[k]={xp:0,level:1,knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,topics:{}}});
+      Object.keys(SUBJECTS).forEach(k=>{if(!state.subjects[k])state.subjects[k]={knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,topics:{}}});
       applyFontSize(state.settings.baseFontSize||16);
       applyFontWeight(state.settings.baseFontWeight||400);
       applyFontFamily(state.settings.baseFontFamily||"'Vazirmatn', Tahoma, sans-serif");
       ensureMistakes();ensureMockExams();
       save();populateSelects();loadSettingsForm();render();
 syncUiToDefaults();
-applyMoodToHeader();
 renderExamCountdown();renderBackupReminder();updateNotifyRoutinesUI();updateLastBackupInfo();
-showToast("Backup وارد شد.");
+showToast("بکاپ وارد شد.");
     }catch(e){showToast("فایل نامعتبر است.")}
   };
   r.readAsText(f);
 }
 function resetAll(){
-  if(!confirm("تمام اطلاعات Study RPG حذف شود؟"))return;
+  if(!confirm("تمام اطلاعات این برنامه حذف شود؟"))return;
   state=freshState();save();populateSelects();loadSettingsForm();render();
-  applyMoodToHeader();
   showToast("سیستم ریست شد.");
 }
 function openEpisodeModal(){
@@ -4602,7 +3996,6 @@ populateSelects();
 currentChecklistGrade=String(state.settings.checklistGrade||state.settings.defaultGrade||"10");
 syncUiToDefaults();
 loadSettingsForm();
-applyMoodToHeader();
 const _defaultCur=document.getElementById("defaultCurriculum");
 const _defaultGrade=document.getElementById("defaultGrade");
 if(_defaultCur)_defaultCur.addEventListener("change",()=>{
@@ -4650,7 +4043,7 @@ if(_ps){
     SUBJECTS.mediaLiteracy = {name:"تفکر و سواد رسانه‌ای", icon:"📱", mode:"final"};
   }
   if(!state.subjects.mediaLiteracy){
-    state.subjects.mediaLiteracy = {xp:0,level:1,knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}};
+    state.subjects.mediaLiteracy = {knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}};
   }
 
   // --- داده‌ها: [base key, icon, label] ---
@@ -4767,21 +4160,8 @@ if(_ps){
     const q = document.getElementById("epQuality").value;
     const d = document.getElementById("epDifficulty").value;
     const analysis = document.getElementById("epAnalysis").value === "yes";
-    let completion = 1;
     const minutes = +document.getElementById("epMinutes").value || 50;
-    const targetMinutes = +state.settings.studyMinutes || 50;
-    const ratio = minutes / targetMinutes;
-    if(ratio < .5) completion = .3;
-    else if(ratio < .8) completion = .6;
-    else if(ratio < .96) completion = .85;
-    const oldLevel = levelFromXP(state.playerXP);
-    if(q === "poor") state.combo = 0;
-    else state.combo = Math.min(6, state.combo + 1);
     updateStreak();
-    let { xp, gold } = calculateStudyRewards({ type, quality:q, difficulty:d, minutes, tests, analysis, completion, subject });
-    const beforeTodayXP = dayXP(), cap = +state.settings.dailyXPSoftCap || 500;
-    if(beforeTodayXP >= cap) xp = Math.round(xp * .5);
-    else if(beforeTodayXP + xp > cap) xp = Math.round((cap - beforeTodayXP) + (xp - (cap - beforeTodayXP)) * .75);
     const accuracy = tests ? Math.max(0, correct / tests * 100) : 0;
     const e = {
       id: crypto.randomUUID(), date: today(),
@@ -4789,13 +4169,13 @@ if(_ps){
       subject, subjectLabel,
       grade: document.getElementById("epGrade").value,
       topic: document.getElementById("epTopic").value || "بدون موضوع",
-      type, minutes, tests, correct, wrong, blank, marked, analysis, quality:q, difficulty:d, xp, gold, combo: state.combo
+      type, minutes, tests, correct, wrong, blank, marked, analysis, quality:q, difficulty:d
     };
     state.episodes.unshift(e);
-    state.playerXP += xp; state.gold += gold; state.lastQuality = qualityName(q);
-    if(!state.subjects[subject]) state.subjects[subject] = {xp:0,level:1,knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}};
+    state.lastQuality = qualityName(q);
+    if(!state.subjects[subject]) state.subjects[subject] = {knowledge:0,accuracy:0,speed:0,retention:0,consistency:0,episodes:0,tests:0,correct:0,wrong:0,blank:0,marked:0,topics:{}};
     const s = state.subjects[subject];
-    s.xp += xp; s.level = levelFromXP(s.xp); s.episodes++;
+    s.episodes++;
     s.tests += tests; s.correct += correct; s.wrong += wrong; s.blank += blank;
     if(marked > 0) s.marked = (s.marked || 0) + marked;
     const k = q === "poor" ? -.5 : q === "exceptional" ? 2 : q === "excellent" ? 1.5 : q === "good" ? 1 : .5;
@@ -4810,12 +4190,8 @@ if(_ps){
       s.topics[e.topic].last = today();
       s.topics[e.topic].retention = Math.min(100, s.topics[e.topic].retention + 15);
     }
-    state.energy = Math.max(0, state.energy - Math.max(2, Math.round(minutes / 6)));
-    state.hp = Math.max(1, state.hp - (q === "poor" ? 2 : 0));
-    const newLevel = levelFromXP(state.playerXP);
     save(); render();
-    showToast(`+${fmt(xp)} XP`);
-    if(newLevel > oldLevel) setTimeout(() => showToast(`🎉 تبریک! به سطح ${fmt(newLevel)} رسیدی!`), 500);
+    showToast(`ثبت شد: ${qualityName(q)} • ${fmt(minutes)} دقیقه`);
   };
 
   // override renderEpisodes برای نمایش label دقیق
@@ -4826,6 +4202,7 @@ if(_ps){
     el.innerHTML = arr.map(e => {
       const v = SUBJECTS[e.subject] || {icon:"📘", name:e.subject};
       const displayName = e.subjectLabel || v.name;
+      const acc = e.tests ? Math.round((e.correct||0)/e.tests*100) : null;
       return `<div class="episode ${e.quality === "poor" ? "" : "done"}">
         <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
           <b>${v.icon} ${esc(displayName)} — ${esc(e.topic)}</b>
@@ -4833,184 +4210,19 @@ if(_ps){
         </div>
         <div class="muted small">${e.date} • ${e.time} • ${e.minutes} دقیقه • ${e.tests} تست • ${e.correct}/${e.tests||0} درست${e.marked ? ` • ✏️ ${e.marked} علامت‌دار` : ""}</div>
         <div style="display:flex;justify-content:space-between;margin-top:7px">
-          <span class="good">+${fmt(e.xp)} XP</span>
-            <span>کیفیت: ${qualityName(e.quality)}</span>
+          ${acc!==null?`<span class="good">دقت ${acc}٪</span>`:"<span></span>"}
+          <span>کیفیت: ${qualityName(e.quality)}</span>
         </div></div>`;
     }).join("");
   };
-
-  // ---------- غول بازی ----------
-  // تزریق فیلد «رشته» قبل از فیلد «درس»
-  const bossSubjSelect = document.getElementById("bossSubject");
-  const bossFormGrid = bossSubjSelect ? bossSubjSelect.closest(".formgrid") : null;
-  if(bossFormGrid && !document.getElementById("bossCurriculum")){
-    const cur = state.settings.selectedCurriculum || "experimental";
-    const wrap = document.createElement("div");
-    wrap.innerHTML = `<label>رشته</label>
-      <select id="bossCurriculum" onchange="window.setBossCurriculum(this.value)">
-        <option value="experimental" ${cur==="experimental"?"selected":""}>🧬 تجربی</option>
-        <option value="mathematics" ${cur==="mathematics"?"selected":""}>📐 ریاضی</option>
-        <option value="humanities" ${cur==="humanities"?"selected":""}>📚 انسانی</option>
-      </select>`;
-    bossFormGrid.insertBefore(wrap, bossSubjSelect.parentElement);
-  }
-
-  window.populateBossSubjects = function(){
-    const sel = document.getElementById("bossSubject");
-    if(!sel) return;
-    const cur = document.getElementById("bossCurriculum")?.value || state.settings.selectedCurriculum || "experimental";
-    const gradeRaw = document.getElementById("bossGrade")?.value || "دوازدهم";
-    const gradeMap = { "دهم":"10", "یازدهم":"11", "دوازدهم":"12" };
-    const gr = gradeMap[gradeRaw] || String(state.settings.dashboardGrade || "10");
-    const list = STUDY_SUBJECT_OPTIONS[cur] && STUDY_SUBJECT_OPTIONS[cur][gr];
-    if(!list || !list.length){
-      sel.innerHTML = '<option value="">درسی یافت نشد</option>';
-      return;
-    }
-    // حذف تکراری‌های label
-    const seen = new Set();
-    const unique = list.filter(([, , l]) => {
-      if(seen.has(l)) return false;
-      seen.add(l);
-      return true;
-    });
-    sel.innerHTML = unique.map(([base, icon, label]) =>
-      `<option value="${base}" data-label="${escAttr(label)}" data-icon="${icon}">${icon} ${label}</option>`
-    ).join("");
-  };
-
-  window.setBossCurriculum = function(v){
-    const el = document.getElementById("bossCurriculum");
-    if(el) el.value = v;
-    state.settings.bossCurriculum = v;
-    window.populateBossSubjects();
-  };
-
-  const bossGradeEl = document.getElementById("bossGrade");
-  if(bossGradeEl) bossGradeEl.addEventListener("change", () => window.populateBossSubjects());
 
   // populating اولیه
   if(state.settings.selectedCurriculum){
     window.populateEpisodeSubjects(state.settings.selectedCurriculum);
   }
-  window.populateBossSubjects();
 
   save();
   console.log("✅ Subject dropdown patch applied");
-})();
-
-/* ===================== TASK EDIT PATCH (v-patch-1) ===================== */
-(function(){
-  if(!Array.isArray(state.hiddenTasks)) state.hiddenTasks = [];
-
-  window.getAllTasks = function(){
-    const overrides = state.taskOverrides || {};
-    const hidden = Array.isArray(state.hiddenTasks) ? state.hiddenTasks : [];
-    const defaults = DEFAULT_TASKS.filter(t => !hidden.includes(t.id))
-      .map(t => overrides[t.id] ? Object.assign({}, t, overrides[t.id]) : t);
-    return defaults.concat(state.customTasks || []);
-  };
-
-  let editingTaskId = null;
-
-  window.openTaskEditModal = function(id){
-    const t = getAllTasks().find(x => x.id === id); if(!t) return;
-    editingTaskId = id;
-    document.getElementById('taskEditName').value = t.name || '';
-    document.getElementById('taskEditXP').value = t.xp || 5;
-    document.getElementById('taskEditModal').classList.add('show');
-    setTimeout(() => document.getElementById('taskEditName')?.focus(), 50);
-  };
-  window.closeTaskEditModal = function(){
-    const m = document.getElementById('taskEditModal'); if(m) m.classList.remove('show');
-    editingTaskId = null;
-  };
-  window.saveTaskEdit = function(){
-    if(!editingTaskId) return;
-    const name = (document.getElementById('taskEditName').value || '').trim();
-    if(!name){ showToast('نام تسک نمی‌تواند خالی باشد.'); return; }
-    const xp = Math.max(1, Math.round(+document.getElementById('taskEditXP').value || 5));
-    const gold = (getAllTasks().find(x => x.id === editingTaskId) || {}).gold || 0;
-    if(String(editingTaskId).startsWith('ct_')){
-      const ct = (state.customTasks || []).find(x => x.id === editingTaskId);
-      if(ct){ ct.name = name; ct.xp = xp; ct.gold = gold; }
-    } else {
-      if(!state.taskOverrides || typeof state.taskOverrides !== 'object') state.taskOverrides = {};
-      state.taskOverrides[editingTaskId] = { name, xp, gold };
-    }
-    save(); render(); closeTaskEditModal(); showToast('تسک ویرایش شد.');
-  };
-  window.deleteTask = function(id){
-    const t = getAllTasks().find(x => x.id === id); if(!t) return;
-    if(!confirm(`تسک «${t.name}» حذف شود؟`)) return;
-    if(String(id).startsWith('ct_')){
-      state.customTasks = (state.customTasks || []).filter(x => x.id !== id);
-    } else {
-      if(!Array.isArray(state.hiddenTasks)) state.hiddenTasks = [];
-      if(!state.hiddenTasks.includes(id)) state.hiddenTasks.push(id);
-    }
-    if(state.tasksDone) delete state.tasksDone[id];
-    if(state.taskOverrides) delete state.taskOverrides[id];
-    save(); render(); showToast('تسک حذف شد.');
-  };
-  window.deleteTaskFromModal = function(){
-    if(!editingTaskId) return;
-    const id = editingTaskId;
-    closeTaskEditModal();
-    deleteTask(id);
-  };
-
-  window.renderTasks = function(){
-    const grid = document.getElementById("tasksGrid");
-    const summary = document.getElementById("tasksSummary");
-    if(!grid) return;
-    const all = getAllTasks();
-    const doneCount = all.filter(t => isTaskDoneToday(t.id)).length;
-    const totalXP = all.filter(t => isTaskDoneToday(t.id)).reduce((a, t) => a + t.xp, 0);
-    const totalGold = all.filter(t => isTaskDoneToday(t.id)).reduce((a, t) => a + t.gold, 0);
-    if(summary) summary.innerHTML = `
-      <div class="ts-item"><b>${doneCount}/${all.length}</b><span>انجام‌شده</span></div>
-      <div class="ts-item"><b style="color:var(--accent)">${totalXP}</b><span>XP امروز</span></div>
-  `;
-    grid.innerHTML = Object.entries(TASK_CATS).map(([catId, cat]) => {
-      const catTasks = all.filter(t => t.cat === catId);
-      const doneCountCat = catTasks.filter(t => isTaskDoneToday(t.id)).length;
-      const pct = catTasks.length ? Math.round(doneCountCat / catTasks.length * 100) : 0;
-      return `<div class="task-cat">
-        <div class="task-cat-head">
-          <h3>${cat.icon} ${cat.name}</h3>
-          <span class="task-cat-pct">${doneCountCat}/${catTasks.length} • ${pct}%</span>
-        </div>
-        <div class="task-list">
-          ${catTasks.map(t => {
-            const done = isTaskDoneToday(t.id);
-            return `<div class="task-item ${done ? "done" : ""}" onclick="toggleTask('${t.id}')">
-              <div class="task-check"></div>
-              <div class="task-info">
-                <span class="task-name"><span class="task-icon">${t.icon || "⭐"}</span>${esc(t.name)}</span>
-              </div>
-              <div class="task-reward" onclick="event.stopPropagation()">
-                <span class="tr-xp">+${t.xp} XP</span>
-                              <div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">
-                  <span class="task-edit" onclick="event.stopPropagation();openTaskEditModal('${t.id}')" title="ویرایش">✏️</span>
-                  <span class="task-delete" onclick="event.stopPropagation();deleteTask('${t.id}')" title="حذف">🗑</span>
-                </div>
-              </div>
-            </div>`;
-          }).join("")}
-        </div>
-        <div class="task-add-row">
-          <input class="tn" id="taskName_${catId}" maxlength="60" placeholder="تسک جدید...">
-          <input class="tx" id="taskXP_${catId}" type="number" min="1" value="5" title="XP">
-            <button class="btn primary" onclick="addCustomTask('${catId}')">➕</button>
-        </div>
-      </div>`;
-    }).join("");
-  };
-
-  if(typeof renderTasks === 'function') renderTasks();
-
-  console.log('✅ Task edit patch applied');
 })();
 
 /* ===================== YPT-inspired additions (v-patch-2) =====================
@@ -5053,8 +4265,8 @@ if(_ps){
     }
     const weeks=[];
     for(let i=0;i<cells.length;i+=7) weeks.push(cells.slice(i,i+7));
-    const dailyTargetMinutes=Math.max(1,(+state.settings.targetEpisodes||7)*(+state.settings.studyMinutes||50));
-    const levelOf=m=>{ if(!m) return 0; const r=m/dailyTargetMinutes; return r<.25?1:r<.5?2:r<.75?3:4; };
+    const maxMinutes=Math.max(1,...cells.map(c=>c.minutes));
+    const levelOf=m=>{ if(!m) return 0; const r=m/maxMinutes; return r<.25?1:r<.5?2:r<.75?3:4; };
     const dayNames=["ش","ی","د","س","چ","پ","ج"];
     let grid=`<div class="heatmap-scroll"><div class="heatmap-grid">
       <div class="heatmap-daylabels">${dayNames.map(n=>`<span>${n}</span>`).join("")}</div>
@@ -5110,9 +4322,9 @@ if(_ps){
     (state.episodes||[]).forEach(e=>{
       const k=String(e.date||"").slice(0,10);
       if(cutoffKey && k<cutoffKey) return;
-      if(!totals[e.subject]) totals[e.subject]={minutes:0,xp:0,episodes:0,tests:0,correct:0};
+      if(!totals[e.subject]) totals[e.subject]={minutes:0,episodes:0,tests:0,correct:0};
       const t=totals[e.subject];
-      t.minutes+=(+e.minutes||0); t.xp+=(+e.xp||0); t.episodes++;
+      t.minutes+=(+e.minutes||0); t.episodes++;
       t.tests+=(+e.tests||0); t.correct+=(+e.correct||0);
     });
     return totals;
@@ -5135,7 +4347,7 @@ if(_ps){
         <div class="rank-main">
           <div class="rank-top"><b>${esc(name)}</b><span class="muted small">${fmt(r.minutes)} دقیقه</span></div>
           <div class="progress"><div class="bar" style="width:${Math.max(2,Math.round(r.minutes/max*100))}%"></div></div>
-          <div class="muted small">${fmt(r.episodes)} پارت • ${fmt(r.xp)} XP${acc!==null?` • دقت ${acc}٪`:""}</div>
+          <div class="muted small">${fmt(r.episodes)} پارت${acc!==null?` • دقت ${acc}٪`:""}</div>
         </div>
       </div>`;
     }).join("");
@@ -5169,8 +4381,6 @@ if(_ps){
     }
     const tgt=document.getElementById("dailyPlanTarget");
     if(tgt) tgt.value=existing?existing.targetEpisodes:(state.settings.targetEpisodes||7);
-    const moodInfo=document.getElementById("dailyPlanMood");
-    if(moodInfo) moodInfo.textContent=`${state.settings.moodEmoji||"📚"} ${state.settings.moodLabel||"مطالعه‌گر"}`;
   }
   window.limitPlanSubjects=function(el){
     const boxes=[...document.querySelectorAll("#dailyPlanSubjects input[type=checkbox]")];
@@ -5182,7 +4392,7 @@ if(_ps){
     const subjects=boxes.map(b=>b.value);
     if(!subjects.length){ showToast("حداقل یک درس برای امروز انتخاب کن."); return; }
     const targetEpisodes=Math.max(1,Math.round(+document.getElementById("dailyPlanTarget").value||state.settings.targetEpisodes||7));
-    state.dailyPlans[today()]={subjects,targetEpisodes,mood:{emoji:state.settings.moodEmoji,label:state.settings.moodLabel},createdAt:Date.now()};
+    state.dailyPlans[today()]={subjects,targetEpisodes,createdAt:Date.now()};
     save(); closeDailyPlanner(); renderDailyPlanCard();
     showToast("برنامه امروز ذخیره شد. بزن بریم! 🚀");
   };
@@ -5203,8 +4413,7 @@ if(_ps){
     }).join("");
     const totalDone=done.length;
     const pct=Math.min(100,Math.round(totalDone/(plan.targetEpisodes||1)*100));
-    el.innerHTML=`<div class="muted small" style="margin-bottom:8px">${plan.mood?.emoji||""} حال‌وهوای هنگام برنامه‌ریزی: ${esc(plan.mood?.label||"—")}</div>
-      <div class="list">${rows}</div>
+    el.innerHTML=`<div class="list">${rows}</div>
       <div class="xpmeta" style="margin-top:9px"><span>ظرفیت امروز</span><span>${fmt(totalDone)} / ${fmt(plan.targetEpisodes)}</span></div>
       <div class="progress"><div class="bar" style="width:${pct}%"></div></div>`;
   };
