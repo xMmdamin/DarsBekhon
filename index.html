@@ -128,7 +128,7 @@
       <div class="quest"><span>Retention بحرانی</span><b id="retentionCount">0</b></div>
     </div>
   </div>
-  <div class="card span-6">
+  <div class="card span-12">
     <h3>📚 وضعیت دروس</h3>
     <div class="dashboard-curriculum-picker" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px;padding:11px;border:1px solid var(--border);border-radius:13px;background:rgba(125,145,190,.06)">
       <div>
@@ -583,24 +583,16 @@
       <div class="pt-hero">
         <div>
           <div class="skill-v7-eyebrow">PERIODIC TABLE</div>
-              <h2>⚗️ جدول تناوبی عناصر</h2>
-          <p class="muted" style="margin:4px 0 0">روی هر عنصر کلیک کن تا اطلاعات کامل + آرایش الکترونی رو ببینی.</p>
+          <h2>⚗️ جدول تناوبی عناصر</h2>
+          <p class="muted" style="margin:4px 0 0">اسم یا نماد عنصر رو تایپ کن تا سریع پیداش کنی، یا روی هر خونه بزن تا آرایش الکترونی کاملش رو ببینی.</p>
         </div>
       </div>
-      <div class="pt-wrap"><div class="periodic-table" id="periodicTable"></div></div>
-      <div class="pt-legend">
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#c0392b"></span> فلز قلیایی</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e67e22"></span> قلیایی خاکی</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e0a200"></span> فلز واسطه</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#1f8fc9"></span> پس‌واسطه</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#6c5ce7"></span> شبه‌فلز</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0f9e6b"></span> نافلز</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0984e3"></span> هالوژن</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#7d2ae8"></span> گاز نجیب</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e84393"></span> لانتانید</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#b33939"></span> اکتینید</div>
-        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#636e72"></span> نامعلوم</div>
+      <div class="pt-search-row">
+        <input id="ptSearch" type="text" placeholder="جست‌وجو... مثلاً «آهن» یا Fe" oninput="filterPeriodicTable(this.value)">
+        <span class="pt-search-count" id="ptSearchCount"></span>
       </div>
+      <div class="pt-legend" id="ptLegend"></div>
+      <div class="pt-wrap"><div class="periodic-table" id="periodicTable"></div></div>
       <div id="ptDetail" class="pt-detail"></div>
     </div>
 

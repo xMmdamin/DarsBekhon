@@ -697,7 +697,8 @@ function fmt(n){return Math.round(Number(n)||0).toLocaleString("fa-IR")}
 /* ===================== REBALANCED STUDY ECONOMY ===================== */
 const STUDY_ECONOMY={type:{learn:.90,practice:1,coverage:1.05,review:.82,final:.95,timed:1.10,analysis:1.15,recovery:.85},quality:{poor:.55,normal:.85,good:1,excellent:1.12,exceptional:1.25},difficulty:{easy:.90,normal:1,hard:1.12,veryhard:1.25,nightmare:1.40},maxEpisodeXP:140,maxEpisodeGold:80};
 function threshold(level){level=Math.max(1,+level||1);return Math.round(120*Math.pow(level,1.42))}
-function calculateStudyRewards({type,quality,difficulty,minutes,tests,analysis,completion,subject}){const tm=Math.max(5,Math.min(240,+minutes||50));const t=STUDY_ECONOMY.type[type]||1,q=STUDY_ECONOMY.quality[quality]||1,d=STUDY_ECONOMY.difficulty[difficulty]||1;const combo=1+Math.min(state.combo,5)*.04,repeat=diminishing(subject,type),testBonus=Math.min(30,(+tests||0)*1.2),analysisBonus=analysis?Math.min(20,(+tests||0)*1.5):0;let xp=Math.round(tm*t*q*d*Math.max(.3,completion)*combo*repeat+testBonus+analysisBonus);if(dayEpisodes().length===0)xp+=10;if(state.streak>=3)xp+=Math.min(15,state.streak);xp=Math.min(STUDY_ECONOMY.maxEpisodeXP,Math.max(5,xp));let gold=Math.round(tm/5);if(quality==='excellent')gold+=3;else if(quality==='exceptional')gold+=6;else if(quality==='poor')gold=Math.max(1,gold-3);if(type==='review')gold+=3;if(type==='analysis')gold+=5;if(analysis)gold+=Math.min(8,Math.floor((+tests||0)/10));if(state.streak>=3)gold+=Math.min(8,Math.floor(state.streak/3));gold=Math.min(STUDY_ECONOMY.maxEpisodeGold,Math.max(1,Math.round(gold*(+state.settings.goldMultiplier||1))));return{xp,gold}}
+const STUDY_ECONOMY_MIN_MEANINGFUL_MINUTES=10; // کمتر از این، پارت خیلی کوتاه محسوب می‌شود و بونوس اولین پارت روز نمی‌گیرد
+function calculateStudyRewards({type,quality,difficulty,minutes,tests,analysis,completion,subject}){const tm=Math.max(1,Math.min(240,+minutes||50));const t=STUDY_ECONOMY.type[type]||1,q=STUDY_ECONOMY.quality[quality]||1,d=STUDY_ECONOMY.difficulty[difficulty]||1;const combo=1+Math.min(state.combo,5)*.04,repeat=diminishing(subject,type),testBonus=Math.min(30,(+tests||0)*1.2),analysisBonus=analysis?Math.min(20,(+tests||0)*1.5):0;let xp=Math.round(tm*t*q*d*Math.max(.3,completion)*combo*repeat+testBonus+analysisBonus);if(dayEpisodes().length===0&&tm>=STUDY_ECONOMY_MIN_MEANINGFUL_MINUTES)xp+=10;if(state.streak>=3)xp+=Math.min(15,state.streak);xp=Math.min(STUDY_ECONOMY.maxEpisodeXP,Math.max(1,xp));let gold=Math.round(tm/5);if(quality==='excellent')gold+=3;else if(quality==='exceptional')gold+=6;else if(quality==='poor')gold=Math.max(1,gold-3);if(type==='review')gold+=3;if(type==='analysis')gold+=5;if(analysis)gold+=Math.min(8,Math.floor((+tests||0)/10));if(state.streak>=3)gold+=Math.min(8,Math.floor(state.streak/3));gold=Math.min(STUDY_ECONOMY.maxEpisodeGold,Math.max(1,Math.round(gold*(+state.settings.goldMultiplier||1))));return{xp,gold}}
 function levelFromXP(xp){let l=1;while(xp>=threshold(l+1))l++;return l}
 function dayEpisodes(){return state.episodes.filter(e=>e.date===today())}
 function dayXP(){return dayEpisodes().reduce((a,e)=>a+(+e.xp||0),0)}
@@ -1179,7 +1180,7 @@ function setStudyTimerSubject(v){
   studyTimerSubject=opt?.value||'';studyTimerSubjectLabel=opt?.dataset.label||'';
   saveOfflineStudyTimer();updateOfflineStudyTimer();
 }
-function setStudyTimerTopic(v){if(studyTimerRunning)return;studyTimerTopic=(v||'').trim().slice(0,60);saveOfflineStudyTimer();updateOfflineStudyTimer();}
+function setStudyTimerTopic(v){studyTimerTopic=(v||'').trim().slice(0,60);saveOfflineStudyTimer();updateOfflineStudyTimer();}
 function formatTimerNumber(n){return new Intl.NumberFormat('fa-IR').format(Math.max(0,Math.round(n)));}
 function updateOfflineStudyTimer(){
   const t=document.getElementById('studyTimerDisplay'),st=document.getElementById('studyTimerStatusText'),status=document.querySelector('.timer-v2-status'),dot=document.getElementById('studyTimerStatusDot'),btn=document.getElementById('studyTimerToggle'),sub=document.getElementById('studyTimerSelectedSubject'),topic=document.getElementById('studyTimerSelectedTopic'),mins=document.getElementById('studyTimerMinutes'),prog=document.getElementById('studyTimerProgress'),pct=document.getElementById('studyTimerPercent'),elapsedEl=document.getElementById('studyTimerElapsed'),lenEl=document.getElementById('studyTimerSessionLength'),label=document.getElementById('studyTimerDisplayLabel');
@@ -1198,7 +1199,7 @@ function updateOfflineStudyTimer(){
   if(mins&&!studyTimerRunning)mins.value=Math.round(studyTimerTotal/60);
   if(elapsedEl)elapsedEl.textContent=formatTimerNumber(elapsed/60)+' دقیقه';
   if(lenEl)lenEl.textContent=formatTimerNumber(studyTimerTotal/60)+' دقیقه';
-  const oldTopic=document.getElementById('studyTimerTopic');if(oldTopic&&oldTopic.value!==studyTimerTopic)oldTopic.value=studyTimerTopic;
+  const oldTopic=document.getElementById('studyTimerTopic');if(oldTopic&&document.activeElement!==oldTopic&&oldTopic.value!==studyTimerTopic)oldTopic.value=studyTimerTopic;
 }
 function resyncStudyTimerClock(){
   if(!studyTimerRunning||!studyTimerStartedAt)return;
@@ -1917,6 +1918,94 @@ function subjectMatchesGrade(subjKey, grade, curriculum){
   if(gn===12 && isSpecialtySubject(subjKey)) return true;
   return hasTarget;
 }
+/* ===================== DASHBOARD SUBJECT LIST (وضعیت دروس) =====================
+   لیست دقیق دروس تخصصی و عمومی هر پایه/رشته. هر آیتم به کلید موجود در SUBJECTS/state.subjects
+   وصل است تا XP/Level/Knowledge همان درس نمایش داده شود؛ چند عنوان می‌توانند به یک کلید مشترک
+   وصل باشند (مثلاً «زیست شناسی ۱ و ۲» و «زیست شناسی ۳» هر دو به کلید biology). */
+const DASHBOARD_SUBJECT_LIST = {
+  experimental:{
+    "12":[
+      ["زیست شناسی ۱ و ۲ (پایه)","biology"],["زیست شناسی ۳ (دوازدهم)","biology"],
+      ["فیزیک ۱ و ۲ (پایه)","physics"],["فیزیک ۳ (دوازدهم)","physics"],
+      ["شیمی ۱ و ۲ (پایه)","chemistry"],["شیمی ۳ (دوازدهم)","chemistry"],
+      ["ریاضی ۱ و ۲ (پایه)","math"],["ریاضی ۳ (دوازدهم)","math"],
+      ["زمین شناسی (جامع)","geology"],
+      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۳ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۳","english"],
+      ["سلامت و بهداشت","health"],["هویت اجتماعی (برای رشته ریاضی و تجربی)","identity"]
+    ],
+    "11":[
+      ["زیست شناسی ۲","biology"],["فیزیک ۲","physics"],["شیمی ۲","chemistry"],
+      ["ریاضی ۲","math"],["زمین شناسی (جامع)","geology"],
+      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۲ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۲","english"],
+      ["انسان و محیط زیست","humanEnvironment"],["تاریخ معاصر (برای رشته ریاضی و تجربی)","contemporaryHistory"]
+    ],
+    "10":[
+      ["زیست شناسی ۱","biology"],["فیزیک ۱","physics"],["شیمی ۱","chemistry"],["ریاضی ۱","math"],
+      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۱ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۱","english"],
+      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"],
+      ["جغرافیا ایران","geographyIran"]
+    ]
+  },
+  mathematics:{
+    "12":[
+      ["ریاضی ۱ و حسابان ۱ (پایه)","calculus"],["حسابان ۲ (دوازدهم)","calculus"],
+      ["هندسه ۱ و ۲ (پایه)","geometry"],["هندسه ۳ (دوازدهم)","geometry"],
+      ["آمار و احتمال","statistics"],["ریاضیات گسسته","discrete"],
+      ["فیزیک ۱ و ۲ (پایه)","physics"],["فیزیک ۳ (دوازدهم)","physics"],
+      ["شیمی ۱ و ۲ (پایه)","chemistry"],["شیمی ۳ (دوازدهم)","chemistry"],
+      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۳ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۳","english"],
+      ["سلامت و بهداشت","health"],["هویت اجتماعی (برای رشته ریاضی و تجربی)","identity"]
+    ],
+    "11":[
+      ["حسابان ۱","calculus"],["هندسه ۲","geometry"],["آمار و احتمال","statistics"],
+      ["فیزیک ۲","physics"],["شیمی ۲","chemistry"],
+      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۲ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۲","english"],
+      ["انسان و محیط زیست","humanEnvironment"],["تاریخ معاصر (برای رشته ریاضی و تجربی)","contemporaryHistory"]
+    ],
+    "10":[
+      ["ریاضی ۱","math"],["هندسه ۱","geometry"],["فیزیک ۱","physics"],["شیمی ۱","chemistry"],
+      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته ریاضی و تجربی)","dini"],
+      ["عربی ۱ (رشته ریاضی و تجربی)","arabic"],["انگلیسی ۱","english"],
+      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"],
+      ["جغرافیا ایران","geographyIran"]
+    ]
+  },
+  humanities:{
+    "12":[
+      ["ریاضی و آمار ۱ و ۲ (پایه)","mathStats"],["ریاضی و آمار ۳ (دوازدهم)","mathStats"],
+      ["علوم و فنون ادبی ۱ و ۲ (پایه)","literaryArts"],["علوم و فنون ادبی ۳ (دوازدهم)","literaryArts"],
+      ["آرایه های ادبی","literaryArts"],
+      ["جامعه شناسی ۱ و ۲ (پایه)","sociology"],["جامعه شناسی ۳ (دوازدهم)","sociology"],
+      ["روان‌شناسی","psychology"],
+      ["عربی تخصصی ۱ و ۲ (پایه)","arabicSpec"],["عربی تخصصی ۳ (دوازدهم)","arabicSpec"],
+      ["تاریخ ۱ و ۲ (پایه)","history"],["تاریخ ۳ (دوازدهم)","history"],
+      ["جغرافیا ۱ و ۲ (پایه)","geography"],["جغرافیا ۳ (دوازدهم)","geography"],
+      ["منطق","logic"],["فلسفه ۱","philosophy"],["فلسفه ۲","philosophy"],["اقتصاد","economics"],
+      ["فارسی ۳","persian"],["دین و زندگی ۳ (رشته انسانی)","dini"],["انگلیسی ۳","english"],
+      ["سلامت و بهداشت","health"],["تحلیل فرهنگی (فقط برای رشته انسانی)","culturalAnalysis"]
+    ],
+    "11":[
+      ["ریاضی و آمار ۲","mathStats"],["علوم و فنون ادبی ۲","literaryArts"],
+      ["جامعه شناسی ۲","sociology"],["روان‌شناسی","psychology"],
+      ["عربی تخصصی ۲","arabicSpec"],["تاریخ ۲","history"],["جغرافیا ۲","geography"],
+      ["فلسفه ۱","philosophy"],
+      ["فارسی ۲","persian"],["دین و زندگی ۲ (رشته انسانی)","dini"],["انگلیسی ۲","english"],
+      ["انسان و محیط زیست","humanEnvironment"]
+    ],
+    "10":[
+      ["ریاضی و آمار ۱","mathStats"],["علوم و فنون ادبی ۱","literaryArts"],
+      ["جامعه شناسی ۱","sociology"],["عربی تخصصی ۱","arabicSpec"],["تاریخ ۱","history"],
+      ["جغرافیا ایران","geographyIran"],["منطق","logic"],
+      ["فارسی ۱","persian"],["دین و زندگی ۱ (رشته انسانی)","dini"],["انگلیسی ۱","english"],
+      ["آمادگی دفاعی","defensePrep"],["تفکر و سواد رسانه‌ای","mediaLiteracy"]
+    ]
+  }
+};
 function renderMiniSubjects(){
   const el=document.getElementById("subjectMini");if(!el)return;
   const picker=document.getElementById("dashboardCurriculum");
@@ -1926,13 +2015,12 @@ function renderMiniSubjects(){
   if(picker)picker.value=key;
   if(gradeSel)gradeSel.value=gr;
   if(!key){el.innerHTML='<div class="empty">رشته تحصیلی را انتخاب کن تا وضعیت دروس نمایش داده شود.</div>';return}
-  // همان فیلتر لیست دروس صفحه «پارت مطالعه» (populateEpisodeSubjects) تا دو لیست همیشه یکی باشند.
-  const visible=curriculumSubjectKeys(key).filter(k=>CHECKLIST_TEMPLATES[k]&&subjectMatchesGrade(k,gr,key));
-  if(!visible.length){el.innerHTML='<div class="empty">درسی برای این پایه یافت نشد.</div>';return}
-  el.innerHTML=visible.map(k=>{
+  const list=(DASHBOARD_SUBJECT_LIST[key]||{})[gr]||[];
+  if(!list.length){el.innerHTML='<div class="empty">درسی برای این پایه یافت نشد.</div>';return}
+  el.innerHTML=list.map(([label,k])=>{
     const v=SUBJECTS[k],s=state.subjects[k];
-    const displayName=subjectDisplayName(k,key);
-    return `<div class="subject"><div class="subject-top"><b>${v.icon} ${displayName}</b><span class="pill">Lv ${s.level}</span></div>
+    if(!v||!s)return "";
+    return `<div class="subject"><div class="subject-top"><b>${v.icon} ${esc(label)}</b><span class="pill">Lv ${s.level}</span></div>
       <div class="xpmeta"><span>XP ${fmt(s.xp)}</span><span>${Math.round(s.knowledge)} Know</span></div>
       <div class="progress"><div class="bar" style="width:${Math.min(100,s.knowledge)}%"></div></div></div>`;
   }).join("");
@@ -3471,7 +3559,7 @@ function getElectronConfigArray(z){
   return config;
 }
 function formatElectronConfig(config){
-  const fillOrder=["1s","2s","2p","3s","3p","4s","3d","4p","5s","4d","5p","6s","4f","5d","6p","7s","5f","6d","7p"];
+  const fillOrder=["1s","2s","2p","3s","3p","3d","4s","4p","5s","4d","5p","6s","4f","5d","6p","7s","5f","6d","7p"];
   const rank=new Map(fillOrder.map((x,i)=>[x,i]));
   const ordered=[...(config||[])].sort((a,b)=>(rank.get(a[0])??999)-(rank.get(b[0])??999));
   return ordered.map(([orb,n])=> n===1 ? orb : `${orb}<sup>${n}</sup>`).join(" ");
@@ -3558,16 +3646,23 @@ const PT_CAT_NAMES={
   halogen:"هالوژن",noble:"گاز نجیب",lanthanide:"لانتانید",
   actinide:"اکتینید",unknown:"خواص نامعلوم"
 };
+const PT_CAT_DOT={
+  alkali:"#ff6b6b",alkaline:"#ffa751",transition:"#ffd166",post:"#6ee7ff",
+  metalloid:"#a29bfe",nonmetal:"#53e6a6",halogen:"#74b9ff",noble:"#c56cf0",
+  lanthanide:"#f8a5c2",actinide:"#f0932b",unknown:"#b2bec3"
+};
 function buildPeriodicTable(){
   const grid=document.getElementById("periodicTable");
   if(!grid) return;
   if(grid.dataset.built==="1") return;
-  let html="";
-  html+=`<div class="pt-element cat-ln-placeholder" style="grid-column:3;grid-row:6">57-71</div>`;
-  html+=`<div class="pt-element cat-an-placeholder" style="grid-column:3;grid-row:7">89-103</div>`;
+  let html=`<div class="pt-corner"></div>`;
+  for(let g=1;g<=18;g++) html+=`<div class="pt-head" style="grid-column:${g+1};grid-row:1">${g}</div>`;
+  for(let p=1;p<=7;p++) html+=`<div class="pt-head-period" style="grid-column:1;grid-row:${p+1}">${p}</div>`;
+  html+=`<div class="pt-element cat-ln-placeholder" style="grid-column:4;grid-row:7">57-71</div>`;
+  html+=`<div class="pt-element cat-an-placeholder" style="grid-column:4;grid-row:8">89-103</div>`;
   PERIODIC_ELEMENTS.forEach(e=>{
     const [z,sym,nameFa,cat,row,col]=e;
-    html+=`<div class="pt-element cat-${cat}" style="grid-column:${col};grid-row:${row}" data-z="${z}" onclick="showPeriodicDetail(${z})" title="${nameFa}">
+    html+=`<div class="pt-element cat-${cat}" style="grid-column:${col+1};grid-row:${row+1}" data-z="${z}" data-name="${nameFa}" data-sym="${sym}" data-cat="${cat}" onclick="showPeriodicDetail(${z})" title="${nameFa}">
       <span class="pt-z">${z}</span>
       <span class="pt-sym">${sym}</span>
       <span class="pt-name">${nameFa}</span>
@@ -3575,8 +3670,56 @@ function buildPeriodicTable(){
   });
   grid.innerHTML=html;
   grid.dataset.built="1";
+  const legend=document.getElementById("ptLegend");
+  if(legend&&!legend.dataset.built){
+    legend.innerHTML=Object.keys(PT_CAT_NAMES).map(cat=>
+      `<div class="pt-legend-item" data-cat="${cat}" onclick="filterPeriodicCategory('${cat}')"><span class="pt-legend-dot" style="background:${PT_CAT_DOT[cat]}"></span>${PT_CAT_NAMES[cat]}</div>`
+    ).join("");
+    legend.dataset.built="1";
+  }
 }
+let ptActiveCategory=null;
+window.filterPeriodicCategory=function(cat){
+  const grid=document.getElementById("periodicTable"); if(!grid) return;
+  ptActiveCategory = ptActiveCategory===cat ? null : cat;
+  document.querySelectorAll("#ptLegend .pt-legend-item").forEach(el=>el.classList.toggle("active", el.dataset.cat===ptActiveCategory));
+  const search=document.getElementById("ptSearch"); if(search) search.value="";
+  const cells=[...grid.querySelectorAll(".pt-element[data-z]")];
+  const countEl=document.getElementById("ptSearchCount");
+  if(!ptActiveCategory){ cells.forEach(c=>c.classList.remove("dim","match")); if(countEl)countEl.textContent=""; return; }
+  let n=0;
+  cells.forEach(c=>{
+    const hit=c.dataset.cat===ptActiveCategory;
+    c.classList.toggle("dim",!hit); c.classList.remove("match");
+    if(hit)n++;
+  });
+  if(countEl)countEl.textContent=`${fmt(n)} عنصر`;
+};
+window.filterPeriodicTable=function(q){
+  const grid=document.getElementById("periodicTable"); if(!grid) return;
+  const norm=(q||"").trim().toLowerCase();
+  const countEl=document.getElementById("ptSearchCount");
+  const cells=[...grid.querySelectorAll(".pt-element[data-z]")];
+  if(!norm){
+    cells.forEach(c=>c.classList.remove("dim","match"));
+    if(countEl)countEl.textContent="";
+    return;
+  }
+  ptActiveCategory=null;
+  document.querySelectorAll("#ptLegend .pt-legend-item").forEach(el=>el.classList.remove("active"));
+  let matches=0,firstMatch=null;
+  cells.forEach(c=>{
+    const hit=(c.dataset.name||"").toLowerCase().includes(norm)||(c.dataset.sym||"").toLowerCase().includes(norm)||String(c.dataset.z)===norm;
+    c.classList.toggle("match",hit);
+    c.classList.toggle("dim",!hit);
+    if(hit){matches++;if(!firstMatch)firstMatch=c;}
+  });
+  if(countEl)countEl.textContent=matches?`${fmt(matches)} نتیجه`:"چیزی پیدا نشد";
+  if(firstMatch&&matches<=6) firstMatch.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
+};
 window.showPeriodicDetail=function(z){
+  document.querySelectorAll("#periodicTable .pt-element.selected").forEach(el=>el.classList.remove("selected"));
+  const cellEl=document.querySelector(`#periodicTable .pt-element[data-z="${z}"]`); if(cellEl)cellEl.classList.add("selected");
   const e=PERIODIC_ELEMENTS.find(x=>x[0]===z);
   if(!e) return;
   const [zNum,sym,nameFa,cat,row,col,mass]=e;
@@ -3609,7 +3752,7 @@ window.showPeriodicDetail=function(z){
         <span class="pt-config-value">1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s → 4f → 5d → 6p → 7s → 5f → 6d → 7p</span>
       </div>
       <div class="pt-config-row">
-        <span class="pt-config-label">آرایش الکترونی (ترتیب پرشدن):</span>
+        <span class="pt-config-label">آرایش الکترونی (نوشتار نهایی):</span>
         <span class="pt-config-value">${fullStr}</span>
       </div>
       ${shortStr?`<div class="pt-config-row">
@@ -3617,6 +3760,7 @@ window.showPeriodicDetail=function(z){
         <span class="pt-config-value">${shortStr}</span>
       </div>`:""}
     </div>`;
+  box.scrollIntoView({behavior:"smooth",block:"nearest"});
 };
 
 /* ===================== TOOLBOX ===================== */
@@ -4122,7 +4266,7 @@ function loadSettingsForm(){
   set("concoursWeight",x.concoursWeight??"");
   set("finalWeight",x.finalWeight??"");
   set("dailyXPSoftCap",x.dailyXPSoftCap??"");
-  set("goldMultiplier",x.goldMultiplier??"");
+  set("goldMultiplier",x.goldMultiplier??1);
   set("desktopDensity",x.desktopDensity||"comfortable");
   set("appTheme",x.appTheme||localStorage.getItem("studyRPG_theme")||"light");
   applyTheme(x.appTheme||localStorage.getItem("studyRPG_theme")||"light");
@@ -4909,8 +5053,8 @@ if(_ps){
     }
     const weeks=[];
     for(let i=0;i<cells.length;i+=7) weeks.push(cells.slice(i,i+7));
-    const maxMinutes=Math.max(1,...cells.map(c=>c.minutes));
-    const levelOf=m=>{ if(!m) return 0; const r=m/maxMinutes; return r<.25?1:r<.5?2:r<.75?3:4; };
+    const dailyTargetMinutes=Math.max(1,(+state.settings.targetEpisodes||7)*(+state.settings.studyMinutes||50));
+    const levelOf=m=>{ if(!m) return 0; const r=m/dailyTargetMinutes; return r<.25?1:r<.5?2:r<.75?3:4; };
     const dayNames=["ش","ی","د","س","چ","پ","ج"];
     let grid=`<div class="heatmap-scroll"><div class="heatmap-grid">
       <div class="heatmap-daylabels">${dayNames.map(n=>`<span>${n}</span>`).join("")}</div>
