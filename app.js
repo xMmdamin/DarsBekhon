@@ -1448,14 +1448,14 @@ function mockExamTrendChart(rows,title){
   const area=path+` L ${pts[pts.length-1].x} ${h-p.b} L ${pts[0].x} ${h-p.b} Z`;
   const step=Math.max(1,Math.ceil(rows.length/6));
   return `<div class="status-chart-v9"><h3>${title}</h3><small>تراز هر آزمون</small>
-    <svg class="xp-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
-      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="xp-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join("")}
-      <path class="xp-area" d="${area}"/>
-      <path class="xp-line" d="${path}"/>
+    <svg class="trend-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="trend-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join("")}
+      <path class="trend-area" d="${area}"/>
+      <path class="trend-line" d="${path}"/>
       ${pts.map((q,i)=>{
         const showLabel=(i===0||i===pts.length-1||i%step===0);
-        return `<circle class="xp-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+
-          (showLabel?`<text class="xp-label" x="${q.x}" y="${h-8}" text-anchor="middle">${rows[i].label}</text>`:"");
+        return `<circle class="trend-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+
+          (showLabel?`<text class="trend-label" x="${q.x}" y="${h-8}" text-anchor="middle">${rows[i].label}</text>`:"");
       }).join("")}
     </svg></div>`;
 }
@@ -1696,7 +1696,11 @@ function qualityName(q){return {poor:"ضعیف",normal:"عادی",good:"خوب",
 /* ===================== EPISODES =====================
    NOTE: addEpisode/renderEpisodes are re-defined further below (see
    "SUBJECT DROPDOWN PATCH") to also store a precise per-grade subject
-   label; that later definition is the one actually used at runtime. */
+   label; that later definition is the one actually used at runtime.
+   These hoisted stubs exist only so nothing crashes if render() runs
+   before that later patch has executed. */
+function renderEpisodes(){}
+function addEpisode(){}
 function updateStreak(){
   const d=today();if(state.lastDate===d)return;
   const y=new Date(Date.now()-86400000).toISOString().slice(0,10);
@@ -2774,16 +2778,16 @@ function statusLineChart(rows,title){
   const area=path+` L ${pts[pts.length-1].x} ${h-p.b} L ${pts[0].x} ${h-p.b} Z`;
   const step=Math.max(1,Math.ceil(rows.length/6));
   return `<div class="status-chart-v9"><h3>${title}</h3><small>دقیقه مطالعه در هر روز</small>
-    <svg class="xp-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
-      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="xp-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join("")}
-      <path class="xp-area" d="${area}"/>
-      <path class="xp-line" d="${path}"/>
+    <svg class="trend-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="trend-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join("")}
+      <path class="trend-area" d="${area}"/>
+      <path class="trend-line" d="${path}"/>
       ${pts.map((q,i)=>{
         const showLabel=(i===0||i===pts.length-1||i%step===0);
         const rotate=rows.length>10?` transform='rotate(-35 ${q.x} ${h-4})'`:"";
         const anchor=rows.length>10?"end":"middle";
-        return `<circle class="xp-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+
-          (showLabel?`<text class="xp-label" x="${q.x}" y="${h-8}" text-anchor="${anchor}"${rotate}>${rows[i].label}</text>`:"");
+        return `<circle class="trend-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+
+          (showLabel?`<text class="trend-label" x="${q.x}" y="${h-8}" text-anchor="${anchor}"${rotate}>${rows[i].label}</text>`:"");
       }).join("")}
     </svg></div>`;
 }
@@ -4025,7 +4029,6 @@ renderExamCountdown();
 renderBackupReminder();
 updateLastBackupInfo();
 updateNotifyRoutinesUI();
-updateFeedbackSoundUI();
 if(state.settings.notifyRoutines && typeof Notification!=="undefined" && Notification.permission==="granted"){
   startRoutineNotifyLoop();
 }
@@ -4628,17 +4631,17 @@ if(_ps){
     const path=pts.map((q,i)=>(i?"L":"M")+q.x.toFixed(1)+" "+q.y.toFixed(1)).join(" ");
     const area=path+` L ${pts[pts.length-1].x} ${h-p.b} L ${pts[0].x} ${h-p.b} Z`;
     const step=Math.max(1,Math.ceil(rows.length/6));
-    return `<svg viewBox="0 0 ${w} ${h}" class="xp-chart">
-      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="xp-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join('')}
-      <path class="xp-area" d="${area}"/><path class="xp-line" d="${path}"/>
-      ${pts.map((q,i)=>{const show=i===0||i===pts.length-1||i%step===0;return `<circle class="xp-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+(show?`<text class="xp-label" x="${q.x}" y="${h-8}" text-anchor="middle">${esc(rows[i].label)}</text>`:'')}).join('')}
+    return `<svg viewBox="0 0 ${w} ${h}" class="trend-chart">
+      ${[0,1,2,3].map(i=>{const y=p.t+i*(h-p.t-p.b)/3;return `<line class="trend-grid" x1="${p.l}" x2="${w-p.r}" y1="${y}" y2="${y}"/>`}).join('')}
+      <path class="trend-area" d="${area}"/><path class="trend-line" d="${path}"/>
+      ${pts.map((q,i)=>{const show=i===0||i===pts.length-1||i%step===0;return `<circle class="trend-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+(show?`<text class="trend-label" x="${q.x}" y="${h-8}" text-anchor="middle">${esc(rows[i].label)}</text>`:'')}).join('')}
     </svg>`;
   }
   function startTimeScatterSVG(daysWithTimes,opts){
     opts=opts||{};const w=opts.w||620,h=opts.h||170,p={l:34,r:10,t:10,b:24};
     const maxM=24*60,bw=(w-p.l-p.r)/Math.max(1,daysWithTimes.length);
     let svg='';
-    [0,6,12,18,24].forEach(hr=>{const y=h-p.b-((hr*60)/maxM)*(h-p.t-p.b);svg+=`<line class="xp-grid" x1="${p.l}" x2="${w-p.r}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${p.l-4}" y="${(y+3).toFixed(1)}" text-anchor="end" class="stats-axis-label">${hr}</text>`;});
+    [0,6,12,18,24].forEach(hr=>{const y=h-p.b-((hr*60)/maxM)*(h-p.t-p.b);svg+=`<line class="trend-grid" x1="${p.l}" x2="${w-p.r}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${p.l-4}" y="${(y+3).toFixed(1)}" text-anchor="end" class="stats-axis-label">${hr}</text>`;});
     daysWithTimes.forEach((d,i)=>{
       const x=p.l+i*bw+bw/2;
       if(d.minutesOfDay!=null){const y=h-p.b-(d.minutesOfDay/maxM)*(h-p.t-p.b);svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="var(--accent)"/>`;}
@@ -4847,5 +4850,14 @@ if(_ps){
     _origRender2();
     if(isPageActive('statistics'))renderStatistics();
   };
+  // Final full re-render: several earlier sections (subject-dropdown
+  // patch, task-edit patch, this statistics module, etc.) redefine
+  // window.render/renderEpisodes/etc. AFTER the app's initial paint
+  // already ran once. Without this, pages like "پارت‌های مطالعه" can
+  // appear empty on first load until the user triggers another
+  // render. Re-running render() here (once everything is patched in)
+  // guarantees the DOM reflects the final, real implementations.
+  render();
+
   console.log('✅ Statistics module loaded');
 })();

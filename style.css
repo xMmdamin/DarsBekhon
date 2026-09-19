@@ -502,12 +502,12 @@ body[data-density="compact"] .stat{padding:9px}
 .status-score-v9 span{font-size:.68rem;color:var(--muted)}
 .status-charts-v9{display:grid;grid-template-columns:1fr 2fr;gap:14px}
 .status-chart-v9{min-height:245px;padding:15px;border-radius:18px;border:1px solid var(--border);background:rgba(125,145,190,.06)}
-.xp-chart{width:100%;height:190px;display:block}
-.xp-grid{stroke:rgba(125,145,190,.14);stroke-width:1}
-.xp-line{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-.xp-area{fill:rgba(110,231,255,.10)}
-.xp-dot{fill:var(--accent);stroke:var(--bg);stroke-width:2}
-.xp-label{fill:var(--muted);font-size:9px;font-family:inherit}
+.trend-chart{width:100%;height:190px;display:block}
+.trend-grid{stroke:rgba(125,145,190,.14);stroke-width:1}
+.trend-line{fill:none;stroke:var(--accent);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.trend-area{fill:rgba(110,231,255,.10)}
+.trend-dot{fill:var(--accent);stroke:var(--bg);stroke-width:2}
+.trend-label{fill:var(--muted);font-size:9px;font-family:inherit}
 .streak-v9{padding:16px;border-radius:18px;border:1px solid var(--border);background:rgba(125,145,190,.06)}
 .streak-head-v9{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .streak-badge-v9{font-weight:900;font-size:.85rem;padding:8px 12px;border-radius:12px;background:rgba(255,107,129,.09);color:#ff8fa1}
