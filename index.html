@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" data-theme="light">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
 <div class="app">
 <header>
   <div class="brand">
-    <button class="logo mood-btn" id="moodButton" onclick="openMoodPicker()" title="تغییر حالت/مود">📚</button>
+    <div class="logo">📚</div>
     <div><h1>درس بخون!</h1><div class="muted">سیستمی برای مطالعه کردن</div></div>
   </div>
   <div class="header-actions">
@@ -31,16 +31,16 @@
   <div class="nav-brand">📖 درس بخون!</div>
   <select id="pageSelect" class="page-select" onchange="switchToPage(this.value)">
     <option value="dashboard">🏠 خانه</option>
+    <option value="statistics">📈 آمار</option>
     <option value="episodes">📖 پارت‌های مطالعه</option>
     <option value="checklist">📋 چک‌لیست</option>
-    <option value="statistics">📊 آمار و تحلیل</option>
     <option value="classes">📅 برنامه روزانه</option>
     <option value="routines">🔁 روتین</option>
-    <option value="quests">🎯 اهداف من</option>
+    <option value="quests">📋 کارهای امروز</option>
     <option value="mistakes">❌ دفترچه اشتباهات</option>
     <option value="mockExams">🧪 آزمون‌های آزمایشی</option>
-    <option value="tasks">🔨 تسک‌ها</option>
-    <option value="skillHub">🧭 مرکز مهارت‌ها</option>
+    <option value="tasks">✅ عادت‌های روزانه</option>
+    <option value="skillHub">📊 نقشه تسلط دروس</option>
     <option value="leitner">🧰 جعبه ابزار</option>
     <option value="settings">⚙️ تنظیمات</option>
   </select>
@@ -60,23 +60,15 @@
   </div>
   <div class="card span-8">
     <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
-      <div><h2 id="playerNameDisplay">دانش‌آموز</h2><div class="muted">خلاصه پیشرفت</div></div>
-    </div>
-    <div class="statgrid" style="margin-top:13px">
-      <div class="stat"><span class="label">سطح پیشرفت</span><b id="playerLevel">1</b></div>
-      <div class="stat"><span class="label">امتیاز</span><b id="playerXP">0</b></div>
-      <div class="stat"><span class="label">روزهای متوالی</span><b id="streak">0</b></div>
-    </div>
-    <div class="xpbar">
-      <div class="xpmeta"><span id="xpText">0 / 100</span><span id="xpPercent">0%</span></div>
-      <div class="progress"><div class="bar" id="playerXPBar" style="width:0%"></div></div>
+      <div><h2 id="playerNameDisplay">دانش‌آموز</h2><div class="muted">پنل مطالعه شخصی</div></div>
+      <div class="pill" id="streakPill">🔥 <span id="streak">0</span> روز پیاپی</div>
     </div>
   </div>
   <div class="card span-4">
-    <h3>🎯 هدف امروز</h3>
+    <h3>🎯 برنامه امروز</h3>
     <p class="muted">تعداد پارت مطالعه با خود توست؛ سیستم فقط ظرفیت پیشنهادی می‌دهد.</p>
     <div class="stat"><span class="label">ظرفیت پیشنهادی</span><b id="dashboardTarget">7 پارت مطالعه</b><small class="muted" id="dashboardEpisodeFormat">—</small></div>
-    <div class="actions"><button class="btn primary" onclick="openEpisodeModal()">+ ثبت پارت مطالعه</button><button class="btn" onclick="switchToPage('quests')">🎯 اهداف من</button></div>
+    <div class="actions"><button class="btn primary" onclick="openEpisodeModal()">+ ثبت پارت مطالعه</button><button class="btn" onclick="switchToPage('quests')">📋 کارهای امروز</button></div>
   </div>
   <div class="card span-4">
     <h3>⏳ روزشمار کنکور</h3>
@@ -93,7 +85,6 @@
     <h3>📊 پیشرفت امروز</h3>
     <div class="statgrid" style="margin-top:10px">
       <div class="stat"><span class="label">پارت مطالعه</span><b id="todayEpisodes">0</b></div>
-      <div class="stat"><span class="label">امتیاز امروز</span><b id="todayXP">0</b></div>
       <div class="stat"><span class="label">دقیقه مطالعه امروز</span><b id="todayMinutes">0</b></div>
       <div class="stat"><span class="label">تست امروز</span><b id="todayTests">0</b></div>
       <div class="stat"><span class="label">آخرین کیفیت</span><b id="lastQuality">—</b></div>
@@ -121,7 +112,7 @@
       <select id="manualWeakSubject" onchange="setManualWeakSubject(this.value)"></select>
       <div class="muted small" style="margin-top:6px">خودکار = تشخیص سیستم؛ انتخاب دستی همیشه نمایش داده می‌شود.</div>
     </div>
-    <h3>📌 خلاصه برنامه</h3>
+    <h3>⚔ وضعیت کمپین</h3>
     <div class="list">
       <div class="quest"><span>سهم زمان مطالعه کنکوری</span><b id="campaignConcoursWeight">65%</b></div>
       <div class="quest"><span>سهم زمان مطالعه امتحان نهایی</span><b id="campaignFinalWeight">35%</b></div>
@@ -129,7 +120,7 @@
       <div class="quest"><span>Retention بحرانی</span><b id="retentionCount">0</b></div>
     </div>
   </div>
-  <div class="card span-12">
+  <div class="card span-6">
     <h3>📚 وضعیت دروس</h3>
     <div class="dashboard-curriculum-picker" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px;padding:11px;border:1px solid var(--border);border-radius:13px;background:rgba(125,145,190,.06)">
       <div>
@@ -180,8 +171,7 @@
       <h3>📈 روند پیشرفت</h3>
       <div class="progress-chart-controls">
         <div class="progress-metric-tabs">
-          <button class="btn progress-metric-btn active" data-metric="xp" onclick="setProgressChartMetric('xp')">XP</button>
-          <button class="btn progress-metric-btn" data-metric="minutes" onclick="setProgressChartMetric('minutes')">دقیقه</button>
+          <button class="btn progress-metric-btn active" data-metric="minutes" onclick="setProgressChartMetric('minutes')">دقیقه</button>
           <button class="btn progress-metric-btn" data-metric="accuracy" onclick="setProgressChartMetric('accuracy')">دقت</button>
         </div>
         <div class="progress-range-tabs">
@@ -210,6 +200,19 @@
     <div id="subjectRanking" style="margin-top:10px"></div>
   </div>
 </div>
+</section>
+
+<section id="statistics" class="page">
+  <div class="stats-shell">
+    <div class="stats-tabs">
+      <button class="stats-tab active" data-range="day" onclick="setStatsRange('day')">روز</button>
+      <button class="stats-tab" data-range="week" onclick="setStatsRange('week')">هفته</button>
+      <button class="stats-tab" data-range="month" onclick="setStatsRange('month')">ماه</button>
+      <button class="stats-tab" data-range="total" onclick="setStatsRange('total')">مجموع</button>
+    </div>
+    <div class="stats-nav" id="statsNav"></div>
+    <div id="statsBody" class="stats-body"></div>
+  </div>
 </section>
 
 <section id="episodes" class="page">
@@ -261,7 +264,7 @@
         <option value="exceptional">فوق العاده</option>
       </select></div>
     </div>
-    <div class="actions"><button class="btn primary" onclick="addEpisode()">⚡ ثبت و محاسبه XP</button></div>
+    <div class="actions"><button class="btn primary" onclick="addEpisode()">📝 ثبت پارت مطالعه</button></div>
   </div>
   <div class="card span-8">
     <h2>📜 پارت‌های مطالعه شده</h2>
@@ -369,17 +372,17 @@
 <div class="quest-board-v7">
   <div class="quest-board-hero card">
     <div class="quest-hero-copy">
-      <div class="eyebrow">برنامه‌ریزی هدفمند</div>
-      <h2>🎯 اهداف من</h2>
-      <p class="muted">اهداف روزانه‌ات را اینجا تعریف و پیگیری کن.</p>
+      <div class="eyebrow">کارهای امروز</div>
+      <h2>📋 کارهای امروز</h2>
+      <p class="muted">کارهای دستی امروزت را اینجا بساز و مدیریت کن.</p>
     </div>
     <div class="quest-hero-actions">
-      <button class="btn primary" onclick="openManualQuestModal()">＋ هدف جدید</button>
+      <button class="btn primary" onclick="openManualQuestModal()">➕ افزودن کار</button>
     </div>
   </div>
   <div class="quest-board-stats" id="questBoardStats"></div>
   <div class="quest-board-toolbar card">
-    <div><b>اهداف امروز</b><div class="muted small">فقط اهداف دستی.</div></div>
+    <div><b>کارهای امروز</b><div class="muted small">فقط موارد دستی.</div></div>
     <div class="quest-filters">
       <select id="questFilter" onchange="renderQuests()">
         <option value="all">همه</option><option value="active">فعال</option><option value="completed">انجام‌شده</option>
@@ -391,12 +394,12 @@
   </div>
   <div class="quest-board-main card"><div id="questList" class="quest-board-list"></div></div>
   <aside class="quest-board-side card">
-    <div class="side-title">🧭 راهنما</div>
+    <div class="side-title">خلاصه</div>
     <div class="quest-rule"><span>فعال</span><b id="questActiveCount">0</b></div>
     <div class="quest-rule"><span>✅ تکمیل‌شده</span><b id="questDoneCount">0</b></div>
     <div class="quest-rule"><span>اولویت بالا</span><b id="questHighCount">0</b></div>
     <hr>
-    <p class="muted small">فقط اهداف دستی نمایش داده می‌شوند.</p>
+    <p class="muted small">فقط موارد دستی امروز نمایش داده می‌شوند.</p>
   </aside>
 </div>
 </section>
@@ -405,9 +408,9 @@
   <div class="card" style="overflow:visible">
     <div class="tasks-hero">
       <div>
-        <div class="skill-v7-eyebrow">DAILY TASKS</div>
-        <h2>🔨 تسک‌های روزانه</h2>
-        <p class="muted" style="margin:4px 0 0">با انجام کارهای شخصی، خانه، ورزش و سلامتی، امتیاز بگیر.</p>
+        <div class="skill-v7-eyebrow">عادت‌های روزانه</div>
+        <h2>✅ عادت‌های روزانه</h2>
+        <p class="muted" style="margin:4px 0 0">کارهای شخصی، خانه، ورزش و سلامتی‌ات را هر روز تیک بزن.</p>
       </div>
       <div class="tasks-summary" id="tasksSummary"></div>
     </div>
@@ -584,16 +587,24 @@
       <div class="pt-hero">
         <div>
           <div class="skill-v7-eyebrow">PERIODIC TABLE</div>
-          <h2>⚗️ جدول تناوبی عناصر</h2>
-          <p class="muted" style="margin:4px 0 0">اسم یا نماد عنصر رو تایپ کن تا سریع پیداش کنی، یا روی هر خونه بزن تا آرایش الکترونی کاملش رو ببینی.</p>
+              <h2>⚗️ جدول تناوبی عناصر</h2>
+          <p class="muted" style="margin:4px 0 0">روی هر عنصر کلیک کن تا اطلاعات کامل + آرایش الکترونی رو ببینی.</p>
         </div>
       </div>
-      <div class="pt-search-row">
-        <input id="ptSearch" type="text" placeholder="جست‌وجو... مثلاً «آهن» یا Fe" oninput="filterPeriodicTable(this.value)">
-        <span class="pt-search-count" id="ptSearchCount"></span>
-      </div>
-      <div class="pt-legend" id="ptLegend"></div>
       <div class="pt-wrap"><div class="periodic-table" id="periodicTable"></div></div>
+      <div class="pt-legend">
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#c0392b"></span> فلز قلیایی</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e67e22"></span> قلیایی خاکی</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e0a200"></span> فلز واسطه</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#1f8fc9"></span> پس‌واسطه</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#6c5ce7"></span> شبه‌فلز</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0f9e6b"></span> نافلز</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#0984e3"></span> هالوژن</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#7d2ae8"></span> گاز نجیب</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#e84393"></span> لانتانید</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#b33939"></span> اکتینید</div>
+        <div class="pt-legend-item"><span class="pt-legend-dot" style="background:#636e72"></span> نامعلوم</div>
+      </div>
       <div id="ptDetail" class="pt-detail"></div>
     </div>
 
@@ -774,62 +785,6 @@
   </div>
 </div>
 </section>
-<section id="statistics" class="page">
-<div class="statistics-shell">
-
-  <div class="statistics-toolbar card">
-    <div class="stat-mode-tabs">
-      <button class="stat-mode-btn active" data-mode="period" onclick="setStatMode('period')">دوره</button>
-      <button class="stat-mode-btn" data-mode="day"    onclick="setStatMode('day')">روز</button>
-      <button class="stat-mode-btn" data-mode="week"   onclick="setStatMode('week')">هفته</button>
-      <button class="stat-mode-btn" data-mode="month"  onclick="setStatMode('month')">ماه</button>
-      <button class="stat-mode-btn" data-mode="trend"  onclick="setStatMode('trend')">روند</button>
-    </div>
-    <div class="stat-range-info" id="statRangeInfo">—</div>
-  </div>
-
-  <div class="statistics-summary">
-    <div class="card stat-summary-card"><small class="label">زمان کل</small><b id="statTotalTime">—</b></div>
-    <div class="card stat-summary-card"><small class="label">میانگین روزانه</small><b id="statDailyAvg">—</b></div>
-    <div class="card stat-summary-card"><small class="label">تعداد جلسات</small><b id="statSessionCount">—</b></div>
-    <div class="card stat-summary-card"><small class="label">روزهای فعال</small><b id="statActiveDays">—</b></div>
-  </div>
-
-  <div class="card">
-    <h3>📊 سهم دروس</h3>
-    <div class="stat-pie-wrap">
-      <svg id="statSubjectPie" viewBox="0 0 200 200"></svg>
-      <div id="statSubjectLegend" class="stat-legend"></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>📈 زمان مطالعه روزانه به تفکیک درس</h3>
-    <div id="statDailyBars"></div>
-  </div>
-
-  <div class="card">
-    <h3>📉 زمان تجمعی دروس</h3>
-    <svg id="statCumulativeChart" viewBox="0 0 520 220" preserveAspectRatio="none" style="width:100%;height:220px"></svg>
-  </div>
-
-  <div class="card">
-    <h3>⏰ میانگین زمان تمرکز بر حسب روز هفته</h3>
-    <div id="statWeekdayBars"></div>
-  </div>
-
-  <div class="card">
-    <h3>🕐 الگوی شروع و پایان مطالعه</h3>
-    <div id="statStartEndScatter"></div>
-  </div>
-
-  <div class="card">
-    <h3>📋 تایم‌لاین جلسات</h3>
-    <div id="statTimeline"></div>
-  </div>
-
-</div>
-</section>
 
 <section id="settings" class="page">
 <div class="grid">
@@ -883,13 +838,6 @@
 </div>
 
 <div class="settings-section">
-  <div class="settings-section-title">🔊 فیدبک لحظه‌ای</div>
-  <p class="muted small">هنگام گرفتن XP یا سکه، یک صدای کوتاه پخش و یک عدد شناور روی صفحه نمایش داده می‌شود.</p>
-  <button class="btn" id="feedbackSoundBtn" onclick="toggleFeedbackSound()">🔊 خاموش کردن صدای امتیاز</button>
-  <div class="muted small" id="feedbackSoundStatus" style="margin-top:6px">وضعیت: فعال</div>
-</div>
-
-<div class="settings-section">
   <div class="settings-section-title">🔔 یادآوری روتین‌ها</div>
   <p class="muted small">با فعال‌سازی، تا وقتی برنامه در مرورگر باز است، سر ساعتِ هر روتین یک نوتیفیکیشن نمایش داده می‌شود.</p>
   <button class="btn" id="notifyRoutinesBtn" onclick="toggleRoutineNotifications()">🔔 فعال‌سازی یادآوری روتین‌ها</button>
@@ -939,14 +887,12 @@
   <div class="settings-section-title">📚 تنظیمات مطالعه</div>
   <p class="muted small">هیچ مقدار پیش‌فرضی برای این بخش وجود ندارد؛ همه را مطابق برنامه خودت تعیین کن.</p>
   <div class="formgrid">
-    <div><label>نام من</label><input id="playerName" maxlength="40" placeholder="نام خودت را وارد کن"></div>
+    <div><label>نام</label><input id="playerName" maxlength="40" placeholder="نام خودت را وارد کن"></div>
     <div><label>تعداد پارت مطالعه پیشنهادی روزانه</label><input id="targetEpisodes" type="number" min="1" max="20" placeholder="مثلاً ۷"></div>
     <div><label>مدت مطالعه هر پارت مطالعه (دقیقه)</label><input id="studyMinutes" type="number" min="5" max="180" placeholder="مثلاً ۵۰"></div>
     <div><label>مدت استراحت (دقیقه)</label><input id="breakMinutes" type="number" min="1" max="60" placeholder="مثلاً ۱۰"></div>
     <div><label>سهم زمان برای کنکور سراسری (%)</label><input id="concoursWeight" type="number" min="0" max="100" placeholder="مثلاً ۶۰"></div>
     <div><label>سهم زمان برای امتحانات نهایی (%)</label><input id="finalWeight" type="number" min="0" max="100" placeholder="مثلاً ۴۰"></div>
-    <div><label>سقف نرم امتیاز روزانه</label><input id="dailyXPSoftCap" type="number" min="100" max="3000" placeholder="مثلاً ۵۰۰"></div>
-    <input id="goldMultiplier" type="hidden" value="1">
   </div>
 </div>
 <div class="actions"><button class="btn primary" onclick="saveSettings()">💾 ذخیره تنظیمات</button><button class="btn" onclick="loadSettingsForm()">↩ بازنشانی فرم</button></div>
@@ -981,42 +927,6 @@
 
 <div class="modal" id="modal"><div class="modalbox card" id="modalBox"></div></div>
 
-<div id="moodModal" class="modal">
-  <div class="modalbox card" style="max-width:620px;width:min(96vw,620px)">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
-      <div>
-        <h2>🎭 حالت امروزت چیه؟</h2>
-        <p class="muted" style="margin:4px 0 0">حالت‌ها کاملاً دستی قابل افزودن، ویرایش و حذف هستند.</p>
-      </div>
-      <button class="btn" type="button" onclick="closeMoodPicker()">✕</button>
-    </div>
-    <div class="mood-current-preview">
-      <span class="big" id="moodPreviewEmoji">📚</span>
-      <div class="txt">
-        <b id="moodPreviewLabel">مطالعه‌گر</b>
-        <small id="moodPreviewMode">حالت دستی</small>
-      </div>
-      <button class="btn" type="button" onclick="enableAutoMood()" title="برگشت به حالت خودکار بر اساس ساعت" style="white-space:nowrap;padding:8px 12px;font-size:.8rem">🕐 خودکار</button>
-    </div>
-    <div class="mood-picker-grid" id="moodGrid"></div>
-    <div class="mood-add-box">
-      <div class="settings-section-title" style="margin-bottom:8px">➕ افزودن حالت جدید</div>
-      <div class="mood-add-form">
-        <input id="moodNewEmoji" maxlength="4" placeholder="🎯" class="mood-emoji-input">
-        <input id="moodNewLabel" maxlength="30" placeholder="نام حالت (مثلاً: پرانرژی)">
-        <button class="btn primary" type="button" onclick="addMood()">افزودن</button>
-      </div>
-      <div class="muted small" style="margin-top:6px">
-        یک ایموجی + یک نام دلخواه وارد کن. برای ویرایش هر حالت روی ✎ و برای حذف روی ✕ بزن.
-      </div>
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
-      <button class="btn" type="button" onclick="resetMoods()">↺ بازنشانی به پیش‌فرض</button>
-      <button class="btn primary" type="button" onclick="closeMoodPicker()">تمام</button>
-    </div>
-  </div>
-</div>
-
 <div id="dailyPlanModal" class="modal">
   <div class="modalbox card" style="max-width:560px;width:min(96vw,560px)">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
@@ -1026,7 +936,6 @@
       </div>
       <button class="btn" type="button" onclick="closeDailyPlanner()">✕</button>
     </div>
-    <div class="muted small" style="margin-bottom:10px">حال‌وهوای فعلی: <b id="dailyPlanMood">—</b> <span style="margin-right:6px">— برای تغییرش از دکمه بالای صفحه استفاده کن.</span></div>
     <label style="margin-top:4px">اولویت‌های امروز (حداکثر ۳ درس)</label>
     <div class="plan-subject-list" id="dailyPlanSubjects"></div>
     <div style="margin-top:12px">
@@ -1043,14 +952,14 @@
 <div id="manualQuestModal" class="modal">
   <div class="modalbox card" style="max-width:980px;width:min(96vw,980px)">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">
-      <div><h2>🧭 ساخت کوئست جدید</h2><p class="muted">یک مأموریت دقیق بساز.</p></div>
+      <div><h2>➕ افزودن کار جدید</h2><p class="muted">یک کار دقیق برای امروز بساز.</p></div>
       <button class="btn" type="button" onclick="closeManualQuestModal()">✕</button>
     </div>
     <div class="formgrid">
-      <div style="grid-column:1/-1"><label>عنوان کوئست</label><input id="manualQuestTitle" placeholder="مثلاً تسلط بر تابع درجه دوم"></div>
+      <div style="grid-column:1/-1"><label>عنوان کار</label><input id="manualQuestTitle" placeholder="مثلاً تسلط بر تابع درجه دوم"></div>
       <div><label>درس</label><select id="manualQuestSubject"></select></div>
       <div><label>پایه</label><select id="manualQuestGrade"><option>دهم</option><option>یازدهم</option><option>دوازدهم</option></select></div>
-      <div><label>نوع کوئست</label><select id="manualQuestType"></select></div>
+      <div><label>نوع کار</label><select id="manualQuestType"></select></div>
       <div><label>تعداد پارت مطالعه</label><input id="manualQuestEpisodes" type="number" min="1" max="20" value="1"></div>
       <div style="grid-column:1/-1"><label>اولویت</label>
         <select id="manualQuestPriority">
@@ -1060,7 +969,7 @@
       <div style="grid-column:1/-1"><label>یادداشت / شرط موفقیت</label><textarea id="manualQuestNote" rows="4" placeholder="مثلاً ۳۰ تست آموزشی + تحلیل"></textarea></div>
     </div>
     <div class="actions" style="margin-top:14px">
-      <button class="btn primary" type="button" onclick="createManualQuest()">＋ ساخت هدف</button>
+      <button class="btn primary" type="button" onclick="createManualQuest()">➕ افزودن کار</button>
       <button class="btn" type="button" onclick="closeManualQuestModal()">انصراف</button>
     </div>
   </div>
@@ -1069,22 +978,20 @@
 <div id="taskEditModal" class="modal">
   <div class="modalbox card" style="max-width:520px;width:min(96vw,520px)">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px">
-      <div><h2>✏️ ویرایش تسک</h2><p class="muted">نام و امتیاز را تغییر بده یا تسک را حذف کن.</p></div>
+      <div><h2>✏️ ویرایش عادت</h2><p class="muted">نام را تغییر بده یا این مورد را حذف کن.</p></div>
       <button class="btn" type="button" onclick="closeTaskEditModal()">✕</button>
     </div>
     <div class="formgrid">
-      <div style="grid-column:1/-1"><label>نام تسک</label><input id="taskEditName" maxlength="60"></div>
-      <div><label>امتیاز</label><input id="taskEditXP" type="number" min="1" value="5"></div>
+      <div style="grid-column:1/-1"><label>نام</label><input id="taskEditName" maxlength="60"></div>
     </div>
     <div class="actions" style="margin-top:14px">
       <button class="btn primary" type="button" onclick="saveTaskEdit()">💾 ذخیره</button>
-      <button class="btn danger" type="button" onclick="deleteTaskFromModal()">🗑 حذف تسک</button>
+      <button class="btn danger" type="button" onclick="deleteTaskFromModal()">🗑 حذف</button>
       <button class="btn" type="button" onclick="closeTaskEditModal()">انصراف</button>
     </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<div class="reward-fx-layer" id="rewardFx" aria-hidden="true"></div>
 
 <script src="app.js"></script>
 </body>
