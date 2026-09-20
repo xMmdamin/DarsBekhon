@@ -1226,6 +1226,8 @@ body[data-density="compact"] .stat{padding:9px}
 .stats-bar-svg{width:100%;height:auto}
 .stats-bar-svg text{fill:var(--muted)}
 .stats-bar-label{font-size:9px}
+.stats-scatter-legend{display:flex;gap:14px;font-size:.72rem;color:var(--muted);margin-bottom:6px}
+.stats-scatter-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:5px;vertical-align:middle}
 .stats-val-label{font-size:8.5px;font-weight:700}
 .stats-axis-label{font-size:8.5px}
 .stats-rank-list{display:flex;flex-direction:column;gap:2px}

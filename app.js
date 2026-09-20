@@ -4637,17 +4637,65 @@ if(_ps){
       ${pts.map((q,i)=>{const show=i===0||i===pts.length-1||i%step===0;return `<circle class="trend-dot" cx="${q.x}" cy="${q.y}" r="3"/>`+(show?`<text class="trend-label" x="${q.x}" y="${h-8}" text-anchor="middle">${esc(rows[i].label)}</text>`:'')}).join('')}
     </svg>`;
   }
-  function startTimeScatterSVG(daysWithTimes,opts){
-    opts=opts||{};const w=opts.w||620,h=opts.h||170,p={l:34,r:10,t:10,b:24};
+  function startEndScatterSVG(daysWithTimes,opts){
+    opts=opts||{};const w=opts.w||620,h=opts.h||190,p={l:34,r:10,t:14,b:24};
     const maxM=24*60,bw=(w-p.l-p.r)/Math.max(1,daysWithTimes.length);
     let svg='';
     [0,6,12,18,24].forEach(hr=>{const y=h-p.b-((hr*60)/maxM)*(h-p.t-p.b);svg+=`<line class="trend-grid" x1="${p.l}" x2="${w-p.r}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="${p.l-4}" y="${(y+3).toFixed(1)}" text-anchor="end" class="stats-axis-label">${hr}</text>`;});
     daysWithTimes.forEach((d,i)=>{
       const x=p.l+i*bw+bw/2;
-      if(d.minutesOfDay!=null){const y=h-p.b-(d.minutesOfDay/maxM)*(h-p.t-p.b);svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="var(--accent)"/>`;}
-      svg+=`<text x="${x.toFixed(1)}" y="${h-6}" text-anchor="middle" class="stats-bar-label">${esc(d.label)}</text>`;
+      if(d.endMin!=null){const y=h-p.b-(d.endMin/maxM)*(h-p.t-p.b);svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="var(--muted)"/>`;}
+      if(d.startMin!=null){const y=h-p.b-(d.startMin/maxM)*(h-p.t-p.b);svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="var(--accent)"/>`;}
+      if(d.label)svg+=`<text x="${x.toFixed(1)}" y="${h-6}" text-anchor="middle" class="stats-bar-label">${esc(d.label)}</text>`;
     });
-    return `<svg viewBox="0 0 ${w} ${h}" class="stats-bar-svg">${svg}</svg>`;
+    return `<div class="stats-scatter-legend"><span><i style="background:var(--accent)"></i>شروع</span><span><i style="background:var(--muted)"></i>پایان</span></div><svg viewBox="0 0 ${w} ${h}" class="stats-bar-svg">${svg}</svg>`;
+  }
+  function avgClockOfDay(mins){
+    const arr=mins.filter(m=>m!=null);
+    if(!arr.length)return null;
+    const avg=arr.reduce((a,b)=>a+b,0)/arr.length;
+    const hh=Math.floor(avg/60),mm=Math.round(avg%60);
+    return `${fmt(hh)}:${String(mm).padStart(2,'0')}`;
+  }
+  function studyBreakBreakdown(eps){
+    if(!eps.length)return {study:0,brk:0,other:0};
+    const sorted=eps.slice().sort((a,b)=>episodeStartMs(a)-episodeStartMs(b));
+    const study=totalMinutes(sorted);
+    let brk=0,other=0;
+    for(let i=1;i<sorted.length;i++){
+      const gap=Math.max(0,(episodeStartMs(sorted[i])-episodeEndMs(sorted[i-1]))/60000);
+      if(gap<=45)brk+=gap;else other+=gap;
+    }
+    return {study,brk,other};
+  }
+  function studyBreakDonutBlock(eps){
+    const bd=studyBreakBreakdown(eps);
+    const total=bd.study+bd.brk+bd.other;
+    if(total<=0)return `<div class="empty">داده‌ای برای نمایش نیست.</div>`;
+    const items=[
+      {label:'مطالعه',value:bd.study,color:'var(--accent)'},
+      {label:'استراحت',value:bd.brk,color:'#5aa9e6'},
+      {label:'سایر (وقفه طولانی)',value:bd.other,color:'var(--muted)'}
+    ].filter(x=>x.value>0);
+    return donutBlock(items,total);
+  }
+  function recordsCard(allEps){
+    if(!allEps.length)return `<div class="empty">هنوز داده‌ای ثبت نشده.</div>`;
+    const longest=allEps.reduce((mx,e)=>(+e.minutes||0)>(+mx.minutes||0)?e:mx,allEps[0]);
+    const byDay={};allEps.forEach(e=>{byDay[e.date]=(byDay[e.date]||0)+(+e.minutes||0)});
+    const bestDayEntry=Object.entries(byDay).sort((a,b)=>b[1]-a[1])[0];
+    const dowNames=['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+    const dowTotals=[0,0,0,0,0,0,0],dowCount=[0,0,0,0,0,0,0];
+    Object.entries(byDay).forEach(([ds,m])=>{const dow=new Date(ds+'T12:00:00').getDay();dowTotals[dow]+=m;dowCount[dow]++;});
+    let bestDow=0;for(let i=1;i<7;i++){const avgI=dowCount[i]?dowTotals[i]/dowCount[i]:0,avgB=dowCount[bestDow]?dowTotals[bestDow]/dowCount[bestDow]:0;if(avgI>avgB)bestDow=i;}
+    const hourCounts={};allEps.forEach(e=>{const h=new Date(episodeStartMs(e)).getHours();hourCounts[h]=(hourCounts[h]||0)+1;});
+    const bestHourEntry=Object.entries(hourCounts).sort((a,b)=>b[1]-a[1])[0];
+    return `<div class="statgrid stats-summary-grid">
+      <div class="stat"><span class="label">طولانی‌ترین پارت مطالعه</span><b>${fmtDuration(longest.minutes)}</b><small class="muted">${esc(subjectDisplayNameSafe(longest.subject))}</small></div>
+      <div class="stat"><span class="label">پرکارترین روز</span><b>${bestDayEntry?fmtDuration(bestDayEntry[1]):'—'}</b><small class="muted">${bestDayEntry?faShortDate(new Date(bestDayEntry[0]+'T12:00:00')):''}</small></div>
+      <div class="stat"><span class="label">پرکارترین روز هفته</span><b>${dowCount[bestDow]?dowNames[bestDow]:'—'}</b></div>
+      <div class="stat"><span class="label">پرتکرارترین ساعت شروع</span><b>${bestHourEntry?fmt(+bestHourEntry[0])+':00':'—'}</b></div>
+    </div>`;
   }
   function timelineItem(e){
     const v=SUBJECTS[e.subject]||{icon:'📘',name:e.subject};
@@ -4681,6 +4729,7 @@ if(_ps){
         <div class="stat"><span class="label">پایان مطالعه</span><b>${endMs?fmtClock(endMs):'—'}</b></div>
       </div>
       <div class="card stats-card"><h3>سهم دروس این روز</h3>${donutBlock(donutItems,mins)}</div>
+      <div class="card stats-card"><h3>نسبت مطالعه به استراحت</h3>${studyBreakDonutBlock(eps)}</div>
       <div class="card stats-card"><h3>خط زمانی</h3>${eps.length?`<div class="stats-timeline">${eps.map(timelineItem).join('')}</div>`:`<div class="empty">پارتی برای این روز ثبت نشده.</div>`}</div>
     `;
   }
@@ -4700,10 +4749,12 @@ if(_ps){
     const donutItems=Object.entries(breakdown).map(([k,v])=>({label:subjectDisplayNameSafe(k),value:v.minutes,color:subjectColor(k)})).filter(x=>x.value>0).sort((a,b)=>b.value-a.value);
     const bars=days.map(d=>({label:d.label,value:d.minutes,color:d.key===today()?'var(--accent2)':'var(--accent)'}));
     const scatterDays=days.map(d=>{
-      if(!d.episodes.length)return {label:d.label,minutesOfDay:null};
-      const dt=new Date(Math.min(...d.episodes.map(episodeStartMs)));
-      return {label:d.label,minutesOfDay:dt.getHours()*60+dt.getMinutes()};
+      if(!d.episodes.length)return {label:d.label,startMin:null,endMin:null};
+      const sorted=d.episodes.slice().sort((a,b)=>episodeStartMs(a)-episodeStartMs(b));
+      const sDt=new Date(episodeStartMs(sorted[0])),eDt=new Date(Math.max(...sorted.map(episodeEndMs)));
+      return {label:d.label,startMin:sDt.getHours()*60+sDt.getMinutes(),endMin:eDt.getHours()*60+eDt.getMinutes()};
     });
+    const avgStart=avgClockOfDay(scatterDays.map(d=>d.startMin)),avgEnd=avgClockOfDay(scatterDays.map(d=>d.endMin));
     body.innerHTML=`
       <div class="card stats-card"><h3>زمان مطالعه هر روز هفته</h3>${barChartSVG(bars,{h:190})}</div>
       <div class="statgrid stats-summary-grid">
@@ -4713,7 +4764,8 @@ if(_ps){
         <div class="stat"><span class="label">نسبت به هفته قبل</span><b style="color:${delta>=0?'var(--good)':'var(--bad)'}">${delta>=0?'▲':'▼'} ${Math.abs(delta)}٪</b></div>
       </div>
       <div class="card stats-card"><h3>سهم دروس این هفته</h3>${donutBlock(donutItems,mins)}</div>
-      <div class="card stats-card"><h3>روند زمان شروع مطالعه</h3><small class="muted">اولین پارت مطالعه هر روز، چه ساعتی شروع شده</small>${startTimeScatterSVG(scatterDays)}</div>
+      <div class="card stats-card"><h3>نسبت مطالعه به استراحت</h3>${studyBreakDonutBlock(weekEps)}</div>
+      <div class="card stats-card"><h3>روند شروع و پایان مطالعه</h3><small class="muted">میانگین شروع ${avgStart||'—'} • میانگین پایان ${avgEnd||'—'}</small>${startEndScatterSVG(scatterDays)}</div>
     `;
   }
   function renderStatsMonth(body,nav){
@@ -4750,6 +4802,13 @@ if(_ps){
       return {label:(d===1||d===daysInMonth||d%5===0)?fmt(d):'',values};
     });
     const cumBuckets=dayMinutesArr.map(({d,key})=>({label:(d===1||d===daysInMonth||d%5===0)?fmt(d):'',value:totalMinutes(state.episodes.filter(e=>e.date===key))}));
+    const regDays=dayMinutesArr.map(({d,key})=>{
+      const dayEps=state.episodes.filter(e=>e.date===key);
+      if(!dayEps.length)return {label:(d%3===0||d===1||d===daysInMonth)?fmt(d):'',startMin:null,endMin:null};
+      const sorted=dayEps.slice().sort((a,b)=>episodeStartMs(a)-episodeStartMs(b));
+      const sDt=new Date(episodeStartMs(sorted[0])),eDt=new Date(Math.max(...sorted.map(episodeEndMs)));
+      return {label:(d%3===0||d===1||d===daysInMonth)?fmt(d):'',startMin:sDt.getHours()*60+sDt.getMinutes(),endMin:eDt.getHours()*60+eDt.getMinutes()};
+    });
     body.innerHTML=`
       <div class="statgrid stats-summary-grid">
         <div class="stat"><span class="label">مجموع ماه</span><b>${fmtDuration(mins)}</b></div>
@@ -4761,6 +4820,8 @@ if(_ps){
         <div class="hub-heat-legend"><span>کم</span><i style="background:rgba(125,145,190,.13)"></i><i style="background:rgba(110,231,255,.28)"></i><i style="background:rgba(110,231,255,.55)"></i><i style="background:var(--accent)"></i><i style="background:linear-gradient(135deg,var(--accent),var(--accent2))"></i><span>زیاد</span></div>
       </div>
       <div class="card stats-card"><h3>سهم دروس این ماه</h3>${donutBlock(donutItems,mins)}</div>
+      <div class="card stats-card"><h3>نسبت مطالعه به استراحت</h3>${studyBreakDonutBlock(monthEps)}</div>
+      <div class="card stats-card"><h3>نظم شروع و پایان مطالعه</h3><small class="muted">میانگین شروع ${avgClockOfDay(regDays.map(d=>d.startMin))||'—'} • میانگین پایان ${avgClockOfDay(regDays.map(d=>d.endMin))||'—'}</small>${startEndScatterSVG(regDays,{h:200})}</div>
       <div class="card stats-card"><h3>روند روزانه ماه به تفکیک درس</h3>${stackedBarSVG(buckets,subjKeys)}</div>
       <div class="card stats-card"><h3>روند تجمعی مطالعه این ماه</h3>${cumulativeAreaSVG(cumBuckets)}</div>
     `;
@@ -4802,6 +4863,8 @@ if(_ps){
         <div class="stat"><span class="label">دقت کلی آزمون‌ها</span><b>${overallAcc!=null?overallAcc+'٪':'—'}</b></div>
       </div>
       <div class="card stats-card"><h3>سهم کلی دروس</h3>${donutBlock(donutItems,mins)}</div>
+      <div class="card stats-card"><h3>نسبت مطالعه به استراحت</h3>${studyBreakDonutBlock(allEps)}</div>
+      <div class="card stats-card"><h3>رکوردها</h3>${recordsCard(allEps)}</div>
       <div class="card stats-card"><h3>روند ماهانه از ابتدا</h3>${barChartSVG(monthBuckets,{h:190})}</div>
       <div class="card stats-card"><h3>روند تجمعی از ابتدا</h3>${cumulativeAreaSVG(monthBuckets)}</div>
       <div class="card stats-card"><h3>رتبه‌بندی کلی دروس</h3><div class="stats-rank-list">${rankingRows||'<div class="empty">هنوز داده‌ای ثبت نشده.</div>'}</div></div>
