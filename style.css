@@ -1338,3 +1338,27 @@ body[data-density="compact"] .stat{padding:9px}
   .grid{gap:20px}
   .card{padding:20px}
 }
+
+
+/* ===== FINAL UI STABILITY PATCH ===== */
+.mobile-only-nav{display:block}
+@media (min-width:901px){
+  .nav-bar{display:flex!important;position:sticky;top:10px;z-index:50;min-height:58px;box-sizing:border-box}
+  .nav-bar .mobile-only-nav{display:none!important}
+  .nav-quick{display:flex!important;flex:1 1 auto!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;justify-content:flex-start!important}
+  .nav-tab{flex:0 0 auto!important;box-sizing:border-box!important}
+  .tasks-hero{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(360px,520px)!important;align-items:center!important}
+  .tasks-summary{width:100%!important;min-width:0!important}
+  .task-add-row{align-items:center!important}
+  .task-add-row input,.task-add-row button{box-sizing:border-box!important;height:36px!important}
+  .task-item{min-height:44px!important;box-sizing:border-box!important}
+}
+@media (max-width:900px){
+  .nav-quick{display:none!important}
+  .nav-bar .mobile-only-nav{display:block!important;flex:1 1 100%!important;max-width:none!important}
+  .tasks-hero{display:flex!important}
+}
+/* Prevent later legacy rules from breaking habit controls. */
+.task-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:2px!important;min-width:max-content!important}
+.task-icon-btn{display:grid!important;place-items:center!important;width:30px!important;height:30px!important;box-sizing:border-box!important;line-height:1!important}
+.task-add-row .btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;white-space:nowrap!important;line-height:1.2!important}

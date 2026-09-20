@@ -60,7 +60,8 @@ const CHECKLIST_GENERAL_COLS = [
 function rowsByLesson(gradeId, lessonCount, topics, lessonTitles){
   const rows=[];
   for(let i=1;i<=lessonCount;i++){
-    const t=(lessonTitles&&lessonTitles[i-1])||`درس ${i}`;
+    const rawT=(lessonTitles&&lessonTitles[i-1])||`درس ${i}`;
+    const t=String(rawT).replace(/Lesson\s*(\d+)/gi,"درس $1").replace(/Vision\s*(\d+)/gi,"ویژن $1");
     topics.forEach((top,ti)=>rows.push({id:`${gradeId}_d${i}_t${ti}`,label:`${t} — ${top}`}));
   }
   return rows;
