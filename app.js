@@ -2399,6 +2399,7 @@ function renderTasks(){
             <div class="task-check"></div>
             <div class="task-info">
               <span class="task-name"><span class="task-icon">${t.icon||"⭐"}</span>${esc(t.name)}</span>
+            </div>
             <div class="task-reward" onclick="event.stopPropagation()">
   <div style="display:flex;gap:3px;justify-content:flex-end">
     <span class="task-edit" onclick="event.stopPropagation();openTaskEditModal('${t.id}')" title="ویرایش">✏️</span>
