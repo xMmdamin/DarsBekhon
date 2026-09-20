@@ -2657,20 +2657,19 @@ function hubBookCard(c,gr,e){
   const last=skillLastStudy(c,gr,e.name),days=skillDaysSince(last);
   const open=state.settings.hubOpenBook===hubBookId(e)?'open':'';
   const tree=hubBookTreeHtml(c,gr,e);
-  return `<article class="hub-book ${open}" id="${hubBookId(e)}" onclick="window.hubToggleBook('${hubBookId(e)}',event)">
-    <div class="hub-book-head">
+  return `<article class="hub-book-list ${open}" id="${hubBookId(e)}">
+    <div class="hub-book-main" onclick="window.hubToggleBook('${hubBookId(e)}',event)">
       <div class="hub-book-icon">${hubEntryIcon(e)}</div>
       <div class="hub-book-name"><b>${esc(e.name)}</b><small>${hubEntryGroupLabel(e)}</small></div>
       <div class="hub-book-level" style="color:${hubKnowColor(know)}">${know}٪</div>
     </div>
-    <div class="hub-book-bar"><i style="width:${know}%;background:${hubKnowColor(know)}"></i></div>
-    <div class="hub-book-xpmeta"><b style="color:${hubKnowColor(know)}">${know}٪ تسلط</b></div>
-    <div class="hub-chips">
-      <div class="hub-chip"><b>${acc}٪</b>دقت</div>
-      <div class="hub-chip"><b>${ret}٪</b>ماندگاری</div>
-      <div class="hub-chip"><b>${fmt(+st.episodes||0)}</b>جلسه</div>
+    <div class="hub-book-progress"><i style="width:${know}%;background:${hubKnowColor(know)}"></i></div>
+    <div class="hub-book-meta-row">
+      <span><b>${acc}٪</b> دقت</span>
+      <span><b>${ret}٪</b> ماندگاری</span>
+      <span><b>${fmt(+st.episodes||0)}</b> جلسه</span>
+      <span class="${days>=3?'warn':''}">${last?(days===0?'📚 امروز':`⏱ ${fmt(days)} روز پیش`):'⚪ هنوز مطالعه نشده'}</span>
     </div>
-    <div class="hub-book-last ${days>=3?'warn':''}">${last?(days===0?'📚 مطالعه امروز':`⏱ ${fmt(days)} روز پیش`):'⚪ هنوز مطالعه نشده'} • برای دیدن درخت مباحث کلیک کن ▾</div>
     ${tree}
   </article>`;
 }
